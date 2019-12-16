@@ -1,0 +1,40 @@
+<ion-buttons slot="start">
+  <ion-menu-button></ion-menu-button>
+</ion-buttons>
+
+<ion-content>
+  <section>
+    <ion-icon name="travel"></ion-icon>
+    <h1 class="ncc">NCC</h1>
+    <h3 text-center> Fogli di servizio</h3>
+    <h4 text-center>{{currentDate}}</h4>
+  </section>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-6>
+        <ion-card class="ion-card-travel" text-center padding>
+          <h2>I miei viaggi</h2>
+        </ion-card>
+      </ion-col>
+      <ion-col col-6>
+        <ion-card class="ion-card-service" text-center padding>
+          <h2>Fogli di servizio</h2>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row padding></ion-row>
+    <ion-row>
+      <ion-col col-6>
+        <ion-card class="ion-card-dates"text-center padding>
+          <h2>Dati del giorno</h2>
+        </ion-card>
+      </ion-col>
+      <ion-col col-6>
+        <ion-card class="ion-card-settings" (click)="pageSettings()" text-center padding>
+          <h2>Impostazioni</h2>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+

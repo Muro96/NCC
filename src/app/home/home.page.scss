@@ -1,0 +1,60 @@
+.ncc {
+  font-family: Arial, Helvetica, sans-serif;
+  letter-spacing: 2px;
+  text-align: center;
+  font-weight: 100px;
+  font-size: 50px;
+  color: #042c6b;
+  margin-bottom: 0px;
+}
+.ion-card-travel{
+  background: #f09d29;
+  border-radius: 15px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  width: 100% !important;
+  height: 100%;
+  margin: 0 !important;
+}
+
+.ion-card-service{
+  background: #ed4766;
+  border-radius: 15px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  width: 100% !important;
+  height: 100%;
+  margin: 0 !important;
+
+}
+.ion-card-dates{
+  background: #4C8DD6;
+  border-radius: 15px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  width: 100% !important;
+  height: 100%;
+  margin: 0 !important;
+
+}
+.ion-card-settings{
+  background: #2D5480;
+  border-radius: 15px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  width: 100% !important;
+  height: 100% ;
+  margin: 0 !important;
+
+}
+
+h2{
+  color: white;
+  text-align: center;
+  padding-top: 100px;
+  padding-bottom: 30px;
+}
