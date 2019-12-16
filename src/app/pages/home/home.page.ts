@@ -7,7 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomePage{
 
-  public currentDate : string = new Date().toLocaleDateString();
+  options = {day: 'numeric', month: 'long', year:'numeric'};
+
+  public currentDate : string = new Date().toLocaleDateString("it-IT",this.options);
 
   constructor() {}
 

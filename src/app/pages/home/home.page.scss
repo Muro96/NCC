@@ -55,6 +55,18 @@
 h2{
   color: white;
   text-align: center;
-  padding-top: 100px;
-  padding-bottom: 30px;
+ // padding-top: 100px;
+ // padding-bottom: 30px;
+}
+
+ion-icon {
+  &.big {
+    color:whitesmoke !important;
+    padding-top: 25px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block !important;
+    width: 75px;
+    height: 75px;
+  }
 }
