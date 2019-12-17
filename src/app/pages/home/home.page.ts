@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { VirtualTimeScheduler } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -11,6 +13,10 @@ export class HomePage{
 
   public currentDate : string = new Date().toLocaleDateString("it-IT",this.options);
 
-  constructor() {}
+  constructor(private router : Router) {}
+
+  pageSettings(){
+    this.router.navigate(['/settings/agency']);
+  }
 
 }

@@ -1,9 +1,29 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>drivers</ion-title>
+    <ion-title>Conducenti</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+    <ion-item>
+      <ion-label position="stacked">Nome</ion-label>
+      <ion-input type="text" placeholder="" [(ngModel)]="nome"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Cognome</ion-label>
+      <ion-input  type="text" placeholder="" [(ngModel)]="surname"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Codice Fiscale</ion-label>
+      <ion-input  type="text" placeholder="" [(ngModel)]="cf"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Indirizzo</ion-label>
+      <ion-input  type="text" placeholder="" [(ngModel)]="phone"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Città</ion-label>
+      <ion-input  type="text" placeholder="" [(ngModel)]="email"></ion-input>
+    </ion-item>
+    <ion-button expand="block" (click)="adddriver()">Aggiungi Conducente</ion-button>
 </ion-content>
