@@ -1,11 +1,42 @@
-<ion-header>
+<ion-header color="primary">
   <ion-toolbar>
-    <ion-title>agency</ion-title>
+    <ion-title>Azienda</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
-  <ion-title>PROVA</ion-title>
-
+  <ion-item>
+    <ion-label position="stacked">Ragione Sociale</ion-label>
+    <ion-input type="text" placeholder="" [(ngModel)]="nome"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="stacked">Partita iva</ion-label>
+    <ion-input  type="text" placeholder="" [(ngModel)]="vat"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="stacked">Codice Fiscale</ion-label>
+    <ion-input  type="text" placeholder="" [(ngModel)]="cf"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="stacked">Indirizzo</ion-label>
+    <ion-input  type="text" placeholder="" [(ngModel)]="address"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="stacked">Città</ion-label>
+    <ion-input  type="text" placeholder="" [(ngModel)]="city"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="stacked">CAP</ion-label>
+    <ion-input  type="text" placeholder="" [(ngModel)]="cap"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="stacked">Provincia</ion-label>
+    <ion-input  type="text" placeholder="" [(ngModel)]="province"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="stacked">Telefono</ion-label>
+    <ion-input  type="text" placeholder="" [(ngModel)]="phone"></ion-input>
+  </ion-item>
+</form>
+<ion-button expand="block" (click)="addAgency()">Aggiungi Azienda</ion-button>
 </ion-content>

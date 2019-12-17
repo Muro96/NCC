@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
+const cors = require('cors');
 
 const connection = mysql.createPool({
     host: 'localhost',
@@ -10,6 +11,12 @@ const connection = mysql.createPool({
 });
 
 const app = express();
+app.use(cors());
+app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+}));
+
 
 // Creating a GET route that returns data from the 'users' table.
 app.get('/agency', function (req, res) {
@@ -27,12 +34,22 @@ app.get('/agency', function (req, res) {
   });
 });
 
-app.get('/dio',function(req,res){
+app.post('/insertagency',function(req,res){
+    console.log(req.body);
+    var a = {
+        name: req.body.name,
+        city: req.body.city,
+        province: req.body.province,
+        cap: req.body.cap,
+        Vat: req.body.vat,
+        phone_number: req.body.phone_number,
+        cf: req.body.cf,
+        address: req.body.address
+    };
     connection.getConnection(function (err,connection){
-        let sql = "INSERT INTO agency (name,city,province,cap,Vat,phone_number) VALUES ('test1','test1','test1','test1','test1','test1')";
-        connection.query(sql, function(err,result) {
+        connection.query('INSERT INTO agency (name,city,province,cap,Vat,phone_number,cf,address) VALUES (?,?,?,?,?,?,?,?)', [a.name,a.city,a.province,a.cap,a.Vat,a.phone_number,a.cf,a.address], function(err,result) {
             if(err) throw err;
-            console.log("add 1 agency");
+            console.log("add agency");
             
         });
     });
@@ -40,5 +57,5 @@ app.get('/dio',function(req,res){
 
 // Starting our server.
 app.listen(3000, () => {
- console.log('Go to http://localhost:3000/agency so you can see the data.');
+ console.log('Server is running at http://localhost:3000/');
 });
