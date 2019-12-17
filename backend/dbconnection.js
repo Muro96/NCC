@@ -5,8 +5,8 @@ const cors = require('cors');
 
 const connection = mysql.createPool({
     host: 'localhost',
-    user: 'root',
-    password: 'root1234',
+    user: 'ncc_qweb',
+    password: 'ncc_qweb',
     database: 'ncc_qweb'
 });
 
@@ -34,25 +34,43 @@ app.get('/agency', function (req, res) {
   });
 });
 
-app.post('/insertagency',function(req,res){
+app.post('/insertAgency',function(req,res){
     console.log(req.body);
     var a = {
         name: req.body.name,
         city: req.body.city,
         province: req.body.province,
         cap: req.body.cap,
-        Vat: req.body.vat,
-        phone_number: req.body.phone_number,
+        vat: req.body.vat,
+        phone: req.body.phone,
         cf: req.body.cf,
         address: req.body.address
     };
     connection.getConnection(function (err,connection){
-        connection.query('INSERT INTO agency (name,city,province,cap,Vat,phone_number,cf,address) VALUES (?,?,?,?,?,?,?,?)', [a.name,a.city,a.province,a.cap,a.Vat,a.phone_number,a.cf,a.address], function(err,result) {
+        connection.query('INSERT INTO agency (name_agency,city,province,cap,vat,phone,cf,address) VALUES (?,?,?,?,?,?,?,?)', [a.name,a.city,a.province,a.cap,a.vat,a.phone,a.cf,a.address], function(err,result) {
             if(err) throw err;
             console.log("add agency");
             
         });
     });
+});
+
+app.post('/insertDriver',function(req,res){
+  console.log(req.body);
+  var a = {
+      name: req.body.name,
+      surname: req.body.surname,
+      cf: req.body.cf,
+      phone: req.body.phone,
+      email: req.body.email
+  };
+  connection.getConnection(function (err,connection){
+      connection.query('INSERT INTO driver (name,surname,cf,phone,email) VALUES (?,?,?,?,?)', [a.name,a.surname,a.cf,a.phone,a.email], function(err,result) {
+          if(err) throw err;
+          console.log("add driver");
+          
+      });
+  });
 });
 
 // Starting our server.

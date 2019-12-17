@@ -32,7 +32,7 @@ export class AgencyPage implements OnInit {
       province: this.province,
       cap: this.cap,
       vat: this.vat,
-      phone_number: this.phone,
+      phone: this.phone,
       cf: this.cf,
       address: this.address
     };
