@@ -15,6 +15,11 @@ const routes: Routes = [
     path: 'settings',
     loadChildren: () => import('./pages/settings/setting.module').then(m => m.SettingPageModule)
   },
+  {
+    path: 'datadays',
+    loadChildren: () => import('./pages/datadays/datadays.module').then( m => m.DatadaysPageModule)
+  },
+
   
   
 ];

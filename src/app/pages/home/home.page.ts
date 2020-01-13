@@ -17,5 +17,9 @@ export class HomePage{
   pageSettings(){
     this.router.navigate(['/settings/agency']);
   }
+  dayDates(){
+    this.router.navigate(['/datadays'])
+
+  }
 
 }
