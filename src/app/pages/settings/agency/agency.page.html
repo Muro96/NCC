@@ -1,10 +1,13 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
     <ion-title>Azienda</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding>
   <ion-item>
     <ion-label position="stacked">Ragione Sociale</ion-label>
     <ion-input type="text" placeholder="" [(ngModel)]="nome"></ion-input>
@@ -37,5 +40,5 @@
     <ion-label position="stacked">Telefono</ion-label>
     <ion-input  type="text" placeholder="" [(ngModel)]="phone"></ion-input>
   </ion-item>
-<ion-button expand="block" (click)="addAgency()">Aggiungi Azienda</ion-button>
+<ion-button expand="block" (click)="init()">Aggiungi Azienda</ion-button>
 </ion-content>
