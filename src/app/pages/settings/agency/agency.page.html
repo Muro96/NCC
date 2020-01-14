@@ -10,36 +10,35 @@
 <ion-content padding>
   <ion-item>
     <ion-label position="stacked">Ragione Sociale</ion-label>
-    <ion-input type="text" placeholder="" [(ngModel)]="nome"></ion-input>
+    <ion-input type="text" placeholder="" [(ngModel)]="agency.name"></ion-input>
   </ion-item>
   <ion-item>
     <ion-label position="stacked">Partita iva</ion-label>
-    <ion-input  type="text" placeholder="" [(ngModel)]="vat"></ion-input>
+    <ion-input  type="text" placeholder="" [(ngModel)]="agency.vat"></ion-input>
   </ion-item>
   <ion-item>
     <ion-label position="stacked">Codice Fiscale</ion-label>
-    <ion-input  type="text" placeholder="" [(ngModel)]="cf"></ion-input>
+    <ion-input  type="text" placeholder="" [(ngModel)]="agency.cf"></ion-input>
   </ion-item>
   <ion-item>
     <ion-label position="stacked">Indirizzo</ion-label>
-    <ion-input  type="text" placeholder="" [(ngModel)]="address"></ion-input>
+    <ion-input  type="text" placeholder="" [(ngModel)]="agency.address"></ion-input>
   </ion-item>
   <ion-item>
     <ion-label position="stacked">Città</ion-label>
-    <ion-input  type="text" placeholder="" [(ngModel)]="city"></ion-input>
+    <ion-input  type="text" placeholder="" [(ngModel)]="agency.city"></ion-input>
   </ion-item>
   <ion-item>
     <ion-label position="stacked">CAP</ion-label>
-    <ion-input  type="text" placeholder="" [(ngModel)]="cap"></ion-input>
+    <ion-input  type="text" placeholder="" [(ngModel)]="agency.cap"></ion-input>
   </ion-item>
   <ion-item>
     <ion-label position="stacked">Provincia</ion-label>
-    <ion-input  type="text" placeholder="" [(ngModel)]="province"></ion-input>
+    <ion-input  type="text" placeholder="" [(ngModel)]="agency.province"></ion-input>
   </ion-item>
   <ion-item>
     <ion-label position="stacked">Telefono</ion-label>
-    <ion-input  type="text" placeholder="" [(ngModel)]="phone"></ion-input>
+    <ion-input  type="text" placeholder="" [(ngModel)]="agency.phone"></ion-input>
   </ion-item>
-  <!-- test-->
-<ion-button expand="block" (click)="init()">Aggiungi Azienda</ion-button>
+<ion-button expand="block" (click)="addAgency()">Aggiungi Azienda</ion-button>
 </ion-content>
