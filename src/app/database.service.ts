@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { map } from 'rxjs/operators';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 
@@ -13,14 +13,18 @@ export class DatabaseService {
   database : SQLiteObject;
   private databaseReady: BehaviorSubject<boolean>;
 
+ // agency_obj = new BehaviorSubject([]);
+ // driver_obj = new BehaviorSubject([]);
+
 
   constructor(private platform: Platform, private http: HttpClientModule, private sqlite : SQLite) {
     this.databaseReady = new BehaviorSubject(false);
     this.platform.ready().then(() =>{
       this.sqlite.create({
-        name: "ncc_db.db",
-        location: "default"
+        name: 'ncc_db.db',
+        location: 'default'
       }).then((db: SQLiteObject) =>{
+        this.database = db;
         //AGENZIE 
         db.executeSql('CREATE TABLE IF NOT EXISTS agency'+
                         '(agency_id INTEGER PRIMARY KEY,'+ 
@@ -95,20 +99,45 @@ export class DatabaseService {
       return this.databaseReady.asObservable();
     }
 
+    /*getAgency(): Observable<any[]> {
+      return this.agency_obj.asObservable();
+    }
+   
+    getDriver(): Observable<any[]> {
+      return this.driver_obj.asObservable();
+    } */
+
 
     addAgency(name: string,vat: string,cf: string,address: string,city: string,cap: string,province: string,phone: string){
-      this.platform.ready().then(() =>{
-        this.sqlite.create({
-          name: "ncc_db.db",
-          location: "default"
-        }).then((db: SQLiteObject) =>{
-          let data = [name,vat,cf,address,city,cap,province,phone];
-          db.executeSql('INSERT INTO agency (name,vat,cf,address,city,cap,province,phone) VALUES (?,?,?,?,?,?,?,?)', data);
-          
-
-        });
-      });
+      let data = [name,vat,cf,address,city,cap,province,phone];
+      return this.database.executeSql('INSERT INTO agency (name,vat,cf,address,city,cap,province,phone) VALUES (?,?,?,?,?,?,?,?)', data);
+      /*.then(data => {
+        this.loadAgency();
+      }); */
     }
+    
 
+   /* loadAgency(){
+      return this.database.executeSql('SELECT * FROM agency',[]).then(data => {
+      let agency = [];
+ 
+      if (data.rows.length > 0) {
+        for (var i = 0; i < data.rows.length; i++) {
+          agency.push({ 
+            name: data.rows.item(i).name,
+            vat: data.rows.item(i).vat, 
+            cf: data.rows.item(i).cf, 
+            address: data.rows.item(i).address,
+            city: data.rows.item(i).city,
+            cap: data.rows.item(i).cap,
+            province: data.rows.item(i).province,
+            phone: data.rows.item(i).phone,
+           });
+        }
+      }
+      this.agency_obj.next(agency);
+    }); 
+  } */
 
+     
 }

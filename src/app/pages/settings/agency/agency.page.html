@@ -41,4 +41,14 @@
     <ion-input  type="text" placeholder="" [(ngModel)]="agency.phone"></ion-input>
   </ion-item>
 <ion-button expand="block" (click)="addAgency()">Aggiungi Azienda</ion-button>
+
+
+<!--<ion-list>
+  <ion-item button *ngFor="let a of agencies">
+    <ion-label>
+      <h2>{{ a.name }}</h2>
+      <p>{{ a.cf }}</p>
+    </ion-label>
+  </ion-item>
+</ion-list> -->
 </ion-content>
