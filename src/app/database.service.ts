@@ -5,6 +5,17 @@ import { map } from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
+export interface Agency {
+  agency_id: number;
+  name: string;
+  vat: string;
+  cf: string;
+  address: string;
+  city: string;
+  cap: string;
+  province: string;
+  phone: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +24,9 @@ export class DatabaseService {
   database : SQLiteObject;
   private databaseReady: BehaviorSubject<boolean>;
 
- // agency_obj = new BehaviorSubject([]);
- // driver_obj = new BehaviorSubject([]);
-
+  
+  agency = new BehaviorSubject([]);
+  driver = new BehaviorSubject([]);
 
   constructor(private platform: Platform, private http: HttpClientModule, private sqlite : SQLite) {
     this.databaseReady = new BehaviorSubject(false);
@@ -89,8 +100,9 @@ export class DatabaseService {
                         'province TEXT,' +
                         'country TEXT,' +
                         'address TEXT)',[]);
-    
 
+      this.getAllAgency();
+      this.databaseReady.next(true);
       })
       });
     }
@@ -99,45 +111,45 @@ export class DatabaseService {
       return this.databaseReady.asObservable();
     }
 
-    /*getAgency(): Observable<any[]> {
-      return this.agency_obj.asObservable();
+    getAgency(): Observable<Agency[]> {
+      console.log(this.agency.asObservable());
+      return this.agency.asObservable();
     }
+    getDrivers(): Observable<any[]> {
+      return this.driver.asObservable();
+    }
+
    
-    getDriver(): Observable<any[]> {
-      return this.driver_obj.asObservable();
-    } */
 
 
-    addAgency(name: string,vat: string,cf: string,address: string,city: string,cap: string,province: string,phone: string){
+    async addAgency(name: string,vat: string,cf: string,address: string,city: string,cap: string,province: string,phone: string){
       let data = [name,vat,cf,address,city,cap,province,phone];
-      return this.database.executeSql('INSERT INTO agency (name,vat,cf,address,city,cap,province,phone) VALUES (?,?,?,?,?,?,?,?)', data);
-      /*.then(data => {
-        this.loadAgency();
-      }); */
+      const data_1 = await this.database.executeSql('INSERT INTO agency (name,vat,cf,address,city,cap,province,phone) VALUES (?,?,?,?,?,?,?,?)', data);
+      this.getAllAgency();
     }
     
 
-   /* loadAgency(){
-      return this.database.executeSql('SELECT * FROM agency',[]).then(data => {
-      let agency = [];
- 
-      if (data.rows.length > 0) {
-        for (var i = 0; i < data.rows.length; i++) {
-          agency.push({ 
-            name: data.rows.item(i).name,
-            vat: data.rows.item(i).vat, 
-            cf: data.rows.item(i).cf, 
-            address: data.rows.item(i).address,
-            city: data.rows.item(i).city,
-            cap: data.rows.item(i).cap,
-            province: data.rows.item(i).province,
-            phone: data.rows.item(i).phone,
-           });
-        }
-      }
-      this.agency_obj.next(agency);
-    }); 
-  } */
-
-     
+     async getAllAgency(){
+      return this.database.executeSql('SELECT * FROM agency;', []).then(data => {
+        const agency: Agency[] = [];
+        if (data.rows.length > 0) {
+          for (var i = 0; i < data.rows.length; i++) {
+              agency.push({
+                agency_id: data.rows.item(i).agency_id,
+                name: data.rows.item(i).name,
+                vat: data.rows.item(i).vat,
+                cf: data.rows.item(i).cf,
+                address: data.rows.item(i).address,
+                city: data.rows.item(i).city,
+                cap: data.rows.item(i).cap,
+                province: data.rows.item(i).province,
+                phone: data.rows.item(i).phone
+                });
+              }
+            }
+        this.agency.next(agency);
+      });
+    }
+  
+   
 }

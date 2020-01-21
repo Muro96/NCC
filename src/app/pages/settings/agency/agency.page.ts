@@ -1,7 +1,6 @@
 import { Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import { NgForm } from '@angular/forms';
-import {DatabaseService} from '../../../database.service'
+import {DatabaseService, Agency} from '../../../database.service'
 import { NavController, ToastController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 
@@ -12,33 +11,30 @@ import { Observable } from 'rxjs';
 })
 
 
-export class AgencyPage implements OnInit {
-  //agencies: Observable<any[]>;
+export class AgencyPage implements OnInit{
+
+  agencies: Agency[] = [];
   agency = {};
   toast: any;
-
-  //variabili che prendo dal form per l'inserimento delle agenzie 
-  /*name: string= "";
-  vat: string= "";
-  cf: string= "";
-  address: string= "";
-  city: string= "";
-  cap: string= "";
-  province: string= "";
-  phone: string= ""; */
+  selectedView = 'list_agency';
 
   constructor(public navCtrl: NavController, public database: DatabaseService, public toastController: ToastController){}
 
   ngOnInit() {
-    /*this.database.getDatabaseState().subscribe(ready => {
-      if(ready){
-        this.agencies = this.database.getAgency();
+    this.database.getDatabaseState().subscribe(ready => {
+      if (ready) {
+        this.database.getAgency().subscribe(agency => {
+          this.agencies = agency;
+        });    
       }
-    })  */
+    });
   }
 
   addAgency(){
-    this.database.addAgency(this.agency['name'], this.agency['vat'],this.agency['cf'],this.agency['address'],this.agency['city'],this.agency['cap'],this.agency['province'],this.agency['phone']);
+    this.database.addAgency(this.agency['name'], this.agency['vat'],this.agency['cf'],this.agency['address'],this.agency['city'],this.agency['cap'],this.agency['province'],this.agency['phone'])
+    .then(_ => {
+      this.agency = {};
+    });
     this.showToast();
     this.HideToast();
 
@@ -56,6 +52,11 @@ export class AgencyPage implements OnInit {
   HideToast(){
     this.toast = this.toastController.dismiss();
   }
+
+  removeItem(index:number){
+    let id=this.agency[index].agency_id;
+    //remove logic
+}
 
   
   }

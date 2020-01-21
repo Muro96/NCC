@@ -7,48 +7,74 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  <ion-item>
-    <ion-label position="stacked">Ragione Sociale</ion-label>
-    <ion-input type="text" placeholder="" [(ngModel)]="agency.name"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="stacked">Partita iva</ion-label>
-    <ion-input  type="text" placeholder="" [(ngModel)]="agency.vat"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="stacked">Codice Fiscale</ion-label>
-    <ion-input  type="text" placeholder="" [(ngModel)]="agency.cf"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="stacked">Indirizzo</ion-label>
-    <ion-input  type="text" placeholder="" [(ngModel)]="agency.address"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="stacked">Città</ion-label>
-    <ion-input  type="text" placeholder="" [(ngModel)]="agency.city"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="stacked">CAP</ion-label>
-    <ion-input  type="text" placeholder="" [(ngModel)]="agency.cap"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="stacked">Provincia</ion-label>
-    <ion-input  type="text" placeholder="" [(ngModel)]="agency.province"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="stacked">Telefono</ion-label>
-    <ion-input  type="text" placeholder="" [(ngModel)]="agency.phone"></ion-input>
-  </ion-item>
-<ion-button expand="block" (click)="addAgency()">Aggiungi Azienda</ion-button>
 
 
-<!--<ion-list>
-  <ion-item button *ngFor="let a of agencies">
-    <ion-label>
-      <h2>{{ a.name }}</h2>
-      <p>{{ a.cf }}</p>
-    </ion-label>
-  </ion-item>
-</ion-list> -->
+<ion-content class="ion-padding">
+  <ion-segment [(ngModel)]='selectedView'>
+    <ion-segment-button value='add_agency' layout="icon-start">
+      <ion-label>AGGIUNGI AZIENDA</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="list_agency" layout="icon-start">
+      <ion-label>LISTA AGENZIA</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <div [ngSwitch]="selectedView">
+    <div *ngSwitchCase="'add_agency'">
+      <ion-item>
+        <ion-label position="stacked">Ragione Sociale</ion-label>
+        <ion-input type="text" placeholder="" [(ngModel)]="agency.name"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Partita iva</ion-label>
+        <ion-input  type="text" placeholder="" [(ngModel)]="agency.vat"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Codice Fiscale</ion-label>
+        <ion-input  type="text" placeholder="" [(ngModel)]="agency.cf"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Indirizzo</ion-label>
+        <ion-input  type="text" placeholder="" [(ngModel)]="agency.address"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Città</ion-label>
+        <ion-input  type="text" placeholder="" [(ngModel)]="agency.city"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">CAP</ion-label>
+        <ion-input  type="text" placeholder="" [(ngModel)]="agency.cap"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Provincia</ion-label>
+        <ion-input  type="text" placeholder="" [(ngModel)]="agency.province"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Telefono</ion-label>
+        <ion-input  type="text" placeholder="" [(ngModel)]="agency.phone"></ion-input>
+      </ion-item>
+      <ion-button expand="block" (click)="addAgency()">Aggiungi Azienda</ion-button>
+    </div>
+    <div *ngSwitchCase="'list_agency'">
+      <ion-grid>
+        <ion-row>
+          <ion-col col-8>Nome Azienda</ion-col>
+          <ion-col col-8>Città</ion-col>
+          <ion-col col-8>Indirizzo</ion-col>
+        </ion-row>
+        <ion-row *ngFor = "let agency of agencies; let i= index">
+          <ion-item-sliding>
+            <ion-item>
+              {{i}}
+              <ion-col col-8>{{agency.name}}</ion-col>
+              <ion-col col-8>{{agency.city}}</ion-col>
+              <ion-col col-8>{{agency.address}}</ion-col>
+            </ion-item>
+            <ion-item-options side="end">
+              <ion-item-option color="danger" (onClick)="removeItem(i)">Elimina</ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+        </ion-row>
+      </ion-grid>
+    </div>
+  </div>
 </ion-content>
