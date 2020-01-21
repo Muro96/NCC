@@ -22,15 +22,15 @@
     <div *ngSwitchCase="'add_agency'">
       <ion-item>
         <ion-label position="stacked">Ragione Sociale</ion-label>
-        <ion-input type="text" placeholder="" [(ngModel)]="agency.name"></ion-input>
+        <ion-input type="text" placeholder="" [(ngModel)]="agency.name" required></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Partita iva</ion-label>
-        <ion-input  type="text" placeholder="" [(ngModel)]="agency.vat"></ion-input>
+        <ion-input  type="text" placeholder="" [(ngModel)]="agency.vat" required></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Codice Fiscale</ion-label>
-        <ion-input  type="text" placeholder="" [(ngModel)]="agency.cf"></ion-input>
+        <ion-input  type="text" placeholder="" [(ngModel)]="agency.cf" required></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Indirizzo</ion-label>
@@ -56,24 +56,23 @@
     </div>
     <div *ngSwitchCase="'list_agency'">
       <ion-grid>
-        <ion-row>
+        <ion-row *ngIf= "agencies?.length > 0">
           <ion-col col-8>Nome Azienda</ion-col>
           <ion-col col-8>Città</ion-col>
           <ion-col col-8>Indirizzo</ion-col>
         </ion-row>
-        <ion-row *ngFor = "let agency of agencies; let i= index">
-          <ion-item-sliding>
-            <ion-item>
-              {{i}}
+        
+          <ion-item-sliding *ngFor = "let agency of agencies; let i= index">
+            <ion-item> 
               <ion-col col-8>{{agency.name}}</ion-col>
               <ion-col col-8>{{agency.city}}</ion-col>
               <ion-col col-8>{{agency.address}}</ion-col>
-            </ion-item>
+            </ion-item> 
             <ion-item-options side="end">
-              <ion-item-option color="danger" (onClick)="removeItem(i)">Elimina</ion-item-option>
+              <ion-item-option color="danger" (click)="removeItem(agency,i)">Elimina</ion-item-option>
             </ion-item-options>
           </ion-item-sliding>
-        </ion-row>
+        
       </ion-grid>
     </div>
   </div>

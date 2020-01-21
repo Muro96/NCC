@@ -150,6 +150,12 @@ export class DatabaseService {
         this.agency.next(agency);
       });
     }
+
+    async deleteAgency(agency_id:number) {
+      const _ = await this.database.executeSql('DELETE FROM agency WHERE agency_id = ?', [agency_id]);
+      this.getAllAgency();
+      
+    }
   
    
 }

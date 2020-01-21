@@ -36,7 +36,7 @@ export class AgencyPage implements OnInit{
       this.agency = {};
     });
     this.showToast();
-    this.HideToast();
+    this.hideToast();
 
   }
 
@@ -49,13 +49,13 @@ export class AgencyPage implements OnInit{
     });
   }
 
-  HideToast(){
+  hideToast(){
     this.toast = this.toastController.dismiss();
   }
 
-  removeItem(index:number){
-    let id=this.agency[index].agency_id;
-    //remove logic
+  removeItem(agency:Agency, i:number){
+    this.agencies.splice(i,1);
+    this.database.deleteAgency(agency.agency_id);
 }
 
   
