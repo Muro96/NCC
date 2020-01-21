@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {DatabaseService, Agency} from '../../../database.service'
 import { NavController, ToastController } from '@ionic/angular';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-agency',
@@ -18,7 +19,7 @@ export class AgencyPage implements OnInit{
   toast: any;
   selectedView = 'list_agency';
 
-  constructor(public navCtrl: NavController, public database: DatabaseService, public toastController: ToastController){}
+  constructor(public navCtrl: NavController, public database: DatabaseService, public toastController: ToastController,private router: Router){}
 
   ngOnInit() {
     this.database.getDatabaseState().subscribe(ready => {
@@ -44,7 +45,7 @@ export class AgencyPage implements OnInit{
     this.toast = this.toastController.create({
       message: 'Aggiunta nuova azienda!',
       duration: 4000
-    }).then((toastData)=>{
+    }).then((toastData) => {
       toastData.present();
     });
   }
@@ -53,10 +54,15 @@ export class AgencyPage implements OnInit{
     this.toast = this.toastController.dismiss();
   }
 
-  removeItem(agency:Agency, i:number){
-    this.agencies.splice(i,1);
+  removeItem(agency: Agency, i: number) {
+    this.agencies.splice(i, 1);
     this.database.deleteAgency(agency.agency_id);
-}
+  }
+
+  detailAgency(agency:Agency) {
+    this.router.navigateByUrl('settings/agency/detailagency');
+    //this.router.navigate(['settings/agency/detailagency']);
+  }
 
   
   }

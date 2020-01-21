@@ -33,6 +33,7 @@ export class DatabaseService {
     this.platform.ready().then(() =>{
       this.sqlite.create({
         name: 'ncc_db.db',
+        //key: 'QWEB_NCC_2020',
         location: 'default'
       }).then((db: SQLiteObject) =>{
         this.database = db;
@@ -50,13 +51,14 @@ export class DatabaseService {
         //CONDUCENTI
         db.executeSql('CREATE TABLE IF NOT EXISTS driver' +
                         '(driver_id INTEGER PRIMARY KEY,' +
-                        'name TEXT not null,' +
-                        'surname TEXT not null,' +
-                        'cf_driver TEXT not null,' +
+                        'name TEXT,' +
+                        'surname TEXT,' +
+                        'cf_driver TEXT,' +
                         'phone TEXT,' +
                         'email TEXT,' +
+                        'password TEXT' +
                         'fk_agency INTEGER,' +
-                        'FOREIGN KEY(fk_agency) REFERENCES agency(agency_id));',[]);
+                        'FOREIGN KEY(fk_agency) REFERENCES agency(agency_id)) ON DELETE CASCADE;',[]);
 
         //VEICOLI  
         db.executeSql('CREATE TABLE IF NOT EXISTS vehicle' +

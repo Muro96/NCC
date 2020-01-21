@@ -19,8 +19,12 @@ const routes: Routes = [
     path: 'datadays',
     loadChildren: () => import('./pages/datadays/datadays.module').then( m => m.DatadaysPageModule)
   },
-
-  
+  {
+    path: 'login',
+    loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
+  },
+ 
+ 
   
 ];
 
