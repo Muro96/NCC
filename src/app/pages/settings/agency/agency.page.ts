@@ -3,7 +3,9 @@ import {HttpClient} from '@angular/common/http';
 import {DatabaseService, Agency} from '../../../database.service'
 import { NavController, ToastController } from '@ionic/angular';
 import { Observable } from 'rxjs';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
+import { ThrowStmt } from '@angular/compiler';
+import { DetailagencyPage } from './detailagency/detailagency.page';
 
 @Component({
   selector: 'app-agency',
@@ -54,14 +56,14 @@ export class AgencyPage implements OnInit{
     this.toast = this.toastController.dismiss();
   }
 
-  removeItem(agency: Agency, i: number) {
-    this.agencies.splice(i, 1);
-    this.database.deleteAgency(agency.agency_id);
-  }
 
   detailAgency(agency:Agency) {
-    this.router.navigateByUrl('settings/agency/detailagency');
-    //this.router.navigate(['settings/agency/detailagency']);
+    let navigationExtras : NavigationExtras = {
+      state: {
+        agency: agency
+      }
+    };
+    this.router.navigate(['settings/agency/detailagency'],navigationExtras);
   }
 
   

@@ -158,6 +158,13 @@ export class DatabaseService {
       this.getAllAgency();
       
     }
+
+    async updateAgency(agency: Agency) {
+      let data = [agency.name,agency.vat,agency.cf,agency.address,agency.city,agency.cap,agency.province,agency.phone];
+      const _ = await this.database.executeSql('UPDATE agency SET name = ?, vat = ?, cf = ?, address = ?, city = ?, cap = ?, province = ?, phone = ? WHERE agency_id = ${agency.agency_id} ',data);
+      this.getAllAgency();
+      
+    }
   
    
 }
