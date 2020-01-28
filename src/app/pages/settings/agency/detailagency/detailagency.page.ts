@@ -58,10 +58,10 @@ export class DetailagencyPage implements OnInit {
       header: 'Sei sicuro di voler eliminare l\'azienda?',
       buttons: [
         {
-        text: 'OK',
-        cssClass: 'secondary',
-        handler: () => {
-          this.removeAgency(agency);  
+          text: 'OK',
+          cssClass: 'secondary',
+          handler: () => {
+            this.removeAgency(agency);  
           
         }
       },

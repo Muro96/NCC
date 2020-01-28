@@ -17,6 +17,18 @@ export interface Agency {
   phone: string;
 }
 
+export interface Driver {
+  driver_id: number;
+  name: string;
+  surname: string;
+  cf_driver: string;
+  phone: string;
+  email: string;
+  password: string;
+  is_login: number;
+  
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -56,9 +68,10 @@ export class DatabaseService {
                         'cf_driver TEXT,' +
                         'phone TEXT,' +
                         'email TEXT,' +
-                        'password TEXT' +
+                        'password TEXT,' +
+                        'is_login INTEGER,' +
                         'fk_agency INTEGER,' +
-                        'FOREIGN KEY(fk_agency) REFERENCES agency(agency_id)) ON DELETE CASCADE;',[]);
+                        'FOREIGN KEY(fk_agency) REFERENCES agency(agency_id) ON DELETE CASCADE);',[]);
 
         //VEICOLI  
         db.executeSql('CREATE TABLE IF NOT EXISTS vehicle' +
@@ -117,7 +130,7 @@ export class DatabaseService {
       console.log(this.agency.asObservable());
       return this.agency.asObservable();
     }
-    getDrivers(): Observable<any[]> {
+    getDrivers(): Observable<Driver[]> {
       return this.driver.asObservable();
     }
 
@@ -165,6 +178,23 @@ export class DatabaseService {
       this.getAllAgency();
       
     }
-  
+
+    async addDriver(name:string,surname:string,cf_driver:string,phone:string,email:string,password:string,is_login:number){
+      let data = [name,surname,cf_driver,phone,email,password,is_login];
+      const a = await this.database.executeSql('INSERT INTO driver (name,surname,cf_driver,phone,email,password,is_login) VALUES (?,?,?,?,?,?,?)', data);
+      } 
+      
+      async checkEmail(email:string){
+        let result: any;
+        let query = "SELECT * FROM driver WHERE email ="+"'" + email + "'" +";"
+        console.log("queryyy"+query);
+        return this.database.executeSql(query, []).then(data =>{
+          console.log("lenght" + data.rows.length);
+          result = data.rows.length;
+          console.log("result"+result);
+          return result;
+        });
+        
+      }
    
 }
