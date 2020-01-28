@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {DatabaseService} from '../../database.service'
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -10,15 +11,20 @@ import {DatabaseService} from '../../database.service'
 export class HomePage{
 
   options = {day: 'numeric', month: 'long', year:'numeric'};
+  subscribe:any;
 
   public currentDate : string = new Date().toLocaleDateString("it-IT",this.options);
 
-  constructor(private router : Router, private database : DatabaseService) {
+  constructor(private router : Router, private database : DatabaseService,public platform:Platform) {
     this.database.getDatabaseState().subscribe(ready => {
       if(ready){
         console.log("database pronto");
       }
     })
+    this.platform.backButton.subscribe(() => {
+      console.log("noooo");
+
+    });
   }
 
   pageSettings(){

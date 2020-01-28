@@ -4,6 +4,7 @@ import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { map } from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import {Md5} from 'ts-md5/dist/md5';
 
 export interface Agency {
   agency_id: number;
@@ -173,28 +174,62 @@ export class DatabaseService {
     }
 
     async updateAgency(agency: Agency) {
-      let data = [agency.name,agency.vat,agency.cf,agency.address,agency.city,agency.cap,agency.province,agency.phone];
-      const _ = await this.database.executeSql('UPDATE agency SET name = ?, vat = ?, cf = ?, address = ?, city = ?, cap = ?, province = ?, phone = ? WHERE agency_id = ${agency.agency_id} ',data);
+      let data = [agency.name,agency.vat,agency.cf,agency.address,agency.city,agency.cap,agency.province,agency.phone,agency.agency_id];
+      console.log("agency_id"+agency.agency_id);
+      const _ = await this.database.executeSql('UPDATE agency SET name = ?, vat = ?, cf = ?, address = ?, city = ?, cap = ?, province = ?, phone = ? WHERE agency_id = ?',data);
       this.getAllAgency();
       
     }
 
     async addDriver(name:string,surname:string,cf_driver:string,phone:string,email:string,password:string,is_login:number){
-      let data = [name,surname,cf_driver,phone,email,password,is_login];
+      let data = [name,surname,cf_driver,phone,email,Md5.hashStr(password),is_login=0];
       const a = await this.database.executeSql('INSERT INTO driver (name,surname,cf_driver,phone,email,password,is_login) VALUES (?,?,?,?,?,?,?)', data);
       } 
       
-      async checkEmail(email:string){
-        let result: any;
-        let query = "SELECT * FROM driver WHERE email ="+"'" + email + "'" +";"
-        console.log("queryyy"+query);
-        return this.database.executeSql(query, []).then(data =>{
-          console.log("lenght" + data.rows.length);
-          result = data.rows.length;
-          console.log("result"+result);
-          return result;
+    async checkEmail(email:string){
+      let result: any;
+      let query = "SELECT * FROM driver WHERE email ="+"'" + email + "'" +";"
+      return this.database.executeSql(query, []).then(data =>{
+        result = data.rows.length;
+        return result;
         });
         
       }
+
+    async checkEmailPassw(email:string,password:any){
+      let result: any;
+      let query = "SELECT * FROM driver WHERE email ="+"'" + email + "'" + "AND password="+"'" + password + "'" + ";"
+      console.log("query"+query);
+      return this.database.executeSql(query,[]).then(data =>{
+        result = data.rows.length;
+        return result;
+      })
+
+    }
+
+    async getDriverEmailPass(email:string,password:any){
+      let query = "SELECT * FROM driver WHERE email ="+"'" + email + "'" + "AND password="+"'" + password + "'" + ";"
+      console.log("query"+query);
+      return this.database.executeSql(query,[]).then(data =>{
+        return {
+          driver_id: data.rows.item(0).driver_id,
+          name: data.rows.item(0).name, 
+          surname: data.rows.item(0).surname, 
+          cf_driver: data.rows.item(0).cf_driver,
+          phone: data.rows.item(0).phone,
+          email: data.rows.item(0).email,
+          password: data.rows.item(0).password,
+          is_login: data.rows.item(0).is_login
+        }
+      });
+      
+
+    }
+
+    async updateIsLogin(id:number) {
+      let data = [1,id];
+      return this.database.executeSql('UPDATE driver SET is_login = ? WHERE driver_id = ?',data);
+      
+    }
    
 }
