@@ -199,7 +199,6 @@ export class DatabaseService {
     async checkEmailPassw(email:string,password:any){
       let result: any;
       let query = "SELECT * FROM driver WHERE email ="+"'" + email + "'" + "AND password="+"'" + password + "'" + ";"
-      console.log("query"+query);
       return this.database.executeSql(query,[]).then(data =>{
         result = data.rows.length;
         return result;
@@ -209,7 +208,6 @@ export class DatabaseService {
 
     async getDriverEmailPass(email:string,password:any){
       let query = "SELECT * FROM driver WHERE email ="+"'" + email + "'" + "AND password="+"'" + password + "'" + ";"
-      console.log("query"+query);
       return this.database.executeSql(query,[]).then(data =>{
         return {
           driver_id: data.rows.item(0).driver_id,
@@ -231,5 +229,24 @@ export class DatabaseService {
       return this.database.executeSql('UPDATE driver SET is_login = ? WHERE driver_id = ?',data);
       
     }
+
+    async getDriverLogin(){
+      let a = [1]; 
+      console.log("IS ONE"+a);
+      return this.database.executeSql('SELECT * FROM driver WHERE is_login = ? LIMIT 1',a).then(data =>{
+        return {
+          driver_id: data.rows.item(0).driver_id,
+          name: data.rows.item(0).name, 
+          surname: data.rows.item(0).surname, 
+          cf_driver: data.rows.item(0).cf_driver,
+          phone: data.rows.item(0).phone,
+          email: data.rows.item(0).email,
+          password: data.rows.item(0).password,
+          is_login: data.rows.item(0).is_login
+          }
+      });
+    
+    }
+
+  }
    
-}

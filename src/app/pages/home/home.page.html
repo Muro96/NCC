@@ -1,7 +1,21 @@
-<ion-buttons slot="start">
-  <ion-menu-button></ion-menu-button>
-</ion-buttons>
+<ion-header translucent>
+  
+  
+  <ion-toolbar>
+    
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+  
+    <ion-item slot="secondary">
+      <ion-label position="stacked"> Benvenuto</ion-label>
+      <ion-label position="stacked"> {{driverLogin}}</ion-label>
+    </ion-item>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content>
+  <ion-router-outlet [swipeGesture]="false"></ion-router-outlet>
   <section>
     <ion-icon name="travel"></ion-icon>
     <h1 class="ncc">NCC</h1>

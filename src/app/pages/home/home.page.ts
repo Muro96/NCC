@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {DatabaseService} from '../../database.service'
-import { Platform } from '@ionic/angular';
+import {DatabaseService, Driver} from '../../database.service'
+import { Platform, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -12,19 +12,25 @@ export class HomePage{
 
   options = {day: 'numeric', month: 'long', year:'numeric'};
   subscribe:any;
+  driver = {}
+  drivers: Driver[] = [];
+  driverLogin: string;
+
 
   public currentDate : string = new Date().toLocaleDateString("it-IT",this.options);
 
   constructor(private router : Router, private database : DatabaseService,public platform:Platform) {
-    this.database.getDatabaseState().subscribe(ready => {
+    this.database.getDatabaseState().subscribe(async ready => {
       if(ready){
-        console.log("database pronto");
+        this.database.getDrivers().subscribe(driver => {
+          this.drivers = driver;
+        });
+        await this.getDriverLogin().then(res =>{
+          this.driverLogin = res;
+        })
       }
-    })
-    this.platform.backButton.subscribe(() => {
-      console.log("noooo");
 
-    });
+      }); 
   }
 
   pageSettings(){
@@ -32,6 +38,13 @@ export class HomePage{
   }
   dayDates(){
     this.router.navigate(['/datadays'])
+
+  }
+  //return email of driver login
+  async getDriverLogin(){
+    let res = await this.database.getDriverLogin();
+    console.log("resemail"+res.email);
+    return res.email;
 
   }
 
