@@ -29,6 +29,11 @@ export interface Driver {
   is_login: number;
   
 }
+export interface Vehicle {
+  vehicle_id: number;
+  car_model: string;
+  license_plate: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -40,13 +45,13 @@ export class DatabaseService {
   
   agency = new BehaviorSubject([]);
   driver = new BehaviorSubject([]);
+  vehicle = new BehaviorSubject([]);
 
   constructor(private platform: Platform, private http: HttpClientModule, private sqlite : SQLite) {
     this.databaseReady = new BehaviorSubject(false);
     this.platform.ready().then(() =>{
       this.sqlite.create({
         name: 'ncc_db.db',
-        //key: 'QWEB_NCC_2020',
         location: 'default'
       }).then((db: SQLiteObject) =>{
         this.database = db;
@@ -93,7 +98,9 @@ export class DatabaseService {
                         'is_agency INTEGER,' + 
                         'cf TEXT,' + 
                         'vat TEXT,' +
-                        'billing_notes TEXT);',[]);
+                        'billing_notes TEXT,' +
+                        'fk_client INTEGER,' +
+                        'FOREIGN KEY(fk_client) REFERENCES driver(driver_id));',[]);
 
         // PARTENZE
         db.executeSql('CREATE TABLE IF NOT EXISTS departure' +
@@ -118,6 +125,7 @@ export class DatabaseService {
                         'address TEXT)',[]);
 
       this.getAllAgency();
+      this.getAllVehicles();
       this.databaseReady.next(true);
       })
       });
@@ -128,11 +136,13 @@ export class DatabaseService {
     }
 
     getAgency(): Observable<Agency[]> {
-      console.log(this.agency.asObservable());
       return this.agency.asObservable();
     }
     getDrivers(): Observable<Driver[]> {
       return this.driver.asObservable();
+    }
+    getVehicles(): Observable<Vehicle[]>{
+      return this.vehicle.asObservable();
     }
 
    
@@ -230,10 +240,16 @@ export class DatabaseService {
       
     }
 
+    async updateLogut(id:number) {
+      let data = [0,id];
+      return this.database.executeSql('UPDATE driver SET is_login = ? WHERE driver_id = ?',data);
+      
+    }
+
     async getDriverLogin(){
       let a = [1]; 
       console.log("IS ONE"+a);
-      return this.database.executeSql('SELECT * FROM driver WHERE is_login = ? LIMIT 1',a).then(data =>{
+      return this.database.executeSql('SELECT * FROM driver WHERE is_login = ?',a).then(data =>{
         return {
           driver_id: data.rows.item(0).driver_id,
           name: data.rows.item(0).name, 
@@ -246,6 +262,41 @@ export class DatabaseService {
           }
       });
     
+    }
+
+    async updateDriver(driver: Driver) {
+      let data = [driver.name,driver.surname,driver.cf_driver,driver.phone,driver.email,driver.driver_id];
+      console.log("driver_id"+driver.driver_id);
+      const _ = await this.database.executeSql('UPDATE driver SET name = ?, surname = ?, cf_driver = ?, phone = ?, email = ? WHERE driver_id = ?',data);
+      this.getDriverLogin();
+      
+    }
+
+    async addVehicle(car_model: string,license_plate:string) {
+      let driverIdFk = await (await this.getDriverLogin()).driver_id;
+      console.log("driver id q"+driverIdFk);
+      let data = [car_model,license_plate,driverIdFk];
+      const a = await this.database.executeSql('INSERT INTO vehicle (car_model,license_plate,fk_driver) VALUES (?,?,?)', data);
+      this.getAllVehicles();
+    }
+
+    async getAllVehicles(){
+      let a = [1];
+      return this.database.executeSql('SELECT * FROM vehicle INNER JOIN driver ON driver.driver_id = vehicle.fk_driver WHERE driver.is_login = ?',a).then(data =>{
+        const vehicle: Vehicle[] = [];
+        if (data.rows.length > 0) {
+          for (var i = 0; i < data.rows.length; i++) {
+              vehicle.push({
+                vehicle_id: data.rows.item(i).vehicle_id,
+                car_model: data.rows.item(i).car_model,
+                license_plate: data.rows.item(i).license_plate
+
+              });
+                  
+          }
+        }
+        this.vehicle.next(vehicle); 
+      });
     }
 
   }

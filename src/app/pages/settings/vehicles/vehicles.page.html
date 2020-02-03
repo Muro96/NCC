@@ -7,6 +7,52 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
+  <ion-segment [(ngModel)]='selectedView'>
+    <ion-segment-button value='add_vehicle' layout="icon-start">
+      <ion-label>AGGIUNGI MEZZO</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="list_vehicle" layout="icon-start">
+      <ion-label>LISTA MEZZI</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <div [ngSwitch]="selectedView">
+    <div *ngSwitchCase="'add_vehicle'">
+      <ion-item>
+        <ion-label position="stacked">Modello Auto</ion-label>
+        <ion-input type="text" placeholder="" [(ngModel)]="vehicle.car_model" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Targa</ion-label>
+        <ion-input  type="text" placeholder="" [(ngModel)]="vehicle.license_plate" required></ion-input>
+      </ion-item>
+      <ion-button expand="block" (click)="addVehicle()">Aggiungi Mezzo</ion-button>
+    </div>
+    <div *ngSwitchCase="'list_vehicle'">
+      <ion-grid>
+        <ion-row align-items-start>
+          <ion-col col-6> 
+            <ion-label>Modello Mezzo</ion-label>
+          </ion-col>
+          <ion-col col-6>
+            <ion-label>Targa Mezzo</ion-label>
+          </ion-col>  
+        </ion-row> 
 
+        <ion-row *ngFor = "let vehicle of vehicles; let i= index" align-items-start style="margin-top:20px; height:30px">
+          <ion-col col-4>
+            <ion-label>{{ vehicle.car_model }}</ion-label>
+          </ion-col>
+          <ion-col col-4>
+            <ion-label>{{ vehicle.license_plate }}</ion-label>
+          </ion-col>
+         <!-- <ion-col col-4>
+            <ion-icon name="eye" (click)="detailAgency(agency)"></ion-icon>
+          </ion-col>  -->
+        </ion-row>
+      </ion-grid>
+    
+    </div> 
+  </div>
 </ion-content>
+

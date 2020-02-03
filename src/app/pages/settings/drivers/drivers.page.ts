@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import { DatabaseService, Driver } from 'src/app/database.service';
 
 @Component({
   selector: 'app-drivers',
@@ -7,30 +8,50 @@ import {HttpClient} from '@angular/common/http';
   styleUrls: ['./drivers.page.scss'],
 })
 export class DriversPage implements OnInit {
-  nome: string= "";
-  surname: string= "";
-  cf: string= "";
-  phone: string= "";
-  email: string= "";
 
 
-  constructor(private http: HttpClient){}
+  driver = {};
+  driv: Driver[] = [];
+  drivers: Driver[] = [];
+
+   constructor(private http: HttpClient,private database : DatabaseService){}
 
   ngOnInit() {
+    this.database.getDatabaseState().subscribe(ready => {
+      if (ready) {
+        this.database.getDriverLogin().then(driver => {
+          this.drivers['driver_id'] = driver.driver_id;
+          this.drivers['name'] = driver.name;
+          this.drivers['surname'] = driver.surname;
+          this.drivers['cf_driver'] = driver.cf_driver;
+          this.drivers['phone'] = driver.phone;
+          this.drivers['email'] = driver.email;
+          this.drivers['password'] = driver.password;
+          this.drivers['is_login'] = driver.is_login;
+          
+        });    
+      }
+    });
   }
 
-  addDriver(){
-    let postParams =  {
-      name: this.nome,
-      surname: this.nome,
-      cf: this.cf,
-      phone: this.phone,
-      email: this.email
-    };
+  async getInfoDriverLog(){
+    let res = await this.database.getDriverLogin();
+    return this.driv.push({
+      driver_id: res.driver_id,
+      name: res.name,
+      surname: res.surname,
+      cf_driver: res.cf_driver,
+      phone: res.phone,
+      email: res.email,
+      password: res.password,
+      is_login: res.is_login
+    })
+  }
 
-    this.http.post('http://localhost:3000/insertDriver', postParams)
-      .subscribe(response => {
-        console.log('POST Response:', response);
-      });
-    }  
+  updateDriver(driver:Driver){
+    this.database.updateDriver(driver);
+  }
+
+
+ 
   }

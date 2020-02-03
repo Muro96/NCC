@@ -8,14 +8,19 @@
       </ion-buttons>
   
     <ion-item slot="secondary">
-      <ion-label position="stacked"> Benvenuto</ion-label>
-      <ion-label position="stacked"> {{driverLogin}}</ion-label>
+      
+        <ion-chip (click)="doLogout()" tappable>
+          <ion-avatar>
+            <img src="../../assets/icon/logout.svg">
+          </ion-avatar>
+          <ion-label>{{driverLogin}}</ion-label>
+        </ion-chip>
     </ion-item>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-router-outlet [swipeGesture]="false"></ion-router-outlet>
+  <!--<ion-router-outlet [swipeGesture]="false"></ion-router-outlet>-->
   <section>
     <ion-icon name="travel"></ion-icon>
     <h1 class="ncc">NCC</h1>

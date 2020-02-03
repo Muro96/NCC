@@ -3,30 +3,45 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
-    <ion-title>Conducenti</ion-title>
+    <ion-title>I miei dati</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
     <ion-item>
       <ion-label position="stacked">Nome</ion-label>
-      <ion-input type="text" placeholder="" [(ngModel)]="nome"></ion-input>
+      <ion-input *ngIf= "drivers.name != null; else nullName" type="text" placeholder="" [(ngModel)]="drivers.name"></ion-input>
+      <ng-template #nullName>
+        <ion-input type="text" placeholder="" [(ngModel)]="drivers.name"></ion-input>
+      </ng-template>
     </ion-item>
     <ion-item>
       <ion-label position="stacked">Cognome</ion-label>
-      <ion-input  type="text" placeholder="" [(ngModel)]="surname"></ion-input>
+      <ion-input *ngIf= "drivers.surname != null; else nullSurname" type="text" placeholder="" [(ngModel)]="drivers.surname"></ion-input>
+      <ng-template #nullSurname>
+        <ion-input type="text" placeholder="" [(ngModel)]="drivers.surnname"></ion-input>
+      </ng-template>
     </ion-item>
     <ion-item>
       <ion-label position="stacked">Codice Fiscale</ion-label>
-      <ion-input  type="text" placeholder="" [(ngModel)]="cf"></ion-input>
+      <ion-input *ngIf= "drivers.cf_driver != null; else nullCfdriver" type="text" placeholder="" [(ngModel)]="drivers.cf_driver"></ion-input>
+      <ng-template #nullCfdriver>
+        <ion-input type="text" placeholder="" [(ngModel)]="drivers.cf_driver"></ion-input>
+      </ng-template>
     </ion-item>
     <ion-item>
       <ion-label position="stacked">Telefono</ion-label>
-      <ion-input  type="text" placeholder="" [(ngModel)]="phone"></ion-input>
+      <ion-input *ngIf= "drivers.phone != null; else nullPhone" type="text" placeholder="" [(ngModel)]="drivers.phone"></ion-input>
+      <ng-template #nullPhone>
+        <ion-input type="text" placeholder="" [(ngModel)]="drivers.phone"></ion-input>
+      </ng-template>
     </ion-item>
     <ion-item>
       <ion-label position="stacked">email</ion-label>
-      <ion-input  type="text" placeholder="" [(ngModel)]="email"></ion-input>
+      <ion-input *ngIf= "drivers.email != null; else nullEmail" type="text" placeholder="" [(ngModel)]="drivers.email"></ion-input>
+      <ng-template #nullEmail>
+        <ion-input type="text" placeholder="" [(ngModel)]="drivers.email"></ion-input>
+      </ng-template>
     </ion-item>
-    <ion-button expand="block" (click)="addDriver()">Aggiungi Conducente</ion-button>
+    <ion-button expand="block" (click)="updateDriver(drivers)">Aggiorna Dati</ion-button>
 </ion-content>
