@@ -75,7 +75,7 @@ export class DatabaseService {
                         'phone TEXT,' +
                         'email TEXT,' +
                         'password TEXT,' +
-                        'is_login INTEGER,' +
+                        'is_login INTEGER DEFAULT "0" NOT NULL,' +
                         'fk_agency INTEGER,' +
                         'FOREIGN KEY(fk_agency) REFERENCES agency(agency_id) ON DELETE CASCADE);',[]);
 
@@ -125,7 +125,6 @@ export class DatabaseService {
                         'address TEXT)',[]);
 
       this.getAllAgency();
-      this.getAllVehicles();
       this.databaseReady.next(true);
       })
       });
@@ -282,7 +281,7 @@ export class DatabaseService {
 
     async getAllVehicles(){
       let a = [1];
-      return this.database.executeSql('SELECT * FROM vehicle INNER JOIN driver ON driver.driver_id = vehicle.fk_driver WHERE driver.is_login = ?',a).then(data =>{
+      return this.database.executeSql('SELECT * FROM driver JOIN vehicle ON driver.driver_id = vehicle.fk_driver AND  driver.is_login = ?',a).then(data =>{
         const vehicle: Vehicle[] = [];
         if (data.rows.length > 0) {
           for (var i = 0; i < data.rows.length; i++) {
@@ -295,8 +294,9 @@ export class DatabaseService {
                   
           }
         }
-        this.vehicle.next(vehicle); 
+        return vehicle;
       });
+      
     }
 
   }

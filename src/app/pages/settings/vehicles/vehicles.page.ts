@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DatabaseService, Vehicle } from 'src/app/database.service';
 import { ToastController } from '@ionic/angular';
 
@@ -8,6 +8,7 @@ import { ToastController } from '@ionic/angular';
   styleUrls: ['./vehicles.page.scss'],
 })
 export class VehiclesPage implements OnInit {
+  
   vehicle = {};
   selectedView = 'list_vehicle';
   vehicles : Vehicle[] =  [];
@@ -15,18 +16,17 @@ export class VehiclesPage implements OnInit {
 
 
   constructor(public database: DatabaseService,private toastController: ToastController) {
-    this.database.getDatabaseState().subscribe(ready => {
-      if (ready) {
-        this.database.getVehicles().subscribe(data => {
-          this.vehicles = data;
-        });
     
-      }
-    });
   }
 
   ngOnInit() {
-    
+    this.database.getDatabaseState().subscribe(ready => {
+      if (ready) {
+        this.database.getAllVehicles().then(data => {
+           this.vehicles = data;   
+            }); 
+      }
+    }); 
   }
 
   addVehicle(){
