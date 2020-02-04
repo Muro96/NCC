@@ -34,6 +34,18 @@ export interface Vehicle {
   car_model: string;
   license_plate: string;
 }
+export interface Client{
+  client_id: number;
+  name: string;
+  surname: string;
+  city: string;
+  province: string;
+  is_private: number;
+  is_agency: number;
+  cf: string;
+  vat: string;
+  billing_notes: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -88,11 +100,11 @@ export class DatabaseService {
                         'FOREIGN KEY(fk_driver) REFERENCES driver(driver_id));',[]);
 
         // CLIENTI (COLUI CHE PAGA CORSA)
-        db.executeSql('CREATE TABLE IF NOT EXISTS client' +
+        db.executeSql('CREATE TABLE client' +
                         '(client_id INTEGER PRIMARY KEY,' + 
                         'name TEXT not null,' +
+                        'surname TEXT not null,' +
                         'city TEXT not null,' +
-                        'country TEXT not null,' +
                         'province TEXT not null,' +
                         'is_private INTEGER,' +
                         'is_agency INTEGER,' + 
@@ -276,13 +288,13 @@ export class DatabaseService {
       console.log("driver id q"+driverIdFk);
       let data = [car_model,license_plate,driverIdFk];
       const a = await this.database.executeSql('INSERT INTO vehicle (car_model,license_plate,fk_driver) VALUES (?,?,?)', data);
-      this.getAllVehicles();
+      await this.getAllVehicles();
     }
 
     async getAllVehicles(){
       let a = [1];
       return this.database.executeSql('SELECT * FROM driver JOIN vehicle ON driver.driver_id = vehicle.fk_driver AND  driver.is_login = ?',a).then(data =>{
-        const vehicle: Vehicle[] = [];
+        let vehicle: Vehicle[] = [];
         if (data.rows.length > 0) {
           for (var i = 0; i < data.rows.length; i++) {
               vehicle.push({
@@ -296,6 +308,40 @@ export class DatabaseService {
         }
         return vehicle;
       });
+      
+    }
+
+    async getClients(){
+      let data = [1];
+      return this.database.executeSql('SELECT * FROM client JOIN driver ON driver.driver_id = client.fk_client WHERE driver.is_login= ?',data).then(data =>{
+        let client: Client[] = [];
+        if(data.rows.length > 0){
+          for(var i = 0; i<data.rows.length; i++){
+            client.push({
+              client_id: data.rows.item(i).client_id,
+              name: data.rows.item(i).name,
+              surname: data.rows.item(i).surname,
+              city: data.rows.item(i).city,
+              province: data.rows.item(i).province,
+              is_private: data.rows.item(i).is_private,
+              is_agency: data.rows.item(i).is_agency,
+              cf: data.rows.item(i).cf,
+              vat: data.rows.item(i).surname,
+              billing_notes: data.rows.item(i).billing_notes
+
+            });
+          }
+        }
+      return client;
+      })
+
+    }
+
+    async addClient(name:string,surname:string,city:string,province:string,is_private:number,is_agency:number,cf:string,vat:string,billing_notes:string) {
+      let driverIdFk = await (await this.getDriverLogin()).driver_id;
+      let data = [name,surname,city,province,is_private,is_agency,cf,vat,billing_notes,driverIdFk];
+      const a = await this.database.executeSql('INSERT INTO client (name,surname,city,province,is_private,is_agency,cf,vat,billing_notes,fk_client) VALUES (?,?,?,?,?,?,?,?,?,?)', data);
+      this.getClients();
       
     }
 
