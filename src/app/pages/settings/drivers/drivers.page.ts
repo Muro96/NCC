@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import { DatabaseService, Driver } from 'src/app/database.service';
+import { NavigationExtras, Router } from '@angular/router';
 
 @Component({
   selector: 'app-drivers',
@@ -13,8 +14,9 @@ export class DriversPage implements OnInit {
   driver = {};
   driv: Driver[] = [];
   drivers: Driver[] = [];
+ 
 
-   constructor(private http: HttpClient,private database : DatabaseService){}
+   constructor(private database : DatabaseService,private router:Router){}
 
   ngOnInit() {
     this.database.getDatabaseState().subscribe(ready => {
@@ -49,7 +51,13 @@ export class DriversPage implements OnInit {
   }
 
   updateDriver(driver:Driver){
-    this.database.updateDriver(driver);
+    let navigationExtras : NavigationExtras = {
+      state: {
+        driver: driver
+      }
+    };
+    this.router.navigate(['settings/drivers/updatedriver'],navigationExtras);
+    
   }
 
 

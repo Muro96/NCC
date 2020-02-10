@@ -7,7 +7,11 @@ const routes: Routes = [
   {
     path: '',
     component: DriversPage
+  },  {
+    path: 'updatedriver',
+    loadChildren: () => import('./updatedriver/updatedriver.module').then( m => m.UpdatedriverPageModule)
   }
+
 ];
 
 @NgModule({
