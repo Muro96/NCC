@@ -11,6 +11,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class UpdatedriverPage implements OnInit {
   drivers : Driver[] = [];
   driver = {};
+  toast: any;
 
   constructor(private route: ActivatedRoute,private router: Router, public database : DatabaseService,public toastController: ToastController,public alertController: AlertController) {
 
@@ -24,7 +25,26 @@ export class UpdatedriverPage implements OnInit {
   ngOnInit() {
   }
   
-  save(driver:Driver){
-    
+  save(){
+    this.database.updateDriver(this.drivers['name'],this.drivers['surname'],this.drivers['cf_driver'],this.drivers['phone'],this.drivers['email']);
+    this.database.getDriverLogin();
+    this.showToast();
+    this.hideToast();
+    this.router.navigateByUrl('/settings/drivers');
+
+    }
+
+    showToast() {
+      this.toast = this.toastController.create({
+        message: 'Aggiornato dati conducente!',
+        duration: 4000
+      }).then((toastData) => {
+        toastData.present();
+      });
+    }
+  
+    hideToast(){
+      this.toast = this.toastController.dismiss();
+    }
   }
-}
+

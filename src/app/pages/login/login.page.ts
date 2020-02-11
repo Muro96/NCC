@@ -12,6 +12,7 @@ import { AlertController, NavController } from '@ionic/angular';
 export class LoginPage implements OnInit {
   driver = {};
   drivers: Driver[] = [];
+  isActiveToggleTextPassword: Boolean = true;
 
   constructor(private router: Router,private database : DatabaseService,private alertController: AlertController,public navcontroller: NavController) { 
     this.database.getDatabaseState().subscribe(ready => {
@@ -65,6 +66,14 @@ export class LoginPage implements OnInit {
     });
 
   await alert.present();
+  }
+
+  showHide(){
+    this.isActiveToggleTextPassword = (this.isActiveToggleTextPassword==true)? false:true;
+  }
+
+  getType(){
+    return this.isActiveToggleTextPassword ? 'password' : 'text';
   }
 
 }

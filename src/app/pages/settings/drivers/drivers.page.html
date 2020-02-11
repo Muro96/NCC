@@ -10,11 +10,9 @@
 <ion-content>
     <ion-item>
       <ion-label position="stacked">Nome</ion-label>
-      <ion-text color="primary" *ngIf= "drivers.name != null; else nullName" >
-          <h3>{{drivers.name}}</h3>
+      <ion-text *ngIf= "drivers.name != null; else nullName">
+          <h4>{{drivers.name}}</h4>
       </ion-text>
-        
-      <!--<ion-input *ngIf= "drivers.name != null; else nullName" type="text" placeholder="" [(ngModel)]="drivers.name"></ion-input> -->
       <ng-template #nullName>
         <ion-text>
           <h3></h3>
@@ -25,8 +23,8 @@
 
     <ion-item>
       <ion-label position="stacked">Cognome</ion-label>
-      <ion-text color="primary" *ngIf= "drivers.surname != null; else nullSurname">
-        <h3>{{drivers.surname}}</h3>
+      <ion-text *ngIf= "drivers.surname != null; else nullSurname">
+        <h4>{{drivers.surname}}</h4>
       </ion-text>
       <ng-template #nullSurname>
         <ion-text>
@@ -38,8 +36,8 @@
 
     <ion-item>
       <ion-label position="stacked">Codice Fiscale</ion-label>
-      <ion-text *ngIf= "drivers.cf_driver != null; else nullCfdriver" color="primary">
-        <h3>{{drivers.cf_driver}}</h3>
+      <ion-text *ngIf= "drivers.cf_driver != null; else nullCfdriver">
+        <h4>{{drivers.cf_driver}}</h4>
       </ion-text>
       <ng-template #nullCfdriver>
         <ion-text>
@@ -52,28 +50,25 @@
     <ion-item>
 
       <ion-label position="stacked">Telefono</ion-label>
-      <ion-text color="primary">
-        <h3>{{drivers.phone}}</h3>
-      </ion-text>
-      <!--<ng-template #nullPhone>
+        <h4>{{drivers.phone}}</h4>
+      <ng-template #nullPhone>
         <ion-text>
         <h3></h3>
       </ion-text>
-      </ng-template> -->
+      </ng-template> 
     </ion-item>
 
 
     <ion-item>
       <ion-label position="stacked">email</ion-label>
-      <ion-text color="primary">
-        <h3>{{drivers.email}}</h3>
-      </ion-text>
+        <h4>{{drivers.email}}</h4>
+    
 
-      <!--<ng-template #nullEmail>
+      <ng-template #nullEmail>
         <ion-text>
           <h3></h3>
         </ion-text>
-      </ng-template> -->
+      </ng-template> 
     </ion-item>
     <ion-button expand="block" (click)="updateDriver(drivers)">Aggiorna Dati</ion-button>
 </ion-content>

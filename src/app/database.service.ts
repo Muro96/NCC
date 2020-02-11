@@ -111,12 +111,12 @@ export class DatabaseService {
                         'cf TEXT,' + 
                         'vat TEXT,' +
                         'billing_notes TEXT,' +
-                        'fk_client INTEGER,' +
-                        'FOREIGN KEY(fk_client) REFERENCES driver(driver_id));',[]);
+                        'fk_driver INTEGER,' +
+                        'FOREIGN KEY(fk_driver) REFERENCES driver(driver_id));',[]);
 
         // PARTENZE
         db.executeSql('CREATE TABLE IF NOT EXISTS departure' +
-                        '(id_departure INTEGER PRIMARY KEY,' +
+                        '(departure_id INTEGER PRIMARY KEY,' +
                         'name TEXT,' +
                         'lat REAL,' +
                         'long REAL,' +
@@ -127,7 +127,7 @@ export class DatabaseService {
 
         //ARRIVI
         db.executeSql('CREATE TABLE IF NOT EXISTS arrival' +
-                        '(id_arrival INTEGER PRIMARY KEY,' +
+                        '(arrival_id INTEGER PRIMARY KEY,' +
                         'name TEXT,' +
                         'lat REAL,' +
                         'long REAL,' +
@@ -135,6 +135,25 @@ export class DatabaseService {
                         'province TEXT,' +
                         'country TEXT,' +
                         'address TEXT)',[]);
+
+        //TRAVEL                
+        db.executeSql('CREATE TABLE IF NOT EXISTS travel' +
+                      '(travel_id INTEGER PRIMARY KEY,' +
+                      'is_paid INTEGER,' +
+                      'n_passenger INTEGER,' + 
+                      'km_tot INTEGER,' +
+                      'date TEXT,'+
+                      'fk_departure INTEGER,' + 
+                      'fk_arrival INTEGER,' +
+                      'fk_client INTEGER,' +
+                      'fk_driver INTEGER,' +
+                      'FOREIGN KEY(fk_driver) REFERENCES driver(driver_id),' +
+                      'FOREIGN KEY(fk_client) REFERENCES client(client_id),' +
+                      'FOREIGN KEY(fk_arrival) REFERENCES arrival(arrival_id),' +
+                      'FOREIGN KEY(fk_departure) REFERENCES departure(departure_id));',[]);
+
+
+          
 
       this.getAllAgency();
       this.databaseReady.next(true);
@@ -275,9 +294,9 @@ export class DatabaseService {
     
     }
 
-    async updateDriver(driver: Driver) {
-      let data = [driver.name,driver.surname,driver.cf_driver,driver.phone,driver.email,driver.driver_id];
-      console.log("driver_id"+driver.driver_id);
+    async updateDriver(name:string,surname:string,cf_driver:string,phone:string,email:string) {
+      let driverid = await (await this.getDriverLogin()).driver_id;
+      let data = [name,surname,cf_driver,phone,email,driverid];
       const _ = await this.database.executeSql('UPDATE driver SET name = ?, surname = ?, cf_driver = ?, phone = ?, email = ? WHERE driver_id = ?',data);
       this.getDriverLogin();
       
@@ -313,7 +332,7 @@ export class DatabaseService {
 
     async getClients(){
       let data = [1];
-      return this.database.executeSql('SELECT * FROM client JOIN driver ON driver.driver_id = client.fk_client WHERE driver.is_login= ?',data).then(data =>{
+      return this.database.executeSql('SELECT c.* FROM client AS c,driver AS d ON d.driver_id = c.fk_driver WHERE d.is_login= ?',data).then(data =>{
         let client: Client[] = [];
         if(data.rows.length > 0){
           for(var i = 0; i<data.rows.length; i++){
@@ -340,8 +359,8 @@ export class DatabaseService {
     async addClient(name:string,surname:string,city:string,province:string,is_private:number,is_agency:number,cf:string,vat:string,billing_notes:string) {
       let driverIdFk = await (await this.getDriverLogin()).driver_id;
       let data = [name,surname,city,province,is_private,is_agency,cf,vat,billing_notes,driverIdFk];
-      const a = await this.database.executeSql('INSERT INTO client (name,surname,city,province,is_private,is_agency,cf,vat,billing_notes,fk_client) VALUES (?,?,?,?,?,?,?,?,?,?)', data);
-      this.getClients();
+      const a = await this.database.executeSql('INSERT INTO client (name,surname,city,province,is_private,is_agency,cf,vat,billing_notes,fk_driver) VALUES (?,?,?,?,?,?,?,?,?,?)', data);
+      //this.getClients();
       
     }
 

@@ -31,6 +31,9 @@ export class ClientsPage implements OnInit {
       this.database.addClient(this.client['name'],this.client['surname'],this.client['city'],this.client['province'],1,0,this.client['cf'],this.client['vat'],this.client['billing_notes']).then(_ => {
         this.client = {};
       });
+      this.database.getClients().then(data => {
+        this.clients = data;
+      });
       this.showToast();
       this.hideToast();
     
@@ -40,6 +43,9 @@ export class ClientsPage implements OnInit {
       this.database.addClient(this.client['name'],this.client['surname'],this.client['city'],this.client['province'],0,1,this.client['cf'],this.client['vat'],this.client['billing_notes']).then(_ => {
         this.client = {};
         
+      });
+      this.database.getClients().then(data => {
+        this.clients = data;
       });
       this.showToast();
       this.hideToast();

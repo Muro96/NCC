@@ -12,6 +12,7 @@ import { AlertController } from '@ionic/angular';
 export class RegisterPage implements OnInit {
   drivers: Driver[] = [];
   driver = {};
+  isActiveToggleTextPassword: Boolean = true;
 
   constructor(private router: Router, private database: DatabaseService,private alertController: AlertController) { }
 
@@ -54,5 +55,13 @@ export class RegisterPage implements OnInit {
     });
 
   await alert.present();
+  }
+
+  showHide(){
+    this.isActiveToggleTextPassword = (this.isActiveToggleTextPassword==true)? false:true;
+  }
+
+  getType(){
+    return this.isActiveToggleTextPassword ? 'password' : 'text';
   }
 }

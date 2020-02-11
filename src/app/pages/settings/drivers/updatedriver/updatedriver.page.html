@@ -19,7 +19,7 @@
       <ion-label position="stacked">Cognome</ion-label>
       <ion-input *ngIf= "drivers.surname != null; else nullSurname" type="text" placeholder="" [(ngModel)]="drivers.surname"></ion-input>
       <ng-template #nullSurname>
-        <ion-input type="text" placeholder="" [(ngModel)]="drivers.surnname"></ion-input>
+        <ion-input type="text" placeholder="" [(ngModel)]="drivers.surname"></ion-input>
       </ng-template>
     </ion-item>
     <ion-item>
@@ -43,5 +43,5 @@
         <ion-input type="text" placeholder="" [(ngModel)]="drivers.email"></ion-input>
       </ng-template>
     </ion-item>
-    <ion-button expand="block" (click)="updateDriver(drivers)">Salva</ion-button>
+    <ion-button expand="block" (click)="save()">Salva</ion-button>
 </ion-content>
