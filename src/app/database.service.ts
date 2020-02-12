@@ -47,6 +47,17 @@ export interface Client{
   billing_notes: string;
 }
 
+export interface Arrival{
+  arrival_id: number;
+  name: string;
+  lat: string;
+  long: string;
+  city: string;
+  province: string;
+  country: string;
+  address: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })

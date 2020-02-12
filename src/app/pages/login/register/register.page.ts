@@ -13,6 +13,7 @@ export class RegisterPage implements OnInit {
   drivers: Driver[] = [];
   driver = {};
   isActiveToggleTextPassword: Boolean = true;
+  checkPassw : string;
 
   constructor(private router: Router, private database: DatabaseService,private alertController: AlertController) { }
 
@@ -32,16 +33,37 @@ export class RegisterPage implements OnInit {
     return res;
   }
 
+  checkDoublePass(){
+    if(this.driver['password']===this.checkPassw){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
   async addDriver(driver: Driver){
     let res = await this.check(driver);
-    if(res==0){
+    let equalPass = this.checkDoublePass();
+    if(res==0 && equalPass==true){
       this.database.addDriver(this.driver['name'],this.driver['surname'],this.driver['cf_driver'],this.driver['phone'],this.driver['email'],this.driver['password'],this.driver['is_login']);
       this.router.navigateByUrl('/login');
     }
-    else{
+    else if (res!=0 && equalPass==true){
       this.userAlreadyRegister();
       
     } 
+    else if (equalPass==false && res==0){
+      this.incorrectPassw();
+      this.driver['password'] = '';
+      this.checkPassw = '';
+
+
+    }
+    else{
+      this.userAlreadyRegister();
+
+    }
   }
 
   async userAlreadyRegister() {
@@ -49,6 +71,21 @@ export class RegisterPage implements OnInit {
       header: 'ATTENZIONE!',
       
       message: 'Sei già registrato con questo indirizzo email! ',
+      buttons: [{
+          text: 'OK',
+          cssClass: 'secondary'}]
+    });
+
+  await alert.present();
+  }
+
+
+
+  async incorrectPassw () {
+    const alert = await this.alertController.create({
+      header: 'ATTENZIONE!',
+      
+      message: 'Le password non combaciano! ',
       buttons: [{
           text: 'OK',
           cssClass: 'secondary'}]

@@ -20,6 +20,10 @@
             <ion-input [type]="getType()" placeholder="Password" [(ngModel)]="driver.password"></ion-input>
             <ion-icon name="eye" item-right (click)="showHide()"></ion-icon>
           </ion-item>
+          <ion-item>
+            <ion-input [type]="getType()" placeholder="Conferma password" [(ngModel)]="checkPassw"></ion-input>
+            <ion-icon name="eye" item-right (click)="showHide()"></ion-icon>
+          </ion-item>
         </div>
         <div padding>
           <ion-button  size="large" expand="block" (click)="addDriver(driver)">REGISTRATI</ion-button>
