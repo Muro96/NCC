@@ -12,9 +12,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { SQLite } from '@ionic-native/sqlite/ngx';
 
 import { DatabaseService } from './database.service';
- 
+import {Geolocation} from '@ionic-native/geolocation/ngx';
 
- 
+
+
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -27,6 +29,7 @@ import { DatabaseService } from './database.service';
   providers: [
     StatusBar,
     SQLite,
+    Geolocation,
     SplashScreen,
     DatabaseService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }

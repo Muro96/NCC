@@ -10,24 +10,24 @@ import { ToastController } from '@ionic/angular';
 export class ClientsPage implements OnInit {
   selectedView = 'list_client';
   client = {};
-  clients : Client[] =  [];
-  toast : any;
-  checked : boolean = false;
-  constructor(public database: DatabaseService,private toastController: ToastController) { }
+  clients: Client[] =  [];
+  toast: any;
+  checked = false;
+  constructor(public database: DatabaseService, private toastController: ToastController) { }
 
   ngOnInit() {
     this.database.getDatabaseState().subscribe(ready => {
       if (ready) {
         this.database.getClients().then(data => {
-           this.clients = data;   
-            }); 
+           this.clients = data;
+            });
       }
-    }); 
+    });
   }
- 
-  addClient(){
-    if(this.checkPrivate()==true){
-      console.log("true");
+
+  addClient() {
+    if (this.checkPrivate() == true){
+      console.log('true');
       this.database.addClient(this.client['name'],this.client['surname'],this.client['city'],this.client['province'],1,0,this.client['cf'],this.client['vat'],this.client['billing_notes']).then(_ => {
         this.client = {};
       });
@@ -42,17 +42,17 @@ export class ClientsPage implements OnInit {
       console.log("false");
       this.database.addClient(this.client['name'],this.client['surname'],this.client['city'],this.client['province'],0,1,this.client['cf'],this.client['vat'],this.client['billing_notes']).then(_ => {
         this.client = {};
-        
+
       });
       this.database.getClients().then(data => {
         this.clients = data;
       });
       this.showToast();
       this.hideToast();
-    } 
-  
-  
-   
+    }
+
+
+
   }
   hideToast() {
     this.toast = this.toastController.dismiss();
@@ -65,13 +65,13 @@ export class ClientsPage implements OnInit {
       toastData.present();
     });
   }
-  checkPrivate(){
+  checkPrivate() {
     this.checked = !this.checked;
-    console.log("this.checked"+this.checked);
+    console.log('this.checked' + this.checked);
     return this.checked;
-    
+
   }
- 
-  
+
+
 
 }
