@@ -1,0 +1,51 @@
+<ion-header color="primary">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>I miei viaggi</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+  <ion-content class="ion-padding">
+    <ion-segment [(ngModel)]='selectedView'>
+      <ion-segment-button value='add_journey' layout="icon-start">
+        <ion-label>AGGIUNGI VIAGGIO</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="list_journey" layout="icon-start">
+        <ion-label>LISTA VIAGGI</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+    <div id="map"></div>
+  <div [ngSwitch]="selectedView">
+    <div *ngSwitchCase="'add_journey'">
+      
+      <ion-list>
+        <ion-item>
+          <ion-label>Orario di Partenza</ion-label>
+          <ion-datetime display-format="hh:mm A" picker-format="hh:mm A " value={{time}}></ion-datetime>
+        </ion-item>
+        <ion-item>
+          <ion-label *ngIf="autocomplete_dep==null">Luogo di Partenza</ion-label>
+          <ion-input id="autocomplete_input_dep"
+            autocomplete="off" (keyup)="getAddressDep()">
+          </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label *ngIf="autocomplete_arr==null">Luogo di Arrivo</ion-label>
+          <ion-input id="autocomplete_input_arr"
+            autocomplete="off" (keyup)="getAddressArr()">
+          </ion-input>
+        </ion-item>
+      </ion-list>
+      
+      
+    </div>
+    <div *ngSwitchCase="'list_journey'">
+      <ion-item>
+        <ion-label position="floating">Data viaggi</ion-label>
+        <ion-input readonly [(ngModel)]="mydate" (ionChange)="onChangeDate()" [liIonic4Datepicker]="datePickerObj"></ion-input>
+      </ion-item>
+    </div> 
+  </div>
+</ion-content>

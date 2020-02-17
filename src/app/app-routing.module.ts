@@ -23,6 +23,10 @@ const routes: Routes = [
     path: 'login',
     loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
   },
+  {
+    path: 'myjourney',
+    loadChildren: () => import('./pages/myjourney/myjourney.module').then( m => m.MyjourneyPageModule)
+  },
  
  
   

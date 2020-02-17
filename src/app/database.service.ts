@@ -53,9 +53,40 @@ export interface Arrival{
   lat: string;
   long: string;
   city: string;
-  province: string;
   country: string;
   address: string;
+}
+export interface Departure{
+  departure_id: number;
+  name: string;
+  lat: string;
+  long: string;
+  city: string;
+  country: string;
+  address: string;
+}
+
+export interface Travel{
+  travel_id: number;
+  is_paid: number;
+  km_tot: number;
+  date: string;
+  hour: string;
+  name_client: string;
+  surname_client: string;
+  billing_notes_client: string;
+  name_arrival: string;
+  lat_arr: string;
+  long_arr: string;
+  city_arrival: string;
+  country_arrival: string;
+  address_arrival: string;
+  name_departure: string;
+  lat_dep: string;
+  long_dep: string;
+  city_departure: string;
+  country_departure: string;
+  address_departure: string;
 }
 
 @Injectable({
@@ -126,34 +157,33 @@ export class DatabaseService {
                         'FOREIGN KEY(fk_driver) REFERENCES driver(driver_id));',[]);
 
         // PARTENZE
-        db.executeSql('CREATE TABLE IF NOT EXISTS departure' +
+        db.executeSql('CREATE TABLE departure' +
                         '(departure_id INTEGER PRIMARY KEY,' +
-                        'name TEXT,' +
-                        'lat REAL,' +
-                        'long REAL,' +
-                        'city TEXT,' +
-                        'province TEXT,' +
-                        'country TEXT,' +
-                        'address TEXT)',[]);
+                        'name_dep TEXT,' +
+                        'lat_dep REAL,' +
+                        'long_dep REAL,' +
+                        'city_dep TEXT,' +
+                        'province_dep TEXT,' +
+                        'address_dep TEXT)',[]);
 
         //ARRIVI
-        db.executeSql('CREATE TABLE IF NOT EXISTS arrival' +
+        db.executeSql('CREATE TABLE arrival' +
                         '(arrival_id INTEGER PRIMARY KEY,' +
-                        'name TEXT,' +
-                        'lat REAL,' +
-                        'long REAL,' +
-                        'city TEXT,' +
-                        'province TEXT,' +
-                        'country TEXT,' +
-                        'address TEXT)',[]);
+                        'name_arr TEXT,' +
+                        'lat_arr REAL,' +
+                        'long_arr REAL,' +
+                        'city_arr TEXT,' +
+                        'province_arr TEXT,' +
+                        'address_arr TEXT)',[]);
 
         //TRAVEL                
-        db.executeSql('CREATE TABLE IF NOT EXISTS travel' +
+        db.executeSql('CREATE TABLE travel' +
                       '(travel_id INTEGER PRIMARY KEY,' +
                       'is_paid INTEGER,' +
                       'n_passenger INTEGER,' + 
                       'km_tot INTEGER,' +
                       'date TEXT,'+
+                      'hour TEXT,' +
                       'fk_departure INTEGER,' + 
                       'fk_arrival INTEGER,' +
                       'fk_client INTEGER,' +
@@ -374,6 +404,47 @@ export class DatabaseService {
       //this.getClients();
       
     }
+    //get all travel on this day
+    async getTravel(date: string){
+      let data= [1,date];
+      return this.database.executeSql('SELECT travel.*,client.*,arrival.*,departure.*' +
+                                      'FROM travel AS travel' + 
+                                        'JOIN driver AS driver ON travel.fk_driver = driver.driver_id' +
+                                        'JOIN client AS client ON travel.fk_client = client.client_id' +
+                                        'JOIN arrival AS arrival ON travel.fk_arrival = arrival.arrival_id' +
+                                        'JOIN departure AS departure ON travel.fk_departure = departure.departure_id' +
+                                        'WHERE driver.is_login = ? AND travel.date = ?',data).then(data =>{
+                                          let travel: Travel[] = [];
+                                            if(data.rows.length > 0){
+                                              for(var i = 0; i<data.rows.length; i++){
+                                                travel.push({
+                                                  travel_id: data.rows.item(i).travel_id,
+                                                  is_paid: data.rows.item(i).is_paid,
+                                                  km_tot: data.rows.item(i).km_tot,
+                                                  date:  data.rows.item(i).date,
+                                                  hour: data.rows.item(i).hour,
+                                                  name_client: data.rows.item(i).name,
+                                                  surname_client: data.rows.item(i).surname,
+                                                  billing_notes_client: data.rows.item(i).billing_notes,
+                                                  name_arrival: data.rows.item(i).name_arr,
+                                                  lat_arr: data.rows.item(i).lat_arr,
+                                                  long_arr: data.rows.item(i).long_arr,
+                                                  city_arrival: data.rows.item(i).city_arr,
+                                                  country_arrival: data.rows.item(i).country_arr,
+                                                  address_arrival: data.rows.item(i).address_arr,
+                                                  name_departure: data.rows.item(i).name_dep,
+                                                  lat_dep: data.rows.item(i).lat_dep,
+                                                  long_dep: data.rows.item(i).long_dep,
+                                                  city_departure: data.rows.item(i).city_dep,
+                                                  country_departure: data.rows.item(i).country_dep,
+                                                  address_departure: data.rows.item(i).address_dep,                                               
+                                                  });
+                                              }
+                                            }
+                                          return travel;
+                                          })
 
-  }
-   
+                                        }
+
+
+  }   

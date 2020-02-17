@@ -37,8 +37,12 @@ export class HomePage{
     this.router.navigate(['/settings/agency']);
   }
   dayDates(){
-    this.router.navigate(['/datadays'])
+    this.router.navigate(['/datadays']);
 
+  }
+
+  myJourney(){
+    this.router.navigate(['/myjourney']);
   }
   //return email of driver login
   async getDriverLogin(){

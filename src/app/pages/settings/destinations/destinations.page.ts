@@ -1,58 +1,87 @@
-import { Component, OnInit } from '@angular/core';
-import { Map, latLng, tileLayer, Layer, marker } from 'leaflet';
-import {NativeGeocoder, NativeGeocoderOptions} from '@ionic-native/native-geocoder/ngx';
-import {Geolocation} from '@ionic-native/geolocation/ngx';
-
+import { Component, ViewChild, ElementRef,OnInit } from '@angular/core';
+ 
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { NativeGeocoder, NativeGeocoderResult, NativeGeocoderOptions } from '@ionic-native/native-geocoder/ngx';
+import { DatabaseService, Arrival } from 'src/app/database.service';
+ 
+declare var google: { maps: { LatLng: new (arg0: number, arg1: number) => any; MapTypeId: { ROADMAP: any; }; Map: new (arg0: any, arg1: { center: any; zoom: number; mapTypeId: any; }) => any; }; };
+ 
 @Component({
   selector: 'app-destinations',
   templateUrl: './destinations.page.html',
   styleUrls: ['./destinations.page.scss'],
 })
-export class DestinationsPage {
-  selectedView = 'add_destination';
-  map: Map;
-  newMarker: any;
-  address: string[];
+export class DestinationsPage implements OnInit{
+  selectedView = 'list_destination';
+  arrival = {};
+  arrivals: Arrival[] =  [];
 
-  constructor(private geolocation: Geolocation) { }
-
-  ionViewDidEnter() {
-    this.loadMap();
-    }
-
-  loadMap() {
-    this.map = new Map('mapId').setView([45.6301900, 12.5681000], 15);
-    tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-    }).addTo(this.map);
-
-
-
+ 
+  @ViewChild('map',{static:true}) mapElement: ElementRef;
+  map: any;
+  address:string;
+ 
+  constructor(
+    private geolocation: Geolocation,
+    private nativeGeocoder: NativeGeocoder) {
   }
-
-  locatePosition() {
-
+ 
+ 
+  ngOnInit() {
+    this.loadMap();
+  }
+ 
+  loadMap() {
     this.geolocation.getCurrentPosition().then((resp) => {
-      // resp.coords.latitude
-      // resp.coords.longitude
+      let latLng = new google.maps.LatLng(resp.coords.latitude, resp.coords.longitude);
+      let mapOptions = {
+        center: latLng,
+        zoom: 15,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      }
+ 
+      this.getAddressFromCoords(resp.coords.latitude, resp.coords.longitude);
+ 
+      this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+ 
+      this.map.addListener('tilesloaded', () => {
+        console.log('accuracy',this.map);
+        this.getAddressFromCoords(this.map.center.lat(), this.map.center.lng())
+      });
+ 
     }).catch((error) => {
       console.log('Error getting location', error);
     });
-
-    let watch = this.geolocation.watchPosition();
-    watch.subscribe((data) => {
-      this.newMarker = marker([data.coords.altitude, data.coords.longitude], {draggable:
-            true}).addTo(this.map);
-      this.newMarker.bindPopup("You are located here!").openPopup();
-      console.log("dataaaa" + data.coords.altitude);
-      console.log("dataaaa" + data.coords.longitude);
-
-    });
   }
-
-  /** Remove map when we have multiple map object */
-  ionViewWillLeave() {
-    this.map.remove();
-  }
-
+ 
+  getAddressFromCoords(lattitude, longitude) {
+    console.log("getAddressFromCoords "+lattitude+" "+longitude);
+    let options: NativeGeocoderOptions = {
+      useLocale: true,
+      maxResults: 5
+    };
+ 
+    this.nativeGeocoder.reverseGeocode(lattitude, longitude, options)
+      .then((result: NativeGeocoderResult[]) => {
+        this.address = "";
+        let responseAddress = [];
+        for (let [key, value] of Object.entries(result[0])) {
+          if(value.length>0)
+          responseAddress.push(value);
+ 
+        }
+        responseAddress.reverse();
+        for (let value of responseAddress) {
+          this.address += value+", ";
+        }
+        this.address = this.address.slice(0, -2);
+      })
+      .catch((error: any) =>{ 
+        this.address = "Address Not Available!";
+      });
+ 
+  } 
+ 
+ 
 }
+ 
