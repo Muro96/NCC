@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Ionic4DatepickerModalComponent } from '@logisticinfotech/ionic4-datepicker';
+import { DatabaseService, Client } from 'src/app/database.service';
+import { LatLng } from 'leaflet';
 declare var google;
 @Component({
   selector: 'app-myjourney',
@@ -10,11 +12,10 @@ declare var google;
 export class MyjourneyPage implements OnInit {
     
   selectedView = 'list_journey';
-  autocomplete_dep : any;
-  autocomplete_arr : any;
+  
   time: string = new Date().toLocaleTimeString('it-IT',{hour: '2-digit', minute:'2-digit'});
-
   options = {day: 'numeric', month: 'numeric', year:'numeric'};
+  
   mydate : string = new Date().toLocaleDateString("it-IT",this.options);
 
   datePickerObj: any = {};
@@ -35,32 +36,32 @@ export class MyjourneyPage implements OnInit {
     'Dicembre'
   ];
   weeksList = ['LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB', 'DOM'];
-  selectedDate;
+  selectedDate: any;
+  clients : Client[] = [];
 
-  constructor(public modalCtrl: ModalController) {}
+  constructor(public modalCtrl: ModalController,private database: DatabaseService) {}
 
   ngOnInit() {
     this.datePickerObj = {
-
       inputDate: this.mydate,
-    
       dateFormat: 'DD/MM/YYYY',
-      fromDate: new Date('01/01/1960'), // default null
-      // toDate: new Date('2018-12-28'), // default null
-      // showTodayButton: true, // default true
-       closeOnSelect: true, // default false
-      // disableWeekDays: [4], // default []
-      // mondayFirst: false, // default false
-      // setLabel: 'Conferma',  // default 'Set'
-       todayLabel: 'Oggi', // default 'Today'
-       closeLabel: 'Chiudi', // default 'Close'
-      // disabledDates: disabledDates, // default []
-      titleLabel: 'Conferma Data', // default null
-       monthsList: this.monthsList,
-       weeksList: this.weeksList,
-       momentLocale: 'it-IT',
+      fromDate: new Date('01/01/1960'), 
+      closeOnSelect: true,
+      todayLabel: 'Oggi',
+      closeLabel: 'Chiudi',
+      titleLabel: 'Conferma Data',
+      monthsList: this.monthsList,
+      weeksList: this.weeksList,
+      momentLocale: 'it-IT',
       yearInAscending: true
     };
+    this.database.getDatabaseState().subscribe(ready => {
+      if (ready) {
+        this.database.getClients().then(data => {
+           this.clients = data;
+            });
+      }
+    });
   }
 
   onChangeDate() {
@@ -91,62 +92,38 @@ export class MyjourneyPage implements OnInit {
 
 
   getAddressDep(){
-    //this.initMap();
-    var map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: 46.00, lng: 12.00},
-      zoom: 13,
-      mapTypeId: 'roadmap'
-  });
+    let place: { geometry: { location: { lat: () => void; lng: () => any; }; }; };
     let inputfield = document.getElementById('autocomplete_input_dep').getElementsByTagName('input')[0];
-    this.autocomplete_dep = new google.maps.places.Autocomplete((inputfield), {
+    let autocomplete_dep = new google.maps.places.Autocomplete((inputfield), {
       types:['address'],
       componentRestrictions: {country: 'it'},
     });    
-    google.maps.event.addListener(this.autocomplete_dep ,`place_changed`, () => {
-      var place = this.autocomplete_dep.getPlace();
-      console.log(place);
+    google.maps.event.addListener(autocomplete_dep ,`place_changed`, () => {
+      var place = autocomplete_dep.getPlace();
+      var myLatlng = new google.maps.LatLng(place.geometry.location.lat(),place.geometry.location.lng());
+      console.log("address_Dep"+myLatlng);
+      return myLatlng;
+      
     });
   }
   getAddressArr(){
-    //this.initMap();
-    var map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: 46.00, lng: 12.00},
-      zoom: 13,
-      mapTypeId: 'roadmap'
-      });
+    let place: { geometry: { location: { lat: () => void; lng: () => any; }; }; };
     let inputfield = document.getElementById('autocomplete_input_arr').getElementsByTagName('input')[0];
-    this.autocomplete_arr = new google.maps.places.Autocomplete((inputfield), {
+    let autocomplete_arr = new google.maps.places.Autocomplete((inputfield), {
       types:['address'],
       componentRestrictions: {country: 'it'},
     });    
-    google.maps.event.addListener(this.autocomplete_arr ,`place_changed`, () => {
-      var place = this.autocomplete_arr.getPlace();
-      console.log(place);
-      var markers = [];
-      var bounds = new google.maps.LatLngBounds();
-      place.forEach(function(place) {
-        if (!place.geometry) {
-          console.log("Returned place contains no geometry");
-          return;
-        }
-        var icon = {
-          url: place.icon,
-          size: new google.maps.Size(71, 71),
-          origin: new google.maps.Point(0, 0),
-          anchor: new google.maps.Point(17, 34),
-          scaledSize: new google.maps.Size(25, 25)
-        };
-
-        // Create a marker for each place.
-        markers.push(new google.maps.Marker({
-          map: map,
-          icon: icon,
-          title: place.name,
-          position: place.geometry.location
-        }));
-      });  
+    google.maps.event.addListener(autocomplete_arr ,`place_changed`, () => {
+      place = autocomplete_arr.getPlace();
+      var myLatlng = new google.maps.LatLng(place.geometry.location.lat(),place.geometry.location.lng());
+      console.log("address_Arr"+myLatlng);
+      return myLatlng;
   });
-}
+
+  
+  }
+
+
 }
 
  

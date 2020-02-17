@@ -37,9 +37,15 @@
             autocomplete="off" (keyup)="getAddressArr()">
           </ion-input>
         </ion-item>
+        <ion-item>
+          <ion-label>Clienti</ion-label>
+            <ion-select>
+              <ion-select-option *ngFor="let client of clients; let i= index">{{client.name + ' ' + client.surname}}</ion-select-option>
+            </ion-select>
+            
+            
+        </ion-item>
       </ion-list>
-      
-      
     </div>
     <div *ngSwitchCase="'list_journey'">
       <ion-item>
@@ -48,4 +54,5 @@
       </ion-item>
     </div> 
   </div>
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
 </ion-content>
