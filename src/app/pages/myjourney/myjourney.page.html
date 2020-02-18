@@ -1,24 +1,40 @@
 <ion-header color="primary">
-  <ion-toolbar>
+  <ion-row>
+    <ion-col padding-top>
+      <ion-button slot="start">
+        <ion-back-button defaultHref="/home"></ion-back-button>
+      </ion-button>
+    </ion-col>
+    <ion-col text-start padding-top>
+      <ion-title>Lista Viaggi</ion-title>
+    </ion-col>
+    <ion-col text-end>
+      <ion-button (click)="addJourney()" shape="round" fill="outline">
+        <ion-icon slot="start" name="add"></ion-icon>
+        Aggiungi
+      </ion-button>
+    </ion-col>
+  </ion-row>
+  <!--<ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
     <ion-title>I miei viaggi</ion-title>
-  </ion-toolbar>
+  </ion-toolbar> -->
 </ion-header>
 
   <ion-content class="ion-padding">
-    <ion-segment [(ngModel)]='selectedView'>
+   <!-- <ion-segment [(ngModel)]='selectedView'>
       <ion-segment-button value='add_journey' layout="icon-start">
         <ion-label>AGGIUNGI VIAGGIO</ion-label>
       </ion-segment-button>
       <ion-segment-button value="list_journey" layout="icon-start">
         <ion-label>LISTA VIAGGI</ion-label>
       </ion-segment-button>
-    </ion-segment>
-    <div id="map"></div>
-  <div [ngSwitch]="selectedView">
-    <div *ngSwitchCase="'add_journey'">
+    </ion-segment> -->
+  
+  <!--<div [ngSwitch]="selectedView">
+    <div *ngSwitchCase="'add_journey'">-->
       
       <ion-list>
         <ion-item>
@@ -26,13 +42,13 @@
           <ion-datetime display-format="hh:mm A" picker-format="hh:mm A " value={{time}}></ion-datetime>
         </ion-item>
         <ion-item>
-          <ion-label *ngIf="autocomplete_dep==null">Luogo di Partenza</ion-label>
+          <ion-label *ngIf="input_value=='' || input_value==null">Luogo di Partenza</ion-label>
           <ion-input id="autocomplete_input_dep"
             autocomplete="off" (keyup)="getAddressDep()">
           </ion-input>
         </ion-item>
         <ion-item>
-          <ion-label *ngIf="autocomplete_arr==null">Luogo di Arrivo</ion-label>
+          <ion-label *ngIf="input_value1=='' || input_value1==null">Luogo di Arrivo</ion-label>
           <ion-input id="autocomplete_input_arr"
             autocomplete="off" (keyup)="getAddressArr()">
           </ion-input>
@@ -40,19 +56,23 @@
         <ion-item>
           <ion-label>Clienti</ion-label>
             <ion-select>
-              <ion-select-option *ngFor="let client of clients; let i= index">{{client.name + ' ' + client.surname}}</ion-select-option>
+              <ion-select-option *ngFor="let client of clients;">{{client.name + ' ' + client.surname}}</ion-select-option>
             </ion-select>
-            
-            
         </ion-item>
+
+        <ion-button expand="block">Aggiungi cliente</ion-button>
       </ion-list>
-    </div>
+
+      <div #map id="map"></div> 
+    <!--</div>
     <div *ngSwitchCase="'list_journey'">
       <ion-item>
         <ion-label position="floating">Data viaggi</ion-label>
         <ion-input readonly [(ngModel)]="mydate" (ionChange)="onChangeDate()" [liIonic4Datepicker]="datePickerObj"></ion-input>
       </ion-item>
     </div> 
-  </div>
-  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+  </div> -->
+  <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAfhesKajJjA4K6zPI4Y_EJgrKDO0RWtpI"></script>
+  <script defer src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key=AIzaSyAfhesKajJjA4K6zPI4Y_EJgrKDO0RWtpI"></script>
+
 </ion-content>
