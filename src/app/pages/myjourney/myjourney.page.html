@@ -1,41 +1,17 @@
 <ion-header color="primary">
-  <ion-row>
-    <ion-col padding-top>
-      <ion-button slot="start">
-        <ion-back-button defaultHref="/home"></ion-back-button>
-      </ion-button>
-    </ion-col>
-    <ion-col text-start padding-top>
-      <ion-title>Lista Viaggi</ion-title>
-    </ion-col>
-    <ion-col text-end>
-      <ion-button (click)="addJourney()" shape="round" fill="outline">
-        <ion-icon slot="start" name="add"></ion-icon>
-        Aggiungi
-      </ion-button>
-    </ion-col>
-  </ion-row>
-  <!--<ion-toolbar>
+  <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
     <ion-title>I miei viaggi</ion-title>
-  </ion-toolbar> -->
+    <ion-button (click)="addJourney()" shape="round" fill="outline" slot="end">
+      <ion-icon slot="start" name="add"></ion-icon>
+      Aggiungi
+    </ion-button>
+  </ion-toolbar>
 </ion-header>
 
-  <ion-content class="ion-padding">
-   <!-- <ion-segment [(ngModel)]='selectedView'>
-      <ion-segment-button value='add_journey' layout="icon-start">
-        <ion-label>AGGIUNGI VIAGGIO</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="list_journey" layout="icon-start">
-        <ion-label>LISTA VIAGGI</ion-label>
-      </ion-segment-button>
-    </ion-segment> -->
-  
-  <!--<div [ngSwitch]="selectedView">
-    <div *ngSwitchCase="'add_journey'">-->
-      
+  <ion-content class="ion-padding">   
       <ion-list>
         <ion-item>
           <ion-label>Orario di Partenza</ion-label>
@@ -44,26 +20,44 @@
         <ion-item>
           <ion-label *ngIf="input_value=='' || input_value==null">Luogo di Partenza</ion-label>
           <ion-input id="autocomplete_input_dep"
-            autocomplete="off" (keyup)="getAddressDep()">
+            autocomplete="on" (keyup)="getAddressDep()">
           </ion-input>
+          <ion-button (click)="getCurrentPosition()">
+            <ion-icon  src="../../assets/icon/position.svg"></ion-icon>
+          </ion-button>
         </ion-item>
         <ion-item>
           <ion-label *ngIf="input_value1=='' || input_value1==null">Luogo di Arrivo</ion-label>
           <ion-input id="autocomplete_input_arr"
-            autocomplete="off" (keyup)="getAddressArr()">
+            autocomplete="on" (keyup)="getAddressArr()" >
           </ion-input>
         </ion-item>
         <ion-item>
           <ion-label>Clienti</ion-label>
-            <ion-select>
-              <ion-select-option *ngFor="let client of clients;">{{client.name + ' ' + client.surname}}</ion-select-option>
+            <ion-select [(ngModel)]="selected_value" (ngModelChange)="getValue($event)">
+              <ion-select-option *ngFor="let client of clients;" [value]="client['client_id']">{{client.name + ' ' + client.surname}}</ion-select-option>
             </ion-select>
         </ion-item>
-
-        <ion-button expand="block">Aggiungi cliente</ion-button>
+        <ion-item>
+          <ion-label>Distanza</ion-label>
+          <div id="distanza"></div>
+        </ion-item>
+        <ion-item>
+          <ion-label>Durata</ion-label>
+          <div id="durata"></div>
+        </ion-item>
+        <ion-item>
+          <ion-label>N° Passeggeri</ion-label>
+          <ion-input slot="end" type="number" placeholder=""></ion-input>
+        </ion-item>
+        <ion-button expand="block" (click)="gotoAddClient();">Aggiungi un nuovo cliente</ion-button>
+        <ion-button expand="block" (click)="distanceMatrix();">Calcola KM</ion-button>
       </ion-list>
 
-      <div #map id="map"></div> 
+      <div #map id="map"></div>  
+      
+       
+      
     <!--</div>
     <div *ngSwitchCase="'list_journey'">
       <ion-item>
@@ -72,7 +66,6 @@
       </ion-item>
     </div> 
   </div> -->
-  <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAfhesKajJjA4K6zPI4Y_EJgrKDO0RWtpI"></script>
-  <script defer src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key=AIzaSyAfhesKajJjA4K6zPI4Y_EJgrKDO0RWtpI"></script>
+ 
 
 </ion-content>

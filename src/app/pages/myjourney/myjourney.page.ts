@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ComponentFactoryResolver } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { ModalController, Platform } from '@ionic/angular';
 import { Ionic4DatepickerModalComponent } from '@logisticinfotech/ionic4-datepicker';
@@ -15,7 +15,20 @@ export class MyjourneyPage implements OnInit {
     
   selectedView = 'add_journey';
   map:any;
-  @ViewChild('map',{static:false}) maq;
+  latlng_arr : any;
+  latlng_dep : any;
+  gmarkers_arr = [];
+  gmarkers_dep = [];
+  coords = [];
+  selected_value : any;
+
+  origin : any;
+  destination : any;
+
+  public distance: string;
+  public duration: string;
+  
+
   
   time: string = new Date().toLocaleTimeString('it-IT',{hour: '2-digit', minute:'2-digit'});
   options = {day: 'numeric', month: 'numeric', year:'numeric'};
@@ -53,7 +66,7 @@ export class MyjourneyPage implements OnInit {
     this.platform.ready().then(() =>{
       this.map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 45.63488, lng:  12.57211},
-        zoom: 13,
+        zoom: 4,
         mapTypeId: 'roadmap'
       });  
     });
@@ -107,62 +120,151 @@ export class MyjourneyPage implements OnInit {
 
 
 
-  getAddressDep(){
+  getAddressDep():any{
     let place: { geometry: { location: { lat: () => void; lng: () => any; }; }; };
     let inputfield = document.getElementById('autocomplete_input_dep').getElementsByTagName('input')[0];
-    this.input_value = inputfield.value;
+    
+    if (this.input_value==null || this.input_value==''){
+      for(var i=0; i<this.gmarkers_dep.length; i++){
+        this.gmarkers_dep[i].setMap(null);
+        this.latlng_dep='';
+        }
+      } 
     let autocomplete_dep = new google.maps.places.Autocomplete((inputfield), {
       types:['address'],
       componentRestrictions: {country: 'it'},
     });    
     google.maps.event.addListener(autocomplete_dep ,`place_changed`, () => {
       var place = autocomplete_dep.getPlace();
-      var myLatlng = new google.maps.LatLng(place.geometry.location.lat(),place.geometry.location.lng());
-      console.log("address_Dep"+myLatlng);
+      this.input_value = inputfield.value;
+      this.latlng_dep = new google.maps.LatLng(place.geometry.location.lat(),place.geometry.location.lng());
       let marker = new google.maps.Marker(
         {
               map: this.map,
-              draggable: true,
               animation: google.maps.Animation.DROP,
-              position: myLatlng
+              position: this.latlng_dep
         });
-      return myLatlng;
+
+      google.maps.event.trigger(this.map, "resize");
+      this.map.panTo(marker.getPosition());
+      this.map.setZoom(9);
+
+        this.coords.push(this.latlng_dep);
+        this.gmarkers_dep.push(marker);
+      
       
     });
+    return this.latlng_dep;
   }
-  getAddressArr(){
+  getAddressArr(): any{
     let place: { geometry: { location: { lat: () => void; lng: () => any; }; }; };
     let inputfield = document.getElementById('autocomplete_input_arr').getElementsByTagName('input')[0];
-    this.input_value1 = inputfield.value;
+    console.log("thissss"+this.input_value1);
+    if (this.input_value1==null || this.input_value1==''){
+      for(var i=0; i<this.gmarkers_arr.length; i++){
+        this.gmarkers_arr[i].setMap(null);
+        this.latlng_arr='';
+        }
+      } 
 
     let autocomplete_arr = new google.maps.places.Autocomplete((inputfield), {
       types:['address'],
       componentRestrictions: {country: 'it'},
-    });    
+    }); 
+  
     google.maps.event.addListener(autocomplete_arr ,`place_changed`, () => {
       place = autocomplete_arr.getPlace();
-      var myLatlng = new google.maps.LatLng(place.geometry.location.lat(),place.geometry.location.lng());
-      console.log("address_Arr"+myLatlng);
-      let marker = new google.maps.Marker(
-        {
+      this.input_value1 = inputfield.value;
+      this.latlng_arr = new google.maps.LatLng(place.geometry.location.lat(),place.geometry.location.lng());
+      console.log("this.input_value1"+this.input_value1);
+  
+      let marker = new google.maps.Marker({
               map: this.map,
-              draggable: true,
               animation: google.maps.Animation.DROP,
-              position: myLatlng
+              position: this.latlng_arr
         });
-      console.log("markerrr"+marker);
-      return myLatlng;
+
+      google.maps.event.trigger(this.map, "resize");
+        this.map.panTo(marker.getPosition());
+        this.map.setZoom(9);
+
+
+
+      this.gmarkers_arr.push(marker);
+      this.coords.push(this.latlng_arr);
+      console.log("bbbbb"+this.latlng_arr);
+      //return this.latlng_arr;
+       
   });
+  console.log("asfghj"+this.latlng_arr);
+  return this.latlng_arr;
+  
 
   
   }
 
-  async initMap(){
-    //const pos1: LatLng = this.getAddressArr();
-    //const pos2: LatLng = this.getAddressDep();
+   async distanceMatrix():Promise<any>{
+    
+    let pos1: LatLng = this.getAddressArr();
+    let pos2: LatLng = this.getAddressDep();
+    /*console.log("pooooos111111"+pos1);
+    console.log("pooooo22222"+pos2); */
+    var service = new google.maps.DistanceMatrixService();
+    return new Promise((resolve, reject) => {
+      let res;
+      service.getDistanceMatrix({
+        origins: [pos1],
+        destinations: [pos2],
+        travelMode: google.maps.TravelMode.DRIVING,
+        unitSystem: google.maps.UnitSystem.METRIC,
+        avoidHighways: false,
+        avoidTolls: false
+      }, function callback (response,status){
+          
+          if (status == 'OK') {
+            res = resolve(response);
+            var origins = response.originAddresses;
+            var destinations = response.destinationAddresses;
+            for (var i = 0; i < origins.length; i++) {
+              var results = response.rows[i].elements;
+              for (var j = 0; j < results.length; j++) {
+                var element = results[j];
+                this.distance = element.distance.text;
+                console.log("thisssss"+this.distance);
+                //let time = element.duration;
+                this.duration = element.duration.text;
+                console.log("duration"+this.duration);
+                var from = origins[i];
+                var to = destinations[j];
+                } 
+              } 
+
+          }
+        return res;
+        });
+      });
+    
+    /*google.maps.event.trigger(this.map, "resize");
+      this.map.setZoom(7); */
+  }
+  
+  getValue(selectedValue: any) {
+    return selectedValue;
+  }
+  async gotoAddClient(){
+     let response = await this.distanceMatrix();
+     //this.response.originAddresses;
+     
+
+  }
+
+  addArrival(){
+    this.database.addArrival();
+
   }
     
   }
+
 
 
 

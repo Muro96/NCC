@@ -69,6 +69,7 @@ export interface Departure{
 export interface Travel{
   travel_id: number;
   is_paid: number;
+  n_pass: number;
   km_tot: number;
   date: string;
   hour: string;
@@ -420,6 +421,7 @@ export class DatabaseService {
                                                 travel.push({
                                                   travel_id: data.rows.item(i).travel_id,
                                                   is_paid: data.rows.item(i).is_paid,
+                                                  n_pass: data.rows.item(i).n_passenger,
                                                   km_tot: data.rows.item(i).km_tot,
                                                   date:  data.rows.item(i).date,
                                                   hour: data.rows.item(i).hour,
@@ -445,6 +447,13 @@ export class DatabaseService {
                                           })
 
                                         }
+    async insertTravel(){
+
+    }
+
+    addArrival() {
+      
+    }
 
 
   }   
