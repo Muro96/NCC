@@ -1,34 +1,35 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home"></ion-back-button>
-    </ion-buttons>
-    
-    <ion-title>Dati del giorno</ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/home"></ion-back-button>
+        </ion-buttons>
+
+        <ion-title>Dati del giorno</ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-  <ion-grid>
-    <ion-row>
-      <ion-col size="12">
-        <ion-item>
-          <ion-label position="floating">Seleziona Data</ion-label>
-          <ion-input readonly [(ngModel)]="mydate" (ionChange)="onChangeDate()" [liIonic4Datepicker]="datePickerObj"></ion-input>
-        </ion-item>
+    <ion-grid>
+        <ion-row>
+            <ion-col size="12">
+                <ion-item>
+                    <ion-label position="floating">Seleziona Data</ion-label>
+                    <ion-input readonly [(ngModel)]="mydate" (ionChange)="onChangeDate()"
+                               [liIonic4Datepicker]="datePickerObj"></ion-input>
+                </ion-item>
 
-        <ion-item>
-          <ion-label position="floating">Km inizio giornata</ion-label>
-          <ion-input  type="text" placeholder="KM"></ion-input>
-        </ion-item>
+                <ion-item>
+                    <ion-label position="floating">Km inizio giornata</ion-label>
+                    <ion-input type="text" placeholder="KM"></ion-input>
+                </ion-item>
 
-        <ion-item>
-          <ion-label position="floating">Km fine giornata</ion-label>
-          <ion-input  type="text" placeholder="KM"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-  
-  </ion-grid>
+                <ion-item>
+                    <ion-label position="floating">Km fine giornata</ion-label>
+                    <ion-input type="text" placeholder="KM"></ion-input>
+                </ion-item>
+            </ion-col>
+        </ion-row>
+
+    </ion-grid>
 
 </ion-content>

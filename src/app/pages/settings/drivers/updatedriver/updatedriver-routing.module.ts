@@ -1,17 +1,18 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {Routes, RouterModule} from '@angular/router';
 
-import { UpdatedriverPage } from './updatedriver.page';
+import {UpdatedriverPage} from './updatedriver.page';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: UpdatedriverPage
-  }
+    {
+        path: '',
+        component: UpdatedriverPage
+    }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class UpdatedriverPageRoutingModule {}
+export class UpdatedriverPageRoutingModule {
+}

@@ -7,7 +7,8 @@
   color: #042c6b;
   margin-bottom: 0px;
 }
-.ion-card-travel{
+
+.ion-card-travel {
   background: #f09d29;
   border-radius: 15px;
   text-align: center;
@@ -18,7 +19,7 @@
   margin: 0 !important;
 }
 
-.ion-card-service{
+.ion-card-service {
   background: #ed4766;
   border-radius: 15px;
   text-align: center;
@@ -29,7 +30,8 @@
   margin: 0 !important;
 
 }
-.ion-card-dates{
+
+.ion-card-dates {
   background: #4C8DD6;
   border-radius: 15px;
   text-align: center;
@@ -40,28 +42,29 @@
   margin: 0 !important;
 
 }
-.ion-card-settings{
+
+.ion-card-settings {
   background: #2D5480;
   border-radius: 15px;
   text-align: center;
   display: flex;
   flex-direction: column;
   width: 100% !important;
-  height: 100% ;
+  height: 100%;
   margin: 0 !important;
 
 }
 
-h2{
+h2 {
   color: white;
   text-align: center;
- // padding-top: 100px;
- // padding-bottom: 30px;
+  // padding-top: 100px;
+  // padding-bottom: 30px;
 }
 
 ion-icon {
   &.big {
-    color:whitesmoke !important;
+    color: whitesmoke !important;
     padding-top: 25px;
     margin-left: auto;
     margin-right: auto;

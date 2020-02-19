@@ -1,74 +1,74 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home"></ion-back-button>
-    </ion-buttons>
-    <ion-title>I miei dati</ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/home"></ion-back-button>
+        </ion-buttons>
+        <ion-title>I miei dati</ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
     <ion-item>
-      <ion-label position="stacked">Nome</ion-label>
-      <ion-text *ngIf= "drivers.name != null; else nullName">
-          <h4>{{drivers.name}}</h4>
-      </ion-text>
-      <ng-template #nullName>
-        <ion-text>
-          <h3></h3>
+        <ion-label position="stacked">Nome</ion-label>
+        <ion-text *ngIf="drivers.name != null; else nullName">
+            <h4>{{drivers.name}}</h4>
         </ion-text>
-      </ng-template>
+        <ng-template #nullName>
+            <ion-text>
+                <h3></h3>
+            </ion-text>
+        </ng-template>
     </ion-item>
 
 
     <ion-item>
-      <ion-label position="stacked">Cognome</ion-label>
-      <ion-text *ngIf= "drivers.surname != null; else nullSurname">
-        <h4>{{drivers.surname}}</h4>
-      </ion-text>
-      <ng-template #nullSurname>
-        <ion-text>
-          <h3></h3>
+        <ion-label position="stacked">Cognome</ion-label>
+        <ion-text *ngIf="drivers.surname != null; else nullSurname">
+            <h4>{{drivers.surname}}</h4>
         </ion-text>
-      </ng-template>
+        <ng-template #nullSurname>
+            <ion-text>
+                <h3></h3>
+            </ion-text>
+        </ng-template>
     </ion-item>
 
 
     <ion-item>
-      <ion-label position="stacked">Codice Fiscale</ion-label>
-      <ion-text *ngIf= "drivers.cf_driver != null; else nullCfdriver">
-        <h4>{{drivers.cf_driver}}</h4>
-      </ion-text>
-      <ng-template #nullCfdriver>
-        <ion-text>
-          <h3></h3>
+        <ion-label position="stacked">Codice Fiscale</ion-label>
+        <ion-text *ngIf="drivers.cf_driver != null; else nullCfdriver">
+            <h4>{{drivers.cf_driver}}</h4>
         </ion-text>
-      </ng-template>
+        <ng-template #nullCfdriver>
+            <ion-text>
+                <h3></h3>
+            </ion-text>
+        </ng-template>
     </ion-item>
 
 
     <ion-item>
 
-      <ion-label position="stacked">Telefono</ion-label>
+        <ion-label position="stacked">Telefono</ion-label>
         <h4>{{drivers.phone}}</h4>
-      <ng-template #nullPhone>
-        <ion-text>
-        <h3></h3>
-      </ion-text>
-      </ng-template> 
+        <ng-template #nullPhone>
+            <ion-text>
+                <h3></h3>
+            </ion-text>
+        </ng-template>
     </ion-item>
 
 
     <ion-item>
-      <ion-label position="stacked">email</ion-label>
+        <ion-label position="stacked">email</ion-label>
         <h4>{{drivers.email}}</h4>
-    
 
-      <ng-template #nullEmail>
-        <ion-text>
-          <h3></h3>
-        </ion-text>
-      </ng-template> 
+
+        <ng-template #nullEmail>
+            <ion-text>
+                <h3></h3>
+            </ion-text>
+        </ng-template>
     </ion-item>
     <ion-button expand="block" (click)="updateDriver(drivers)">Aggiorna Dati</ion-button>
 </ion-content>
