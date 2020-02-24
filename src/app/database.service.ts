@@ -449,12 +449,40 @@ export class DatabaseService {
         });
 
     }
+    // check if arrival is already present in db; 
+    async checkArrival_present(lat:any,lng:any) {
+        let result: any;
+        let query = 'SELECT * FROM arrival WHERE lat_arr =' + '\'' + lat + '\'' + 'AND long_arr=' + '\'' + lng + '\'' + ';';
+        return this.database.executeSql(query, []).then(data => {
+            result = data.rows.length;
+            return result;
+        });
+
+    }
+
+    checkDest_present(lat: any, lng: any) {
+        let result: any;
+        let query = 'SELECT * FROM departure WHERE lat_dest =' + '\'' + lat + '\'' + 'AND long_dest=' + '\'' + lng + '\'' + ';';
+        return this.database.executeSql(query, []).then(data => {
+            result = data.rows.length;
+            return result;
+        });
+
+    }
 
     async insertTravel() {
 
     }
 
-    addArrival() {
+    async addArrival(lat:any,lng:any,address:string) {
+        let data = [lat,lng,address];
+        const query = await this.database.executeSql('INSERT INTO arrival (lat_arr,long_arr,address_arr) VALUES (?,?,?)',data);
+
+    }
+
+    async addDestination(lat:any,lng:any,address:string) {
+        let data = [lat,lng,address];
+        const query = await this.database.executeSql('INSERT INTO departure (lat_dep,long_dep,address_dep) VALUES (?,?,?)',data);
 
     }
 

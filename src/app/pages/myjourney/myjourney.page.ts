@@ -148,6 +148,7 @@ export class MyjourneyPage implements OnInit {
 
         });
         return this.latlng_dep;
+    
     }
 
     getAddressArr(): any {
@@ -249,13 +250,45 @@ export class MyjourneyPage implements OnInit {
 
     }
 
-    async addArrival() {
-        let response = await this.distanceMatrix();
+    async checkArrival() {
         let latlng = this.getAddressArr();
-        //split this address to get all the info to insert
-        let address = response.destinationAddresses;
-        this.database.addArrival();
+        let split = latlng.split(",");
+        let res = await this.database.checkArrival_present(split[0], split[1]);
+        return res;
+    }
 
+    async checkDest() {
+        let latlng = this.getAddressDep();
+        let split = latlng.split(",");
+        let res = await this.database.checkDest_present(split[0], split[1]);
+        return res;
+    }
+
+    async addArrival() {
+        let res = await this.checkArrival();
+        if (res==0){
+            let response = await this.distanceMatrix();
+            let latlng = this.getAddressArr();
+            let split = latlng.split(",");
+            console.log("latlng_arr"+split);
+            //split this address to get all the info to insert
+            let address = response.originAddresses;
+            this.database.addArrival(split[0],split[1],address);
+        }
+        else{
+            console.log("arrival already present in db");
+        }
+        
+    }
+
+    async addDestination() {
+        //let res = await this.
+        let response = await this.distanceMatrix();
+        let latlng = this.getAddressDep();
+        let split = latlng.split(",");
+        console.log("latlng_dest"+split);
+        let address = response.destinationAddresses;
+        this.database.addArrival(split[0],split[1],address);
     }
 
 }
