@@ -29,9 +29,12 @@ export class VehiclesPage implements OnInit {
         });
     }
 
-    addVehicle() {
-        this.database.addVehicle(this.vehicle['car_model'], this.vehicle['license_plate']).then(_ => {
+    async addVehicle() {
+        this.database.addVehicle(this.vehicle['car_model'], this.vehicle['license_plate']).then(async _ => {
             this.vehicle = {};
+            await this.database.getAllVehicles().then(data =>{
+                this.vehicles = data;
+            });
         });
         this.showToast();
         this.hideToast();

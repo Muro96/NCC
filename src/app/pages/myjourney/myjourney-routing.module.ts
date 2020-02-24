@@ -7,7 +7,11 @@ const routes: Routes = [
     {
         path: '',
         component: MyjourneyPage
-    }
+    },
+  {
+    path: 'addjourney',
+    loadChildren: () => import('./addjourney/addjourney.module').then( m => m.AddjourneyPageModule)
+  }
 ];
 
 @NgModule({

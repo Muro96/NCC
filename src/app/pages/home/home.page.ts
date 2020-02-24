@@ -34,7 +34,7 @@ export class HomePage {
     }
 
     pageSettings() {
-        this.router.navigate(['/settings/agency']);
+        this.router.navigate(['/settings/drivers']);
     }
 
     dayDates() {

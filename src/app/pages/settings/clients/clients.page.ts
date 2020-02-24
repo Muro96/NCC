@@ -27,26 +27,27 @@ export class ClientsPage implements OnInit {
         });
     }
 
-    addClient() {
+    async addClient() {
         if (this.checkPrivate() == true) {
             console.log('true');
-            this.database.addClient(this.client['name'], this.client['surname'], this.client['city'], this.client['province'], 1, 0, this.client['cf'], this.client['vat'], this.client['billing_notes']).then(_ => {
+            this.database.addClient(this.client['name'], this.client['surname'], this.client['city'], this.client['province'], 1, 0, this.client['cf'], this.client['vat'], this.client['billing_notes']).then(async _ => {
                 this.client = {};
+                await this.database.getClients().then(data => {
+                    this.clients = data;
+                });
             });
-            this.database.getClients().then(data => {
-                this.clients = data;
-            });
+
             this.showToast();
             this.hideToast();
 
         } else {
             console.log('false');
-            this.database.addClient(this.client['name'], this.client['surname'], this.client['city'], this.client['province'], 0, 1, this.client['cf'], this.client['vat'], this.client['billing_notes']).then(_ => {
+            this.database.addClient(this.client['name'], this.client['surname'], this.client['city'], this.client['province'], 0, 1, this.client['cf'], this.client['vat'], this.client['billing_notes']).then(async _ => {
                 this.client = {};
+                await this.database.getClients().then(data => {
+                    this.clients = data;
+                });
 
-            });
-            this.database.getClients().then(data => {
-                this.clients = data;
             });
             this.showToast();
             this.hideToast();
