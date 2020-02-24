@@ -15,9 +15,34 @@
     <ion-list>
         <ion-item>
             <ion-label>Orario di Partenza</ion-label>
-            <ion-datetime display-format="hh:mm A" picker-format="hh:mm A " value={{time}}></ion-datetime>
+            <ion-datetime display-format="HH:mm" picker-format="HH:mm" value={{time}}></ion-datetime>
         </ion-item>
         <ion-item>
+            <ion-label>Città di Partenza</ion-label>
+            <ion-input type="text" [(ngModel)]="departure.city"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>Provincia di Partenza</ion-label>
+            <ion-input type="text" [(ngModel)]="departure.country"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>Indirizzo di Partenza</ion-label>
+            <ion-input type="text" [(ngModel)]="departure.address"></ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-label>Città di Destinazione</ion-label>
+            <ion-input type="text" [(ngModel)]="arrival.city"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>Provincia di Destinazione</ion-label>
+            <ion-input type="text" [(ngModel)]="arrival.country"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>Indirizzo di Destinazione</ion-label>
+            <ion-input type="text" [(ngModel)]="arrival.address"></ion-input>
+        </ion-item>
+        <!--<ion-item>
             <ion-label *ngIf="input_value=='' || input_value==null">Luogo di Partenza</ion-label>
             <ion-input id="autocomplete_input_dep"
                        autocomplete="on" (keyup)="getAddressDep()">
@@ -25,37 +50,38 @@
             <ion-button (click)="getCurrentPosition()">
                 <ion-icon src="../../assets/icon/position.svg"></ion-icon>
             </ion-button>
-        </ion-item>
-        <ion-item>
+        </ion-item> -->
+        <!--<ion-item>
             <ion-label *ngIf="input_value1=='' || input_value1==null">Luogo di Arrivo</ion-label>
             <ion-input id="autocomplete_input_arr"
                        autocomplete="on" (keyup)="getAddressArr()">
             </ion-input>
-        </ion-item>
+        </ion-item> -->
         <ion-item>
             <ion-label>Clienti</ion-label>
-            <ion-select [(ngModel)]="selected_value" (ngModelChange)="getClientIdSelected($event)">
+            <ion-select [(ngModel)]="client_id_select" (ngModelChange)="getClientIdSelected()">
                 <ion-select-option *ngFor="let client of clients;"
                                    [value]="client['client_id']">{{client.name + ' ' + client.surname}}</ion-select-option>
             </ion-select>
         </ion-item>
-        <ion-item>
+        <!--<ion-item>
             <ion-label>Distanza</ion-label>
             <div id="distanza"></div>
         </ion-item>
         <ion-item>
             <ion-label>Durata</ion-label>
             <div id="durata"></div>
-        </ion-item>
+        </ion-item> -->
         <ion-item>
             <ion-label>N° Passeggeri</ion-label>
-            <ion-input slot="end" type="number" placeholder=""></ion-input>
+            <ion-input slot="end" type="number" placeholder="" [(ngModel)]="travel.n_pass"></ion-input>
         </ion-item>
         <ion-button expand="block" (click)="gotoAddClient();">Aggiungi un nuovo cliente</ion-button>
-        <ion-button expand="block" (click)="distanceMatrix();">Calcola KM</ion-button>
+        <ion-button expand="block" (click)="addTravel();">Aggiungi viaggio</ion-button>
+        <!--<ion-button expand="block" (click)="distanceMatrix();">Calcola KM</ion-button> -->
     </ion-list>
 
-    <div #map id="map"></div>
+   <!-- <div #map id="map"></div> -->
 
 
     <!--</div>

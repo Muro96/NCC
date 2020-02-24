@@ -168,7 +168,7 @@ export class DatabaseService {
                     'long_dep REAL,' +
                     'city_dep TEXT,' +
                     'province_dep TEXT,' +
-                    'address_dep TEXT)', []);
+                    'addrearrival_idss_dep TEXT)', []);
 
                 //ARRIVI
                 db.executeSql('CREATE TABLE arrival' +
@@ -321,7 +321,6 @@ export class DatabaseService {
 
     async getDriverLogin() {
         let a = [1];
-        console.log('IS ONE' + a);
         return this.database.executeSql('SELECT * FROM driver WHERE is_login = ?', a).then(data => {
             return {
                 driver_id: data.rows.item(0).driver_id,
@@ -449,8 +448,8 @@ export class DatabaseService {
         });
 
     }
-    // check if arrival is already present in db; 
-    async checkArrival_present(lat:any,lng:any) {
+    // check if arrival is already present in db; (for map)
+    /*async checkArrival_present(lat:any,lng:any) {
         let result: any;
         let query = 'SELECT * FROM arrival WHERE lat_arr =' + '\'' + lat + '\'' + 'AND long_arr=' + '\'' + lng + '\'' + ';';
         return this.database.executeSql(query, []).then(data => {
@@ -458,33 +457,114 @@ export class DatabaseService {
             return result;
         });
 
-    }
+    } 
 
-    checkDest_present(lat: any, lng: any) {
-        let result: any;
+    //check if departure is already in db (for map)
+    /*checkDest_present(lat: any, lng: any) {
+        let res: any;
         let query = 'SELECT * FROM departure WHERE lat_dest =' + '\'' + lat + '\'' + 'AND long_dest=' + '\'' + lng + '\'' + ';';
         return this.database.executeSql(query, []).then(data => {
-            result = data.rows.length;
-            return result;
+            res = data.rows.length;
+            return res;
         });
 
-    }
+    }*/
 
-    async insertTravel() {
-
-    }
-
-    async addArrival(lat:any,lng:any,address:string) {
+      //add arrival with map 
+    /*async addArrival(lat:any,lng:any,address:string) {
         let data = [lat,lng,address];
         const query = await this.database.executeSql('INSERT INTO arrival (lat_arr,long_arr,address_arr) VALUES (?,?,?)',data);
 
-    }
-
+    } 
+    //add departure with map
     async addDestination(lat:any,lng:any,address:string) {
         let data = [lat,lng,address];
         const query = await this.database.executeSql('INSERT INTO departure (lat_dep,long_dep,address_dep) VALUES (?,?,?)',data);
 
+    } */
+
+    //===============================================NO MAP================================================================
+
+    async checkArrival_present(address:string,city:string){
+        let res: any;
+        let query = 'SELECT * FROM arrival WHERE address_arr =' + '\'' + address + '\'' + 'AND city_arr=' + '\'' + city + '\'' + ';';
+        return this.database.executeSql(query, []).then(data => {
+            res = data.rows.length;
+            return res;
+        });
+
+
+    }
+    async checkDep_present(address:string,city:string){
+        let res: any;
+        let query = 'SELECT * FROM departure WHERE address_dep =' + '\'' + address + '\'' + 'AND city_dep=' + '\'' + city + '\'' + ';';
+        return this.database.executeSql(query, []).then(data => {
+            res = data.rows.length;
+            return res;
+        });
+
+
     }
 
+    async addTravel(city_dep:string, country_dep:string,address_dep:string,city_arr:string, country_arr:string,address_arr:string,hour:string,date:string,n_pass:string,km_tot:number,client_id:number) {
+        let result_row_arrival = await this.checkArrival_present(address_arr,city_arr);
+        let arrival_id: any;
+        let departure_id: any;
+        if(result_row_arrival==0){
+            arrival_id = await this.addArrival(city_arr,country_arr,address_arr);
+            //console.log("arrival_id"+arrival_id);
+        }
+        else{
+            //console.log("è gia presente arrival");
+            let query = 'SELECT arrival_id FROM arrival WHERE address_arr =' + '\'' + address_arr + '\'' + 'AND city_arr=' + '\'' + city_arr + '\'' + ';';
+            const a = await this.database.executeSql(query,[]).then(data => {
+                arrival_id = data.rows.item(0).arrival_id
+                //console.log("arrival_id in else"+arrival_id);
+            });
+            
+        }
+        let result_row_departure = await this.checkDep_present(address_dep,city_dep);
+        if (result_row_departure==0){
+            departure_id = await this.addDeparture(city_dep,country_dep,address_dep);
+            //console.log("dep_id"+departure_id);
+        }
+        else{
+            //console.log("è gia presente departure");
+            let query = 'SELECT departure_id FROM departure WHERE address_dep =' + '\'' + address_dep + '\'' + 'AND city_dep=' + '\'' + city_dep + '\'' + ';';
+            const b = await this.database.executeSql(query,[]).then(data => {
+                departure_id = data.rows.item(0).departure_id
+                //console.log("arrival_id in else"+departure_id);
+            });
+           
+
+        }
+
+        let driverid = await (await this.getDriverLogin()).driver_id;
+        const query_main = await this.database.executeSql('INSERT INTO travel (n_passenger,km_tot,date,hour,fk_departure,fk_arrival,fk_client,fk_driver)' + 
+                                                     'VALUES (?,?,?,?,?,?,?,?)',[n_pass,km_tot,date,hour,departure_id,arrival_id,client_id,driverid]);
+
+    }
+
+    //ADD ARRIVAL WITH NO MAP
+    async addArrival(city:string,country:string,address:string){
+        let data = [city,country,address];
+        let res: any;
+        await this.database.executeSql('INSERT INTO arrival (city_arr,province_arr,address_arr) VALUES (?,?,?)',data).then((row: any) => {
+            console.log('ID ARRIVO', row.insertId);
+            res = row.insertId;
+           
+        })
+        return res;
+    }
+    //ADD DEPARTURE WITH NO MAP
+    async addDeparture(city:string,country:string,address:string){
+        let data = [city,country,address];
+        let res: any;
+        await this.database.executeSql('INSERT INTO departure (city_dep,province_dep,address_dep) VALUES (?,?,?)',data).then((row: any) => {
+            console.log('ID DEP', row.insertId);
+            res = row.insertId;   
+        })
+        return res;
+    }
 
 }

@@ -13,7 +13,7 @@ declare var google: { maps: { LatLng: new (arg0: number, arg1: number) => any; M
 })
 export class DestinationsPage implements OnInit {
     selectedView = 'list_destination';
-    arrival = {};
+    /*arrival = {};
     arrivals: Arrival[] = [];
 
 
@@ -24,14 +24,14 @@ export class DestinationsPage implements OnInit {
     constructor(
         private geolocation: Geolocation,
         private nativeGeocoder: NativeGeocoder) {
-    }
+    } */
 
 
     ngOnInit() {
-        this.loadMap();
+        //this.loadMap();
     }
 
-    loadMap() {
+   /* loadMap() {
         this.geolocation.getCurrentPosition().then((resp) => {
             let latLng = new google.maps.LatLng(resp.coords.latitude, resp.coords.longitude);
             let mapOptions = {
@@ -80,8 +80,8 @@ export class DestinationsPage implements OnInit {
             .catch((error: any) => {
                 this.address = 'Address Not Available!';
             });
-
-    }
+ 
+    } */
 
 
 }
