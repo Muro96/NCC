@@ -3,8 +3,9 @@ import {Component, ViewChild, ElementRef, OnInit} from '@angular/core';
 import {Geolocation} from '@ionic-native/geolocation/ngx';
 import {NativeGeocoder, NativeGeocoderResult, NativeGeocoderOptions} from '@ionic-native/native-geocoder/ngx';
 import {DatabaseService, Arrival} from 'src/app/database.service';
+import { ToastController, AlertController } from '@ionic/angular';
 
-declare var google: { maps: { LatLng: new (arg0: number, arg1: number) => any; MapTypeId: { ROADMAP: any; }; Map: new (arg0: any, arg1: { center: any; zoom: number; mapTypeId: any; }) => any; }; };
+//declare var google: { maps: { LatLng: new (arg0: number, arg1: number) => any; MapTypeId: { ROADMAP: any; }; Map: new (arg0: any, arg1: { center: any; zoom: number; mapTypeId: any; }) => any; }; };
 
 @Component({
     selector: 'app-destinations',
@@ -13,10 +14,10 @@ declare var google: { maps: { LatLng: new (arg0: number, arg1: number) => any; M
 })
 export class DestinationsPage implements OnInit {
     selectedView = 'list_destination';
-    /*arrival = {};
+    arrival = {};
     arrivals: Arrival[] = [];
 
-
+    /*
     @ViewChild('map', {static: true}) mapElement: ElementRef;
     map: any;
     address: string;
@@ -26,10 +27,29 @@ export class DestinationsPage implements OnInit {
         private nativeGeocoder: NativeGeocoder) {
     } */
 
+    constructor(public database: DatabaseService, private toastController: ToastController,private alertController:AlertController) {
+    }
+
 
     ngOnInit() {
+        this.database.getDatabaseState().subscribe(ready => {
+            if (ready) {
+                this.database.getArrivals().then(data => {
+                    this.arrivals = data;
+                });
+            }
+        });
         //this.loadMap();
     }
+    async addArrival(){
+     this.database.addDestination(this.arrival['name_arr'],this.arrival['city_arr'],this.arrival['province_arr'],this.arrival['address_arr']).then(async _ => {
+        this.arrival = {};
+        await this.database.getArrivals().then(data => {
+            this.arrivals = data;
+            });
+        });
+    }
+
 
    /* loadMap() {
         this.geolocation.getCurrentPosition().then((resp) => {

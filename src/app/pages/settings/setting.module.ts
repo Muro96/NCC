@@ -28,14 +28,14 @@ const routes: Routes = [
                 loadChildren: () => import('./destinations/destinations.module').then(m => m.DestinationsPageModule)
             },
             {
-                path: 'arrivals',
-                loadChildren: () => import('./arrivals/arrivals.module').then(m => m.ArrivalsPageModule)
+                path: 'departures',
+                loadChildren: () => import('./departures/departures.module').then(m => m.DeparturesPageModule)
             },
         ]
     },
     {
         path: 'settings',
-        redirectTo: '/settings/agency',
+        redirectTo: '/settings/drivers',
         pathMatch: 'full'
 
     }

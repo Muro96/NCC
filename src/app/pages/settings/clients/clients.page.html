@@ -50,24 +50,26 @@
                 <ion-label>Privato?</ion-label>
                 <ion-checkbox color="primary" checked slot="start" (ionChange)="checkPrivate()"></ion-checkbox>
             </ion-item>
-
-
             <ion-button expand="block" (click)="addClient()">Aggiungi Cliente</ion-button>
         </div>
         <div *ngSwitchCase="'list_client'">
-            <ion-grid>
-                <ion-row *ngFor="let client of clients;" align-items-start style="margin-top:20px; height:30px">
-                    <ion-col col-4>
-                        <ion-label>{{client.name}}</ion-label>
-                    </ion-col>
-                    <ion-col col-4>
-                        <ion-label>{{client.surname}}</ion-label>
-                    </ion-col>
-                    <ion-col col-4>
-                        <ion-label>{{client.city}}</ion-label>
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
+            <ion-card *ngFor="let client of clients">
+                <ion-card-header>
+            
+                        <ion-card-title>Cliente: {{client.name+ ' '+ client.surname}}</ion-card-title>
+                    
+                    
+                        <ion-card-title>Codice Fiscale: {{client.cf}}</ion-card-title>
+                    
+                        <ion-card-title>Città: {{client.city + ',' + client.province}}</ion-card-title>
+                   
+                </ion-card-header>
+                <ion-card-content>
+                    Note di fatturazione: {{client.billing_notes}}
+                  </ion-card-content>
+
+                <ion-button expand="block" (click)="cancelClient(client.client_id)">Cancella Cliente</ion-button>
+          </ion-card>
         </div>
     </div>
 </ion-content>

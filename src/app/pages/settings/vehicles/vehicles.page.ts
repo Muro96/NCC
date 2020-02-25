@@ -1,6 +1,6 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {DatabaseService, Vehicle} from 'src/app/database.service';
-import {ToastController} from '@ionic/angular';
+import {ToastController, AlertController} from '@ionic/angular';
 
 @Component({
     selector: 'app-vehicles',
@@ -15,7 +15,7 @@ export class VehiclesPage implements OnInit {
     toast: any;
 
 
-    constructor(public database: DatabaseService, private toastController: ToastController) {
+    constructor(public database: DatabaseService, private toastController: ToastController,private alertController:AlertController) {
 
     }
 
@@ -54,6 +54,34 @@ export class VehiclesPage implements OnInit {
         this.toast = this.toastController.dismiss();
     }
 
+    deleteVehicle(vehicle_id:number){
+        this.database.deleteVehicles(vehicle_id);
+        this.database.getAllVehicles().then(data =>{
+            this.vehicles = data;
+        });
+
+    }
+    
+    async cancelVehicle(vehicle_id:number) {
+        const alert = await this.alertController.create({
+            header: 'SEI SICURO DI VOLER ELIMINARE IL MEZZO?',
+
+            buttons: [{
+                text: 'OK',
+                cssClass: 'secondary',
+                handler: () => {
+                    this.deleteVehicle(vehicle_id);
+                }
+            },
+                {
+                    text: 'ANNULLA',
+                }
+            ]
+
+        });
+
+        await alert.present();
+    }
 }
   
 

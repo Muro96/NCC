@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {DatabaseService, Client} from 'src/app/database.service';
-import {ToastController} from '@ionic/angular';
+import {ToastController, AlertController} from '@ionic/angular';
 
 @Component({
     selector: 'app-clients',
@@ -14,7 +14,7 @@ export class ClientsPage implements OnInit {
     toast: any;
     checked = false;
 
-    constructor(public database: DatabaseService, private toastController: ToastController) {
+    constructor(public database: DatabaseService, private toastController: ToastController,private alertController:AlertController) {
     }
 
     ngOnInit() {
@@ -74,6 +74,35 @@ export class ClientsPage implements OnInit {
         console.log('this.checked' + this.checked);
         return this.checked;
 
+    }
+
+    deleteClient(client_id:number){
+        this.database.deleteClient(client_id);
+        this.database.getClients().then(data =>{
+            this.clients = data;
+    });
+
+    }
+
+    async cancelClient(client_id:number) {
+        const alert = await this.alertController.create({
+            header: 'SEI SICURO DI VOLER ELIMINARE IL VIAGGIO?',
+
+            buttons: [{
+                text: 'OK',
+                cssClass: 'secondary',
+                handler: () => {
+                    this.deleteClient(client_id);
+                }
+            },
+                {
+                    text: 'ANNULLA',
+                }
+            ]
+
+        });
+
+        await alert.present();
     }
 
 

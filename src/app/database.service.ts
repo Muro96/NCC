@@ -39,22 +39,22 @@ export interface Client {
 
 export interface Arrival {
     arrival_id: number;
-    name: string;
-    lat: string;
-    long: string;
-    city: string;
-    country: string;
-    address: string;
+    name_arr: string;
+    lat_arr: string;
+    long_arr: string;
+    city_arr: string;
+    province_arr: string;
+    address_arr: string;
 }
 
 export interface Departure {
     departure_id: number;
-    name: string;
-    lat: string;
-    long: string;
-    city: string;
-    country: string;
-    address: string;
+    name_dep: string;
+    lat_dep: string;
+    long_dep: string;
+    city_dep: string;
+    province_dep: string;
+    address_dep: string;
 }
 
 export interface Travel {
@@ -64,6 +64,9 @@ export interface Travel {
     km_tot: number;
     date: string;
     hour: string;
+    fk_departure: number,
+    fk_arrival: number,
+    fk_client: number
     name_client: string;
     surname_client: string;
     billing_notes_client: string;
@@ -196,11 +199,7 @@ export class DatabaseService {
 
 
 
-    /*async deleteAgency(agency_id: number) {
-        const _ = await this.database.executeSql('DELETE FROM agency WHERE agency_id = ?', [agency_id]);
-        this.getAllAgency();
-
-    }
+    /*
 
     async updateAgency(agency: Agency) {
         let data = [agency.name, agency.vat, agency.cf, agency.address, agency.city, agency.cap, agency.province, agency.phone, agency.agency_id];
@@ -317,6 +316,10 @@ export class DatabaseService {
         });
 
     }
+    async deleteVehicles(vehicle_id:number){
+        await this.database.executeSql('DELETE FROM vehicle WHERE vehicle_id = ?', [vehicle_id]);
+
+    }
 
     async getClients() {
         let data = [1];
@@ -348,50 +351,53 @@ export class DatabaseService {
         let driverIdFk = await (await this.getDriverLogin()).driver_id;
         let data = [name, surname, city, province, is_private, is_agency, cf, vat, billing_notes, driverIdFk];
         const a = await this.database.executeSql('INSERT INTO client (name,surname,city,province,is_private,is_agency,cf,vat,billing_notes,fk_driver) VALUES (?,?,?,?,?,?,?,?,?,?)', data);
-        //this.getClients();
+
+    }
+
+    async deleteClient(client_id:number){
+        await this.database.executeSql('DELETE FROM client WHERE client_id = ?', [client_id]); 
 
     }
 
     //get all travel on this day
-    async getTravel(date: string) {
+    async getTravel(travel_id:number) {
         let query = 'SELECT travel.*,client.*,arrival.*,departure.* ' +
         'FROM travel AS travel '+
         'JOIN driver AS driver ON travel.fk_driver = driver.driver_id ' +
         'JOIN client AS client ON travel.fk_client = client.client_id ' +
         'JOIN arrival AS arrival ON travel.fk_arrival = arrival.arrival_id ' +
         'JOIN departure AS departure ON travel.fk_departure = departure.departure_id ' +
-        'WHERE driver.is_login = 1 AND travel.date =' + '\'' + date + '\''
+        'WHERE driver.is_login = 1 AND travel.travel_id =' + '\'' + travel_id + '\''
         return this.database.executeSql(query, []).then(data => {
-            let travel: Travel[] = [];
-            if (data.rows.length > 0) {
-                for (var i = 0; i < data.rows.length; i++) {
-                    travel.push({
-                        travel_id: data.rows.item(i).travel_id,
-                        is_paid: data.rows.item(i).is_paid,
-                        n_pass: data.rows.item(i).n_passenger,
-                        km_tot: data.rows.item(i).km_tot,
-                        date: data.rows.item(i).date,
-                        hour: data.rows.item(i).hour,
-                        name_client: data.rows.item(i).name,
-                        surname_client: data.rows.item(i).surname,
-                        billing_notes_client: data.rows.item(i).billing_notes,
-                        name_arrival: data.rows.item(i).name_arr,
-                        lat_arr: data.rows.item(i).lat_arr,
-                        long_arr: data.rows.item(i).long_arr,
-                        city_arrival: data.rows.item(i).city_arr,
-                        country_arrival: data.rows.item(i).country_arr,
-                        address_arrival: data.rows.item(i).address_arr,
-                        name_departure: data.rows.item(i).name_dep,
-                        lat_dep: data.rows.item(i).lat_dep,
-                        long_dep: data.rows.item(i).long_dep,
-                        city_departure: data.rows.item(i).city_dep,
-                        country_departure: data.rows.item(i).country_dep,
-                        address_departure: data.rows.item(i).address_dep,
-                        notes_travel: data.rows.item(i).notes_travel,
-                    });
+            return{
+                travel_id: data.rows.item(0).travel_id,
+                is_paid: data.rows.item(0).is_paid,
+                n_pass: data.rows.item(0).n_passenger,
+                km_tot: data.rows.item(0).km_tot,
+                date: data.rows.item(0).date,
+                hour: data.rows.item(0).hour,
+                fk_departure: data.rows.item(0).fk_departure,
+                fk_arrival: data.rows.item(0).fk_arrival,
+                fk_client: data.rows.item(0).fk_client,
+                name_client: data.rows.item(0).name,
+                surname_client: data.rows.item(0).surname,
+                billing_notes_client: data.rows.item(0).billing_notes,
+                name_arrival: data.rows.item(0).name_arr,
+                lat_arr: data.rows.item(0).lat_arr,
+                long_arr: data.rows.item(0).long_arr,
+                city_arrival: data.rows.item(0).city_arr,
+                country_arrival: data.rows.item(0).country_arr,
+                address_arrival: data.rows.item(0).address_arr,
+                name_departure: data.rows.item(0).name_dep,
+                lat_dep: data.rows.item(0).lat_dep,
+                long_dep: data.rows.item(0).long_dep,
+                city_departure: data.rows.item(0).city_dep,
+                country_departure: data.rows.item(0).country_dep,
+                address_departure: data.rows.item(0).address_dep,
+                notes_travel: data.rows.item(0).notes_travel,
+    
                 }
-            }
-            return travel;
+    
         });
 
     }
@@ -404,7 +410,6 @@ export class DatabaseService {
         'JOIN arrival AS arrival ON travel.fk_arrival = arrival.arrival_id ' +
         'JOIN departure AS departure ON travel.fk_departure = departure.departure_id ' +
         'WHERE driver.is_login = 1 AND travel.date =' + '\'' + date + '\''+ 'AND travel.is_paid=' + '\'' + is_paid + '\''
-        console.log("query"+query);
         return this.database.executeSql(query, []).then(data => {
             let travel: Travel[] = [];
             if (data.rows.length > 0) {
@@ -416,6 +421,9 @@ export class DatabaseService {
                         km_tot: data.rows.item(i).km_tot,
                         date: data.rows.item(i).date,
                         hour: data.rows.item(i).hour,
+                        fk_departure: data.rows.item(i).fk_departure,
+                        fk_arrival: data.rows.item(i).fk_arrival,
+                        fk_client: data.rows.item(i).fk_client,
                         name_client: data.rows.item(i).name,
                         surname_client: data.rows.item(i).surname,
                         billing_notes_client: data.rows.item(i).billing_notes,
@@ -559,9 +567,54 @@ export class DatabaseService {
     }
 
     async cancelTravel(travel_id:number){
+        let fk_arr  = await (await this.getTravel(travel_id)).fk_arrival;
+        let fk_dep = await (await this.getTravel(travel_id)).fk_departure;
+        let fk_client  = await (await this.getTravel(travel_id)).fk_client;
+        await this.database.executeSql('DELETE FROM arrival WHERE arrival_id = ?',[fk_arr]);
+        await this.database.executeSql('DELETE FROM departure WHERE departure_id = ?',[fk_dep]);
+        await this.database.executeSql('DELETE FROM client WHERE client_id = ?',[fk_client]);
         await this.database.executeSql('DELETE FROM travel WHERE travel_id = ?', [travel_id]);
 
 
     }
 
+    async getArrivals(){
+        let query = 'SELECT arrival.*,driver.* ' +
+        'FROM arrival AS arrival '+
+        'JOIN travel AS travel ON arrival.arrival_id = travel.fk_arrival ' +
+        'JOIN driver AS driver ON travel.fk_driver = driver.driver_id ' +
+        'WHERE driver.is_login = 1';
+
+        return this.database.executeSql(query,[]).then(data =>{
+            let arrival: Arrival[] = [];
+            if (data.rows.length > 0) {
+                for (var i = 0; i < data.rows.length; i++) {
+                    arrival.push({
+                        arrival_id: data.rows.item(i).arrival_id,
+                        name_arr: data.rows.item(i).name_arr,
+                        lat_arr: data.rows.item(i).lat_arr,
+                        long_arr: data.rows.item(i).long_arr,
+                        city_arr: data.rows.item(i).city_arr,
+                        province_arr: data.rows.item(i).province_arr,
+                        address_arr: data.rows.item(i).address_arr
+                        });
+
+                    }
+                }
+                return arrival;
+            });
+        }
+
+        async addDestination(name_arr:string, city_arr:string, province_arr: string, address_arr: string) {
+            let data = [name_arr,city_arr,province_arr,address_arr];
+            const a = await this.database.executeSql('INSERT INTO arrival (name_arr,city_arr,province_arr,address_arr) VALUES (?,?,?,?)', data);
+            
+        }
+
+        
+        
+
+       
+
+    
 }

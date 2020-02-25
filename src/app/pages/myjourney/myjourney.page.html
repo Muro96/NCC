@@ -12,11 +12,11 @@
 </ion-header>
 
 <ion-content>
-    <ion-item>
+    <ion-item lines="none">
         <ion-label>Data viaggi</ion-label>
         <ion-input readonly [(ngModel)]="mydate" (ionChange)="onChangeDate()" [liIonic4Datepicker]="datePickerObj"></ion-input>
     </ion-item>
-    <ion-item>
+    <ion-item lines="none">
         <ion-label>Pagato?</ion-label>
         <ion-checkbox color="primary" checked slot="start" (ionChange)="checkPaid()"></ion-checkbox>
     </ion-item>

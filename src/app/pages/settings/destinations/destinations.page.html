@@ -1,4 +1,4 @@
-<ion-header>
+<!--<ion-header>
     <ion-row>
         <ion-col text-start padding-top>
             <ion-title>Google Map</ion-title>
@@ -10,12 +10,67 @@
             </ion-button>
         </ion-col>
     </ion-row>
+</ion-header> -->
+
+<ion-header color="primary">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/home"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Destinazioni</ion-title>
+    </ion-toolbar>
 </ion-header>
-<ion-content>
+
+
+<ion-content class="ion-padding">
+    <ion-segment [(ngModel)]='selectedView'>
+        <ion-segment-button value='add_destination' layout="icon-start">
+            <ion-label>AGGIUNGI DESTINAZIONE</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="list_destination" layout="icon-start">
+            <ion-label>LISTA DESTINAZIONI</ion-label>
+        </ion-segment-button>
+    </ion-segment>
+    <div [ngSwitch]="selectedView">
+        <div *ngSwitchCase="'add_destination'">
+            <ion-item>
+                <ion-label position="stacked">Nome</ion-label>
+                <ion-input type="text" placeholder="" [(ngModel)]="arrival.name_arr"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label position="stacked">Città</ion-label>
+                <ion-input type="text" placeholder="" [(ngModel)]="arrival.city_arr"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label position="stacked">Provincia</ion-label>
+                <ion-input type="text" placeholder="" [(ngModel)]="arrival.province_arr"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label position="stacked">Indirizzo</ion-label>
+                <ion-input type="text" placeholder="" [(ngModel)]="arrival.address_arr"></ion-input>
+            </ion-item>
+            <ion-button expand="block" (click)="addArrival();">Aggiungi destinazione</ion-button>
+          
+        </div>
+        <div *ngSwitchCase="'list_destination'">
+            <ion-card *ngFor="let arrival of arrivals">
+                <ion-card-header>
+                    <ion-card-title>Indirizzo: {{arrival.address_arr+ ','+ arrival.city_arr+ '(' + arrival.province_arr + ')'}}</ion-card-title>  
+                </ion-card-header>
+                <ion-card-content>
+            
+                  </ion-card-content>
+
+                <ion-button expand="block" (click)="cancelClient()">Cancella Destinazione</ion-button>
+          </ion-card>
+        </div>
+    </div>
+</ion-content>
+<!--<ion-content>
 
     <div class="map-wrapper">
         <div id="map_center">
-            <!--<img src="../../assets/icon/center_marker.png" />  -->
+            <!--<img src="../../assets/icon/center_marker.png" />  
         </div>
     </div>
     <div id="address">
@@ -23,7 +78,7 @@
     </div>
 
 
-</ion-content> 
+</ion-content> -->
 
 
 
