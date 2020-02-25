@@ -13,8 +13,19 @@
 
 <ion-content>
     <ion-item>
-        <ion-label position="floating">Data viaggi</ion-label>
-       <!-- <ion-input readonly [(ngModel)]="mydate" (ionChange)="onChangeDate()" [liIonic4Datepicker]="datePickerObj"></ion-input> -->
+        <ion-label>Data viaggi</ion-label>
+        <ion-input readonly [(ngModel)]="mydate" (ionChange)="onChangeDate()" [liIonic4Datepicker]="datePickerObj"></ion-input>
     </ion-item>
-    <ion-button expand="block" (click)="getTravel();">get travel</ion-button>
+
+    <ion-card *ngFor="let travel of travels;">
+        
+        <ion-card-header>
+          <ion-card-title>Orario Partenza : {{travel.hour}}</ion-card-title>
+          <ion-card-title>Destinazione: {{travel.city_arrival}}</ion-card-title>
+          <ion-card-title>Arrivo: {{travel.city_departure}}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          Founded in 1829 on an isthmus between Lake Monona and Lake Mendota, Madison was named the capital of the Wisconsin Territory in 1836.
+        </ion-card-content>
+      </ion-card>
 </ion-content>

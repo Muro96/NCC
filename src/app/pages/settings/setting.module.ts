@@ -12,10 +12,6 @@ const routes: Routes = [
         component: SettingPage,
         children: [
             {
-                path: 'agency',
-                loadChildren: () => import('./agency/agency.module').then(m => m.AgencyPageModule)
-            },
-            {
                 path: 'drivers',
                 loadChildren: () => import('./drivers/drivers.module').then(m => m.DriversPageModule)
             },
@@ -30,6 +26,10 @@ const routes: Routes = [
             {
                 path: 'destinations',
                 loadChildren: () => import('./destinations/destinations.module').then(m => m.DestinationsPageModule)
+            },
+            {
+                path: 'arrivals',
+                loadChildren: () => import('./arrivals/arrivals.module').then(m => m.ArrivalsPageModule)
             },
         ]
     },

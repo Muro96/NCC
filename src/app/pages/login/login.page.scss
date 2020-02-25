@@ -1,12 +1,15 @@
 ion-item {
-  --background: #3880ff;
+  --background: #003c5f;
   --color: #fff;
 }
 
 ion-button {
-  --background: #062f77;
-}
+  --background: #003c5f;
+} 
 
 ion-input {
   font-size: medium;
+}
+ion-content{
+  --background:#003c5f;
 }

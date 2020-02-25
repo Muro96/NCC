@@ -46,11 +46,11 @@ export class HomePage {
         this.router.navigate(['/myjourney']);
     }
 
-    //return email of driver login
+    //return name of driver login
     async getDriverLogin() {
         let res = await this.database.getDriverLogin();
         console.log('resemail' + res.email);
-        return res.email;
+        return res.name;
 
     }
 

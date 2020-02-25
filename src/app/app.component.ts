@@ -20,7 +20,7 @@ export class AppComponent {
         },
         {
             title: 'Impostazioni',
-            url: '/settings/agency',
+            url: '/settings/drivers',
             icon: 'list',
         },
     ];

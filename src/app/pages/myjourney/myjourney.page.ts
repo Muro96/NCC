@@ -37,7 +37,7 @@ export class MyjourneyPage implements OnInit {
 
     time: string = new Date().toLocaleTimeString('it-IT', {hour: '2-digit', minute: '2-digit'});
     options = {day: 'numeric', month: 'numeric', year: 'numeric'};
-    mydate: string = new Date().toLocaleDateString('it-IT', this.options);
+    mydate: string = new Date().toLocaleDateString('it-IT');
 
 
     input_value: any;
@@ -61,7 +61,7 @@ export class MyjourneyPage implements OnInit {
         'Novembre',
         'Dicembre'
     ];
-    weeksList = ['LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB', 'DOM'];
+    weeksList = ['DOM','LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB'];
     selectedDate: any;
     clients: Client[] = [];
 
@@ -71,7 +71,7 @@ export class MyjourneyPage implements OnInit {
     ngOnInit() {
         this.datePickerObj = {
             inputDate: this.mydate,
-            dateFormat: 'DD/MM/YYYY',
+            dateFormat: 'DD/M/YYYY',
             fromDate: new Date('01/01/1960'),
             closeOnSelect: true,
             todayLabel: 'Oggi',
@@ -87,26 +87,25 @@ export class MyjourneyPage implements OnInit {
                 this.database.getClients().then(data => {
                     this.clients = data;
                 });
+                this.database.getTravel(this.mydate).then(data =>{
+                    this.travels = data;
+            });
             }
-        });
-    }
+    });
+}
 
+    onChangeDate(){
+        console.log("myyydate"+this.mydate);
+        this.database.getTravel(this.mydate).then(data =>{
+            this.travels = data;
+    });
+
+    }
+    
 
     addJourney() {
         this.router.navigate(['myjourney/addjourney']);
     }
-
-    getTravel(){
-        console.log("thisssssssss"+this.mydate);
-        this.database.getTravel(this.mydate).then(data =>{
-            this.travels = data;
-        })
-        console.log("travell"+this.travels);
-
-    }
-
-
-
 }
 
 

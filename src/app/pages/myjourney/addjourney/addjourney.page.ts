@@ -35,8 +35,8 @@ export class AddjourneyPage implements OnInit {
     coords = [];
 
     time: string = new Date().toLocaleTimeString('it-IT', {hour: '2-digit', minute: '2-digit'});
-    options = {day: 'numeric', month: 'numeric', year: 'numeric'};
-    mydate: string = new Date().toLocaleDateString('it-IT', this.options);
+    //options = {day: 'numeric', month: 'numeric', year: 'numeric'};
+    mydate: string = new Date().toLocaleDateString('it-IT');
 
 
     input_value: any;
@@ -78,7 +78,7 @@ export class AddjourneyPage implements OnInit {
          }); */
         this.datePickerObj = {
             inputDate: this.mydate,
-            dateFormat: 'DD/MM/YYYY',
+            dateFormat: 'DD/M/YYYY',
             fromDate: new Date('01/01/1960'),
             closeOnSelect: true,
             todayLabel: 'Oggi',

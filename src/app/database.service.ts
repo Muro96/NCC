@@ -168,7 +168,7 @@ export class DatabaseService {
                     'long_dep REAL,' +
                     'city_dep TEXT,' +
                     'province_dep TEXT,' +
-                    'addrearrival_idss_dep TEXT)', []);
+                    'address_dep TEXT)', []);
 
                 //ARRIVI
                 db.executeSql('CREATE TABLE arrival' +
@@ -408,14 +408,16 @@ export class DatabaseService {
 
     //get all travel on this day
     async getTravel(date: string) {
-        let data = [1, date];
-        return this.database.executeSql('SELECT travel.*,client.*,arrival.*,departure.*' +
-            'FROM travel AS travel' +
-            'JOIN driver AS driver ON travel.fk_driver = driver.driver_id' +
-            'JOIN client AS client ON travel.fk_client = client.client_id' +
-            'JOIN arrival AS arrival ON travel.fk_arrival = arrival.arrival_id' +
-            'JOIN departure AS departure ON travel.fk_departure = departure.departure_id' +
-            'WHERE driver.is_login = ? AND travel.date = ?', data).then(data => {
+        let data = [1];
+        let query = 'SELECT travel.*,client.*,arrival.*,departure.* ' +
+        'FROM travel AS travel '+
+        'JOIN driver AS driver ON travel.fk_driver = driver.driver_id ' +
+        'JOIN client AS client ON travel.fk_client = client.client_id ' +
+        'JOIN arrival AS arrival ON travel.fk_arrival = arrival.arrival_id ' +
+        'JOIN departure AS departure ON travel.fk_departure = departure.departure_id ' +
+        'WHERE driver.is_login = 1 AND travel.date =' + '\'' + date + '\''
+        console.log("querty"+query);
+        return this.database.executeSql(query, []).then(data => {
             let travel: Travel[] = [];
             if (data.rows.length > 0) {
                 for (var i = 0; i < data.rows.length; i++) {
@@ -541,7 +543,7 @@ export class DatabaseService {
 
         let driverid = await (await this.getDriverLogin()).driver_id;
         const query_main = await this.database.executeSql('INSERT INTO travel (n_passenger,km_tot,date,hour,fk_departure,fk_arrival,fk_client,fk_driver)' + 
-                                                     'VALUES (?,?,?,?,?,?,?,?)',[n_pass,km_tot,date,hour,departure_id,arrival_id,client_id,driverid]);
+                                                          'VALUES (?,?,?,?,?,?,?,?)',[n_pass,km_tot,date,hour,departure_id,arrival_id,client_id,driverid]);
 
     }
 
