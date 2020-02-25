@@ -5,6 +5,8 @@ import {Ionic4DatepickerModalComponent} from '@logisticinfotech/ionic4-datepicke
 import {DatabaseService, Client, Travel, Departure, Arrival} from 'src/app/database.service';
 import {LatLng} from 'leaflet';
 import {Router} from '@angular/router';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { NumberValueAccessor } from '@angular/forms';
 
 //declare var google;
 
@@ -18,6 +20,9 @@ export class MyjourneyPage implements OnInit {
     selectedView = 'add_journey';
     travel = {};
     travels: Travel[] = [];
+
+    checked_ispaid = true;
+    check_int= 1;
 
     departure = {};
     departures: Departure[] = [];
@@ -87,7 +92,7 @@ export class MyjourneyPage implements OnInit {
                 this.database.getClients().then(data => {
                     this.clients = data;
                 });
-                this.database.getTravel(this.mydate).then(data =>{
+                this.database.getTravelisPaidDate(this.mydate,1).then(data =>{
                     this.travels = data;
             });
             }
@@ -96,7 +101,7 @@ export class MyjourneyPage implements OnInit {
 
     onChangeDate(){
         console.log("myyydate"+this.mydate);
-        this.database.getTravel(this.mydate).then(data =>{
+        this.database.getTravelisPaidDate(this.mydate,1).then(data =>{
             this.travels = data;
     });
 
@@ -106,6 +111,56 @@ export class MyjourneyPage implements OnInit {
     addJourney() {
         this.router.navigate(['myjourney/addjourney']);
     }
+
+    cancelTravel(travel_id:number){
+        console.log("traaaaaavel"+travel_id);
+        this.database.cancelTravel(travel_id);
+        this.database.getTravelisPaidDate(this.mydate,this.check_int).then(data =>{
+            this.travels = data;
+    });
+
+
+    }
+
+    async cancel(travel_id:number) {
+        const alert = await this.alertController.create({
+            header: 'SEI SICURO DI VOLER ELIMINARE IL VIAGGIO?',
+
+            buttons: [{
+                text: 'OK',
+                cssClass: 'secondary',
+                handler: () => {
+                    this.cancelTravel(travel_id);
+                }
+            },
+                {
+                    text: 'ANNULLA',
+                }
+            ]
+
+        });
+
+        await alert.present();
+    }
+
+    async checkPaid(){
+        this.checked_ispaid = !this.checked_ispaid;
+        if(this.checked_ispaid==true){
+            this.check_int=1;
+            await this.database.getTravelisPaidDate(this.mydate,this.check_int).then(data =>{
+                this.travels = data;
+            })
+        }
+        else{
+            this.check_int=0;
+            await this.database.getTravelisPaidDate(this.mydate,this.check_int).then(data =>{
+                this.travels = data;
+            })
+        }
+        console.log('this.checked__paid' + this.checked_ispaid);
+        console.log('check_int' + this.check_int);
+        
+        }
 }
 
 

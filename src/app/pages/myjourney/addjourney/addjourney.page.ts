@@ -18,6 +18,8 @@ export class AddjourneyPage implements OnInit {
     travel = {};
     travels: Travel[] = [];
 
+    checked = false;
+
     departure = {};
     departures: Departure[] = [];
 
@@ -305,20 +307,42 @@ export class AddjourneyPage implements OnInit {
     } */
 
     async addTravel() {
-        console.log('thisss' + this.time);
         let client_id = this.getClientIdSelected();
-        if (this.departure['city'] != null && this.departure['country'] != null && this.departure['address'] != null && this.arrival['city'] != null && this.arrival['country'] != null && this.arrival['address'] != null) {
-            this.database.addTravel(this.departure['city'], this.departure['country'], this.departure['address'], this.arrival['city'], this.arrival['country'], this.arrival['address'], this.time, this.mydate, this.travel['n_pass'], this.travel['km_tot'], client_id);
-            this.travel = {};
-            this.arrival = {};
-            this.departure = {};
-        } else {
-            this.checkForm();
+        if (this.checkPaid() == true){
+            if (this.departure['city'] != null && this.departure['country'] != null && this.departure['address'] != null && this.arrival['city'] != null && this.arrival['country'] != null && this.arrival['address'] != null) {
+                this.database.addTravel(this.departure['city'], this.departure['country'], this.departure['address'], this.arrival['city'], this.arrival['country'], this.arrival['address'], this.time, this.mydate, this.travel['n_pass'], this.travel['km_tot'], client_id,1);
+                this.travel = {};
+                this.arrival = {};
+                this.departure = {};
+            } else {
+                this.checkForm();
+    
+            }
 
         }
+        else{
+            if (this.departure['city'] != null && this.departure['country'] != null && this.departure['address'] != null && this.arrival['city'] != null && this.arrival['country'] != null && this.arrival['address'] != null) {
+                this.database.addTravel(this.departure['city'], this.departure['country'], this.departure['address'], this.arrival['city'], this.arrival['country'], this.arrival['address'], this.time, this.mydate, this.travel['n_pass'], this.travel['km_tot'], client_id,0);
+                this.travel = {};
+                this.arrival = {};
+                this.departure = {};
+            } else {
+                this.checkForm();
+    
+            }
+
+        }
+        
 
 
     }
+
+    checkPaid(){
+        this.checked = !this.checked;
+        console.log('this.checked__paid' + this.checked);
+        return this.checked;
+        }
+
 
     async checkForm() {
         const alert = await this.alertController.create({

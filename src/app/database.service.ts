@@ -6,18 +6,6 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {Md5} from 'ts-md5/dist/md5';
 
-export interface Agency {
-    agency_id: number;
-    name: string;
-    vat: string;
-    cf: string;
-    address: string;
-    city: string;
-    cap: string;
-    province: string;
-    phone: string;
-}
-
 export interface Driver {
     driver_id: number;
     name: string;
@@ -91,6 +79,7 @@ export interface Travel {
     city_departure: string;
     country_departure: string;
     address_departure: string;
+    notes_travel:string;
 }
 
 @Injectable({
@@ -100,10 +89,9 @@ export class DatabaseService {
     database: SQLiteObject;
     private databaseReady: BehaviorSubject<boolean>;
 
-
-    agency = new BehaviorSubject([]);
     driver = new BehaviorSubject([]);
     vehicle = new BehaviorSubject([]);
+
 
     constructor(private platform: Platform, private http: HttpClientModule, private sqlite: SQLite) {
         this.databaseReady = new BehaviorSubject(false);
@@ -113,17 +101,8 @@ export class DatabaseService {
                 location: 'default'
             }).then((db: SQLiteObject) => {
                 this.database = db;
-                //AGENZIE
-                db.executeSql('CREATE TABLE IF NOT EXISTS agency' +
-                    '(agency_id INTEGER PRIMARY KEY,' +
-                    'name TEXT not null,' +
-                    'vat TEXT not null,' +
-                    'cf TEXT not null,' +
-                    'address TEXT,' +
-                    'city TEXT,' +
-                    'cap TEXT,' +
-                    'province TEXT,' +
-                    'phone TEXT);', []);
+    
+        
                 //CONDUCENTI
                 db.executeSql('CREATE TABLE IF NOT EXISTS driver' +
                     '(driver_id INTEGER PRIMARY KEY,' +
@@ -133,9 +112,7 @@ export class DatabaseService {
                     'phone TEXT,' +
                     'email TEXT,' +
                     'password TEXT,' +
-                    'is_login INTEGER DEFAULT "0" NOT NULL,' +
-                    'fk_agency INTEGER,' +
-                    'FOREIGN KEY(fk_agency) REFERENCES agency(agency_id) ON DELETE CASCADE);', []);
+                    'is_login INTEGER DEFAULT "0" NOT NULL)', []);
 
                 //VEICOLI
                 db.executeSql('CREATE TABLE IF NOT EXISTS vehicle' +
@@ -188,6 +165,7 @@ export class DatabaseService {
                     'km_tot INTEGER,' +
                     'date TEXT,' +
                     'hour TEXT,' +
+                    'notes_travel TEXT,' +
                     'fk_departure INTEGER,' +
                     'fk_arrival INTEGER,' +
                     'fk_client INTEGER,' +
@@ -198,7 +176,6 @@ export class DatabaseService {
                     'FOREIGN KEY(fk_departure) REFERENCES departure(departure_id));', []);
 
 
-                this.getAllAgency();
                 this.databaseReady.next(true);
             });
         });
@@ -206,10 +183,6 @@ export class DatabaseService {
 
     getDatabaseState() {
         return this.databaseReady.asObservable();
-    }
-
-    getAgency(): Observable<Agency[]> {
-        return this.agency.asObservable();
     }
 
     getDrivers(): Observable<Driver[]> {
@@ -221,36 +194,9 @@ export class DatabaseService {
     }
 
 
-    async addAgency(name: string, vat: string, cf: string, address: string, city: string, cap: string, province: string, phone: string) {
-        let data = [name, vat, cf, address, city, cap, province, phone];
-        const data_1 = await this.database.executeSql('INSERT INTO agency (name,vat,cf,address,city,cap,province,phone) VALUES (?,?,?,?,?,?,?,?)', data);
-        this.getAllAgency();
-    }
 
 
-    async getAllAgency() {
-        return this.database.executeSql('SELECT * FROM agency;', []).then(data => {
-            const agency: Agency[] = [];
-            if (data.rows.length > 0) {
-                for (var i = 0; i < data.rows.length; i++) {
-                    agency.push({
-                        agency_id: data.rows.item(i).agency_id,
-                        name: data.rows.item(i).name,
-                        vat: data.rows.item(i).vat,
-                        cf: data.rows.item(i).cf,
-                        address: data.rows.item(i).address,
-                        city: data.rows.item(i).city,
-                        cap: data.rows.item(i).cap,
-                        province: data.rows.item(i).province,
-                        phone: data.rows.item(i).phone
-                    });
-                }
-            }
-            this.agency.next(agency);
-        });
-    }
-
-    async deleteAgency(agency_id: number) {
+    /*async deleteAgency(agency_id: number) {
         const _ = await this.database.executeSql('DELETE FROM agency WHERE agency_id = ?', [agency_id]);
         this.getAllAgency();
 
@@ -262,7 +208,7 @@ export class DatabaseService {
         const _ = await this.database.executeSql('UPDATE agency SET name = ?, vat = ?, cf = ?, address = ?, city = ?, cap = ?, province = ?, phone = ? WHERE agency_id = ?', data);
         this.getAllAgency();
 
-    }
+    } */
 
     async addDriver(name: string, surname: string, cf_driver: string, phone: string, email: string, password: string, is_login: number) {
         let data = [name, surname, cf_driver, phone, email, Md5.hashStr(password), is_login = 0];
@@ -408,7 +354,6 @@ export class DatabaseService {
 
     //get all travel on this day
     async getTravel(date: string) {
-        let data = [1];
         let query = 'SELECT travel.*,client.*,arrival.*,departure.* ' +
         'FROM travel AS travel '+
         'JOIN driver AS driver ON travel.fk_driver = driver.driver_id ' +
@@ -416,7 +361,6 @@ export class DatabaseService {
         'JOIN arrival AS arrival ON travel.fk_arrival = arrival.arrival_id ' +
         'JOIN departure AS departure ON travel.fk_departure = departure.departure_id ' +
         'WHERE driver.is_login = 1 AND travel.date =' + '\'' + date + '\''
-        console.log("querty"+query);
         return this.database.executeSql(query, []).then(data => {
             let travel: Travel[] = [];
             if (data.rows.length > 0) {
@@ -443,6 +387,51 @@ export class DatabaseService {
                         city_departure: data.rows.item(i).city_dep,
                         country_departure: data.rows.item(i).country_dep,
                         address_departure: data.rows.item(i).address_dep,
+                        notes_travel: data.rows.item(i).notes_travel,
+                    });
+                }
+            }
+            return travel;
+        });
+
+    }
+
+    async getTravelisPaidDate(date: string,is_paid:number) {
+        let query = 'SELECT travel.*,client.*,arrival.*,departure.* ' +
+        'FROM travel AS travel '+
+        'JOIN driver AS driver ON travel.fk_driver = driver.driver_id ' +
+        'JOIN client AS client ON travel.fk_client = client.client_id ' +
+        'JOIN arrival AS arrival ON travel.fk_arrival = arrival.arrival_id ' +
+        'JOIN departure AS departure ON travel.fk_departure = departure.departure_id ' +
+        'WHERE driver.is_login = 1 AND travel.date =' + '\'' + date + '\''+ 'AND travel.is_paid=' + '\'' + is_paid + '\''
+        console.log("query"+query);
+        return this.database.executeSql(query, []).then(data => {
+            let travel: Travel[] = [];
+            if (data.rows.length > 0) {
+                for (var i = 0; i < data.rows.length; i++) {
+                    travel.push({
+                        travel_id: data.rows.item(i).travel_id,
+                        is_paid: data.rows.item(i).is_paid,
+                        n_pass: data.rows.item(i).n_passenger,
+                        km_tot: data.rows.item(i).km_tot,
+                        date: data.rows.item(i).date,
+                        hour: data.rows.item(i).hour,
+                        name_client: data.rows.item(i).name,
+                        surname_client: data.rows.item(i).surname,
+                        billing_notes_client: data.rows.item(i).billing_notes,
+                        name_arrival: data.rows.item(i).name_arr,
+                        lat_arr: data.rows.item(i).lat_arr,
+                        long_arr: data.rows.item(i).long_arr,
+                        city_arrival: data.rows.item(i).city_arr,
+                        country_arrival: data.rows.item(i).country_arr,
+                        address_arrival: data.rows.item(i).address_arr,
+                        name_departure: data.rows.item(i).name_dep,
+                        lat_dep: data.rows.item(i).lat_dep,
+                        long_dep: data.rows.item(i).long_dep,
+                        city_departure: data.rows.item(i).city_dep,
+                        country_departure: data.rows.item(i).country_dep,
+                        address_departure: data.rows.item(i).address_dep,
+                        notes_travel: data.rows.item(i).notes_travel,
                     });
                 }
             }
@@ -508,7 +497,7 @@ export class DatabaseService {
 
     }
 
-    async addTravel(city_dep:string, country_dep:string,address_dep:string,city_arr:string, country_arr:string,address_arr:string,hour:string,date:string,n_pass:string,km_tot:number,client_id:number) {
+    async addTravel(city_dep:string, country_dep:string,address_dep:string,city_arr:string, country_arr:string,address_arr:string,hour:string,date:string,n_pass:string,km_tot:number,client_id:number,is_paid:number) {
         let result_row_arrival = await this.checkArrival_present(address_arr,city_arr);
         let arrival_id: any;
         let departure_id: any;
@@ -542,8 +531,8 @@ export class DatabaseService {
         }
 
         let driverid = await (await this.getDriverLogin()).driver_id;
-        const query_main = await this.database.executeSql('INSERT INTO travel (n_passenger,km_tot,date,hour,fk_departure,fk_arrival,fk_client,fk_driver)' + 
-                                                          'VALUES (?,?,?,?,?,?,?,?)',[n_pass,km_tot,date,hour,departure_id,arrival_id,client_id,driverid]);
+        const query_main = await this.database.executeSql('INSERT INTO travel (is_paid,n_passenger,km_tot,date,hour,fk_departure,fk_arrival,fk_client,fk_driver)' + 
+                                                          'VALUES (?,?,?,?,?,?,?,?,?)',[is_paid,n_pass,km_tot,date,hour,departure_id,arrival_id,client_id,driverid]);
 
     }
 
@@ -567,6 +556,12 @@ export class DatabaseService {
             res = row.insertId;   
         })
         return res;
+    }
+
+    async cancelTravel(travel_id:number){
+        await this.database.executeSql('DELETE FROM travel WHERE travel_id = ?', [travel_id]);
+
+
     }
 
 }

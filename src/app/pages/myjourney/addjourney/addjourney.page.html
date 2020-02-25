@@ -77,6 +77,11 @@
             <ion-label>N° Passeggeri</ion-label>
             <ion-input slot="end" type="number" placeholder="" [(ngModel)]="travel.n_pass"></ion-input>
         </ion-item>
+
+        <ion-item>
+            <ion-label>Pagato?</ion-label>
+            <ion-checkbox color="primary" checked slot="start" (ionChange)="checkPaid()"></ion-checkbox>
+        </ion-item>
         <ion-button expand="block" (click)="gotoAddClient();">Aggiungi un nuovo cliente</ion-button>
         <ion-button expand="block" (click)="addTravel();">Aggiungi viaggio</ion-button>
         <!--<ion-button expand="block" (click)="distanceMatrix();">Calcola KM</ion-button> -->

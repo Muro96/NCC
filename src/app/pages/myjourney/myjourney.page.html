@@ -16,16 +16,29 @@
         <ion-label>Data viaggi</ion-label>
         <ion-input readonly [(ngModel)]="mydate" (ionChange)="onChangeDate()" [liIonic4Datepicker]="datePickerObj"></ion-input>
     </ion-item>
+    <ion-item>
+        <ion-label>Pagato?</ion-label>
+        <ion-checkbox color="primary" checked slot="start" (ionChange)="checkPaid()"></ion-checkbox>
+    </ion-item>
 
-    <ion-card *ngFor="let travel of travels;">
-        
+    <ion-card *ngFor="let travel of travels;">   
         <ion-card-header>
-          <ion-card-title>Orario Partenza : {{travel.hour}}</ion-card-title>
-          <ion-card-title>Destinazione: {{travel.city_arrival}}</ion-card-title>
-          <ion-card-title>Arrivo: {{travel.city_departure}}</ion-card-title>
+            <ion-item lines="none">
+                <ion-icon src="../../assets/icon/hour.svg"></ion-icon>
+                <ion-card-title>Orario Partenza : {{travel.hour}}</ion-card-title>
+            </ion-item>
+            <ion-item lines="none">
+                <ion-icon src="../../assets/icon/location.svg"></ion-icon>
+                <ion-card-title>Destinazione: {{travel.city_arrival}}</ion-card-title>
+            </ion-item>
+            <ion-item lines="none">
+                <ion-icon src="../../assets/icon/location.svg"></ion-icon>
+                <ion-card-title>Partenza: {{travel.city_departure}}</ion-card-title>
+            </ion-item>
         </ion-card-header>
         <ion-card-content>
           Founded in 1829 on an isthmus between Lake Monona and Lake Mendota, Madison was named the capital of the Wisconsin Territory in 1836.
         </ion-card-content>
+        <ion-button expand="block" (click)="cancel(travel.travel_id);">Cancella viaggio</ion-button>
       </ion-card>
 </ion-content>
