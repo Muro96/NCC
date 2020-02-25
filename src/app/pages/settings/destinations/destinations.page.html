@@ -23,7 +23,7 @@
 
 
 <ion-content class="ion-padding">
-    <ion-segment [(ngModel)]='selectedView'>
+   <!-- <ion-segment [(ngModel)]='selectedView'>
         <ion-segment-button value='add_destination' layout="icon-start">
             <ion-label>AGGIUNGI DESTINAZIONE</ion-label>
         </ion-segment-button>
@@ -31,7 +31,7 @@
             <ion-label>LISTA DESTINAZIONI</ion-label>
         </ion-segment-button>
     </ion-segment>
-    <div [ngSwitch]="selectedView">
+    <!--<div [ngSwitch]="selectedView">
         <div *ngSwitchCase="'add_destination'">
             <ion-item>
                 <ion-label position="stacked">Nome</ion-label>
@@ -52,7 +52,7 @@
             <ion-button expand="block" (click)="addArrival();">Aggiungi destinazione</ion-button>
           
         </div>
-        <div *ngSwitchCase="'list_destination'">
+        <div *ngSwitchCase="'list_destination'"> -->
             <ion-card *ngFor="let arrival of arrivals">
                 <ion-card-header>
                     <ion-card-title>Indirizzo: {{arrival.address_arr+ ','+ arrival.city_arr+ '(' + arrival.province_arr + ')'}}</ion-card-title>  
@@ -60,11 +60,9 @@
                 <ion-card-content>
             
                   </ion-card-content>
-
-                <ion-button expand="block" (click)="cancelClient()">Cancella Destinazione</ion-button>
           </ion-card>
-        </div>
-    </div>
+        <!--</div>
+    </div> -->
 </ion-content>
 <!--<ion-content>
 

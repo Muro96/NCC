@@ -605,11 +605,38 @@ export class DatabaseService {
             });
         }
 
-        async addDestination(name_arr:string, city_arr:string, province_arr: string, address_arr: string) {
+        async getDepartures(){
+            let query = 'SELECT departure.*,driver.* ' +
+            'FROM departure AS departure '+
+            'JOIN travel AS travel ON departure.departure_id = travel.fk_departure ' +
+            'JOIN driver AS driver ON travel.fk_driver = driver.driver_id ' +
+            'WHERE driver.is_login = 1';
+    
+            return this.database.executeSql(query,[]).then(data =>{
+                let departure: Departure[] = [];
+                if (data.rows.length > 0) {
+                    for (var i = 0; i < data.rows.length; i++) {
+                        departure.push({
+                            departure_id: data.rows.item(i).departure_id,
+                            name_dep: data.rows.item(i).name_dep,
+                            lat_dep: data.rows.item(i).lat_dep,
+                            long_dep: data.rows.item(i).long_dep,
+                            city_dep: data.rows.item(i).city_dep,
+                            province_dep: data.rows.item(i).province_dep,
+                            address_dep: data.rows.item(i).address_dep
+                            });
+    
+                        }
+                    }
+                    return departure;
+                });
+            }
+
+        /*async addDestination(name_arr:string, city_arr:string, province_arr: string, address_arr: string) {
             let data = [name_arr,city_arr,province_arr,address_arr];
             const a = await this.database.executeSql('INSERT INTO arrival (name_arr,city_arr,province_arr,address_arr) VALUES (?,?,?,?)', data);
             
-        }
+        } */
 
         
         

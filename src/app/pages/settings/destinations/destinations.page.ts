@@ -41,14 +41,14 @@ export class DestinationsPage implements OnInit {
         });
         //this.loadMap();
     }
-    async addArrival(){
+    /*async addArrival(){
      this.database.addDestination(this.arrival['name_arr'],this.arrival['city_arr'],this.arrival['province_arr'],this.arrival['address_arr']).then(async _ => {
         this.arrival = {};
         await this.database.getArrivals().then(data => {
             this.arrivals = data;
             });
         });
-    }
+    } */
 
 
    /* loadMap() {

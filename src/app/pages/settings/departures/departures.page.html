@@ -1,9 +1,23 @@
-<ion-header>
+<ion-header color="primary">
   <ion-toolbar>
-    <ion-title>departures</ion-title>
+      <ion-buttons slot="start">
+          <ion-back-button defaultHref="/home"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Partenze</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
 
+<ion-content class="ion-padding">
+
+          <ion-card *ngFor="let departure of departures">
+              <ion-card-header>
+                  <ion-card-title>Indirizzo: {{departure.address_dep+ ','+ departure.city_dep+ '(' + departure.province_dep + ')'}}</ion-card-title>  
+              </ion-card-header>
+              <ion-card-content>
+          
+                </ion-card-content>
+        </ion-card>
+      <!--</div>
+  </div> -->
 </ion-content>
