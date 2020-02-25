@@ -84,6 +84,14 @@ export interface Travel {
     address_departure: string;
     notes_travel:string;
 }
+export interface Register {
+    register_id: number;
+    print_reg: number;
+    date:string;
+    km_start: number;
+    km_end: number;
+                
+}
 
 @Injectable({
     providedIn: 'root'
@@ -177,6 +185,17 @@ export class DatabaseService {
                     'FOREIGN KEY(fk_client) REFERENCES client(client_id),' +
                     'FOREIGN KEY(fk_arrival) REFERENCES arrival(arrival_id),' +
                     'FOREIGN KEY(fk_departure) REFERENCES departure(departure_id));', []);
+
+
+                db.executeSql('CREATE TABLE register' +
+                    '(register_id INTEGER PRIMARY KEY,' +
+                    'print_reg INTEGER,' +
+                    'date TEXT,' +
+                    'km_start INTEGER,' +
+                    'km_end INTEGER,' +
+                    'fk_vehicle INTEGER,' +
+                    'FOREIGN KEY(fk_vehicle) REFERENCES vehicle(vehicle_id));',[]); 
+                            
 
 
                 this.databaseReady.next(true);
@@ -632,16 +651,6 @@ export class DatabaseService {
                 });
             }
 
-        /*async addDestination(name_arr:string, city_arr:string, province_arr: string, address_arr: string) {
-            let data = [name_arr,city_arr,province_arr,address_arr];
-            const a = await this.database.executeSql('INSERT INTO arrival (name_arr,city_arr,province_arr,address_arr) VALUES (?,?,?,?)', data);
-            
-        } */
-
-        
-        
-
-       
 
     
 }
