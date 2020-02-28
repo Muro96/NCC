@@ -26,8 +26,8 @@ export interface Vehicle {
 
 export interface Client {
     client_id: number;
-    name: string;
-    surname: string;
+    name_client: string;
+    surname_client: string;
     city: string;
     province: string;
     is_private: number;
@@ -74,15 +74,22 @@ export interface Travel {
     lat_arr: string;
     long_arr: string;
     city_arrival: string;
-    country_arrival: string;
+    province_arrival: string;
     address_arrival: string;
     name_departure: string;
     lat_dep: string;
     long_dep: string;
     city_departure: string;
-    country_departure: string;
+    province_departure: string;
     address_departure: string;
     notes_travel:string;
+    fk_vehicle: number;
+    car_model: string;
+    licence_plate: string;
+    name_driver: string;
+    surname_driver: string;
+
+    
 }
 export interface Register {
     register_id: number;
@@ -137,8 +144,8 @@ export class DatabaseService {
                 // CLIENTI (COLUI CHE PAGA CORSA)
                 db.executeSql('CREATE TABLE client' +
                     '(client_id INTEGER PRIMARY KEY,' +
-                    'name TEXT not null,' +
-                    'surname TEXT not null,' +
+                    'name_client TEXT not null,' +
+                    'surname_client TEXT not null,' +
                     'city TEXT not null,' +
                     'province TEXT not null,' +
                     'is_private INTEGER,' +
@@ -182,6 +189,8 @@ export class DatabaseService {
                     'fk_arrival INTEGER,' +
                     'fk_client INTEGER,' +
                     'fk_driver INTEGER,' +
+                    'fk_vehicle INTEGER,' +
+                    'FOREIGN KEY(fk_vehicle) REFERENCES vehicle(vehicle_id),' +
                     'FOREIGN KEY(fk_driver) REFERENCES driver(driver_id),' +
                     'FOREIGN KEY(fk_client) REFERENCES client(client_id),' +
                     'FOREIGN KEY(fk_arrival) REFERENCES arrival(arrival_id),' +
@@ -349,8 +358,8 @@ export class DatabaseService {
                 for (var i = 0; i < data.rows.length; i++) {
                     client.push({
                         client_id: data.rows.item(i).client_id,
-                        name: data.rows.item(i).name,
-                        surname: data.rows.item(i).surname,
+                        name_client: data.rows.item(i).name_client,
+                        surname_client: data.rows.item(i).surname_client,
                         city: data.rows.item(i).city,
                         province: data.rows.item(i).province,
                         is_private: data.rows.item(i).is_private,
@@ -370,7 +379,7 @@ export class DatabaseService {
     async addClient(name: string, surname: string, city: string, province: string, is_private: number, is_agency: number, cf: string, vat: string, billing_notes: string) {
         let driverIdFk = await (await this.getDriverLogin()).driver_id;
         let data = [name, surname, city, province, is_private, is_agency, cf, vat, billing_notes, driverIdFk];
-        const a = await this.database.executeSql('INSERT INTO client (name,surname,city,province,is_private,is_agency,cf,vat,billing_notes,fk_driver) VALUES (?,?,?,?,?,?,?,?,?,?)', data);
+        const a = await this.database.executeSql('INSERT INTO client (name_client,surname_client,city,province,is_private,is_agency,cf,vat,billing_notes,fk_driver) VALUES (?,?,?,?,?,?,?,?,?,?)', data);
 
     }
 
@@ -381,7 +390,7 @@ export class DatabaseService {
 
     //get all travel on this day
     async getTravel(travel_id:number) {
-        let query = 'SELECT travel.*,client.*,arrival.*,departure.* ' +
+        let query = 'SELECT travel.*,client.*,arrival.*,departure.*,driver.*,vehicle.* ' +
         'FROM travel AS travel '+
         'JOIN driver AS driver ON travel.fk_driver = driver.driver_id ' +
         'JOIN client AS client ON travel.fk_client = client.client_id ' +
@@ -399,8 +408,8 @@ export class DatabaseService {
                 fk_departure: data.rows.item(0).fk_departure,
                 fk_arrival: data.rows.item(0).fk_arrival,
                 fk_client: data.rows.item(0).fk_client,
-                name_client: data.rows.item(0).name,
-                surname_client: data.rows.item(0).surname,
+                name_client: data.rows.item(0).name_client,
+                surname_client: data.rows.item(0).surname_client,
                 billing_notes_client: data.rows.item(0).billing_notes,
                 name_arrival: data.rows.item(0).name_arr,
                 lat_arr: data.rows.item(0).lat_arr,
@@ -423,8 +432,9 @@ export class DatabaseService {
     }
 
     async getTravelisPaidDate(date: string,is_paid:number) {
-        let query = 'SELECT travel.*,client.*,arrival.*,departure.* ' +
+        let query = 'SELECT travel.*,client.*,arrival.*,departure.*,driver.*,vehicle.* ' +
         'FROM travel AS travel '+
+        'JOIN vehicle AS vehicle ON travel.fk_vehicle = vehicle.vehicle_id ' +
         'JOIN driver AS driver ON travel.fk_driver = driver.driver_id ' +
         'JOIN client AS client ON travel.fk_client = client.client_id ' +
         'JOIN arrival AS arrival ON travel.fk_arrival = arrival.arrival_id ' +
@@ -451,15 +461,20 @@ export class DatabaseService {
                         lat_arr: data.rows.item(i).lat_arr,
                         long_arr: data.rows.item(i).long_arr,
                         city_arrival: data.rows.item(i).city_arr,
-                        country_arrival: data.rows.item(i).country_arr,
+                        province_arrival: data.rows.item(i).province_arr,
                         address_arrival: data.rows.item(i).address_arr,
                         name_departure: data.rows.item(i).name_dep,
                         lat_dep: data.rows.item(i).lat_dep,
                         long_dep: data.rows.item(i).long_dep,
                         city_departure: data.rows.item(i).city_dep,
-                        country_departure: data.rows.item(i).country_dep,
+                        province_departure: data.rows.item(i).province_dep,
                         address_departure: data.rows.item(i).address_dep,
                         notes_travel: data.rows.item(i).notes_travel,
+                        fk_vehicle: data.rows.item(i).fk_vehicle,
+                        car_model: data.rows.item(i).car_model,
+                        licence_plate: data.rows.item(i).license_plate,
+                        name_driver: data.rows.item(i).name,
+                        surname_driver: data.rows.item(i).surname,
                     });
                 }
             }
@@ -525,7 +540,7 @@ export class DatabaseService {
 
     }
 
-    async addTravel(city_dep:string, country_dep:string,address_dep:string,city_arr:string, country_arr:string,address_arr:string,hour:string,date:string,n_pass:string,km_tot:number,client_id:number,is_paid:number) {
+    async addTravel(city_dep:string, country_dep:string,address_dep:string,city_arr:string, country_arr:string,address_arr:string,hour:string,date:string,n_pass:string,km_tot:number,client_id:number,is_paid:number,vehicle_id:number) {
         let result_row_arrival = await this.checkArrival_present(address_arr,city_arr);
         let arrival_id: any;
         let departure_id: any;
@@ -559,8 +574,8 @@ export class DatabaseService {
         }
 
         let driverid = await (await this.getDriverLogin()).driver_id;
-        const query_main = await this.database.executeSql('INSERT INTO travel (is_paid,n_passenger,km_tot,date,hour,fk_departure,fk_arrival,fk_client,fk_driver)' + 
-                                                          'VALUES (?,?,?,?,?,?,?,?,?)',[is_paid,n_pass,km_tot,date,hour,departure_id,arrival_id,client_id,driverid]);
+        const query_main = await this.database.executeSql('INSERT INTO travel (is_paid,n_passenger,km_tot,date,hour,fk_departure,fk_arrival,fk_client,fk_driver,fk_vehicle)' + 
+                                                          'VALUES (?,?,?,?,?,?,?,?,?,?)',[is_paid,n_pass,km_tot,date,hour,departure_id,arrival_id,client_id,driverid,vehicle_id]);
 
     }
 

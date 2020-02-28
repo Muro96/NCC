@@ -62,7 +62,14 @@
             <ion-label>Clienti</ion-label>
             <ion-select [(ngModel)]="client_id_select" (ngModelChange)="getClientIdSelected()">
                 <ion-select-option *ngFor="let client of clients;"
-                                   [value]="client['client_id']">{{client.name + ' ' + client.surname}}</ion-select-option>
+                                   [value]="client['client_id']">{{client.name_client + ' ' + client.surname_client}}</ion-select-option>
+            </ion-select>
+        </ion-item>
+        <ion-item>
+            <ion-label>Veicolo</ion-label>
+            <ion-select [(ngModel)]="vehicle_id_select" (ngModelChange)="getVehicleIdSelected()">
+                <ion-select-option *ngFor="let vehicle of vehicles;"
+                                   [value]="vehicle['vehicle_id']">{{vehicle.car_model}}</ion-select-option>
             </ion-select>
         </ion-item>
         <!--<ion-item>

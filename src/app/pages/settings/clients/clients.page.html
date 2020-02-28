@@ -20,11 +20,11 @@
         <div *ngSwitchCase="'add_client'">
             <ion-item>
                 <ion-label position="stacked">Nome</ion-label>
-                <ion-input type="text" placeholder="" [(ngModel)]="client.name"></ion-input>
+                <ion-input type="text" placeholder="" [(ngModel)]="client.name_client"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-label position="stacked">Cognome</ion-label>
-                <ion-input type="text" placeholder="" [(ngModel)]="client.surname"></ion-input>
+                <ion-input type="text" placeholder="" [(ngModel)]="client.surname_client"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-label position="stacked">Città</ion-label>
@@ -56,7 +56,7 @@
             <ion-card *ngFor="let client of clients">
                 <ion-card-header>
             
-                        <ion-card-title>Cliente: {{client.name+ ' '+ client.surname}}</ion-card-title>
+                        <ion-card-title>Cliente: {{client.name_client+ ' '+ client.surname_client}}</ion-card-title>
                     
                     
                         <ion-card-title>Codice Fiscale: {{client.cf}}</ion-card-title>

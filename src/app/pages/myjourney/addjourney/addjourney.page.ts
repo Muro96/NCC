@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild, ElementRef, ComponentFactoryResolver} from
 import {Geolocation} from '@ionic-native/geolocation/ngx';
 import {ModalController, Platform, AlertController, ToastController} from '@ionic/angular';
 import {Ionic4DatepickerModalComponent} from '@logisticinfotech/ionic4-datepicker';
-import {DatabaseService, Client, Travel, Departure, Arrival} from 'src/app/database.service';
+import {DatabaseService, Client, Travel, Departure, Arrival, Vehicle} from 'src/app/database.service';
 import {LatLng} from 'leaflet';
 import {Router} from '@angular/router';
 
@@ -27,6 +27,7 @@ export class AddjourneyPage implements OnInit {
     arrivals: Arrival [] = [];
 
     client_id_select: any;
+    vehicle_id_select: any;
 
 
     map: any;
@@ -65,6 +66,7 @@ export class AddjourneyPage implements OnInit {
     weeksList = ['LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB', 'DOM'];
     selectedDate: any;
     clients: Client[] = [];
+    vehicles: Vehicle[] = [];
 
 
     constructor(public modalCtrl: ModalController, private database: DatabaseService, private platform: Platform, private router: Router, private alertController: AlertController, private toastController: ToastController) {
@@ -96,6 +98,10 @@ export class AddjourneyPage implements OnInit {
                 this.database.getClients().then(data => {
                     this.clients = data;
                 });
+                this.database.getAllVehicles().then(vehicle =>{
+                    this.vehicles = vehicle;
+
+                })
             }
         });
     }
@@ -258,6 +264,10 @@ export class AddjourneyPage implements OnInit {
         return this.client_id_select;
     }
 
+    getVehicleIdSelected() {
+        return this.vehicle_id_select;
+    }
+
     gotoAddClient() {
         this.router.navigate(['/settings/clients']);
 
@@ -308,9 +318,10 @@ export class AddjourneyPage implements OnInit {
 
     async addTravel() {
         let client_id = this.getClientIdSelected();
+        let vehicle_id = this.getVehicleIdSelected();
         if (this.checkPaid() == true){
             if (this.departure['city'] != null && this.departure['country'] != null && this.departure['address'] != null && this.arrival['city'] != null && this.arrival['country'] != null && this.arrival['address'] != null) {
-                this.database.addTravel(this.departure['city'], this.departure['country'], this.departure['address'], this.arrival['city'], this.arrival['country'], this.arrival['address'], this.time, this.mydate, this.travel['n_pass'], this.travel['km_tot'], client_id,1);
+                this.database.addTravel(this.departure['city'], this.departure['country'], this.departure['address'], this.arrival['city'], this.arrival['country'], this.arrival['address'], this.time, this.mydate, this.travel['n_pass'], this.travel['km_tot'], client_id,1,vehicle_id);
                 this.travel = {};
                 this.arrival = {};
                 this.departure = {};
@@ -322,7 +333,7 @@ export class AddjourneyPage implements OnInit {
         }
         else{
             if (this.departure['city'] != null && this.departure['country'] != null && this.departure['address'] != null && this.arrival['city'] != null && this.arrival['country'] != null && this.arrival['address'] != null) {
-                this.database.addTravel(this.departure['city'], this.departure['country'], this.departure['address'], this.arrival['city'], this.arrival['country'], this.arrival['address'], this.time, this.mydate, this.travel['n_pass'], this.travel['km_tot'], client_id,0);
+                this.database.addTravel(this.departure['city'], this.departure['country'], this.departure['address'], this.arrival['city'], this.arrival['country'], this.arrival['address'], this.time, this.mydate, this.travel['n_pass'], this.travel['km_tot'], client_id,0,vehicle_id);
                 this.travel = {};
                 this.arrival = {};
                 this.departure = {};

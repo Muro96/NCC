@@ -148,21 +148,29 @@ export class ServicepaperPage implements OnInit {
   }
 
 } */
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavController, Platform } from '@ionic/angular';
- 
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
  
 import { File } from '@ionic-native/file/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
- 
+import { DatabaseService, Travel } from 'src/app/database.service';
+
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+//pdfMake.vfs = pdfFonts.pdfMake.fonts
+
+
+
+
+
+ 0
 @Component({
-  selector: 'page-home',
-  templateUrl: 'home.html'
+  selector: 'app-servicepaper',
+  templateUrl: './servicepaper.page.html',
+  styleUrls: ['./servicepaper.page.scss'],
 })
-export class ServicepaperPage {
+export class ServicepaperPage implements OnInit {
   letterObj = {
     to: '',
     from: '',
@@ -170,22 +178,45 @@ export class ServicepaperPage {
   }
  
   pdfObj = null;
+  mydate: string = new Date().toLocaleDateString('it-IT');
+  travels: Travel [] = [];
  
-  constructor(public navCtrl: NavController, private plt: Platform, private file: File, private fileOpener: FileOpener) { }
+  constructor(public navCtrl: NavController, private plt: Platform, private file: File, private fileOpener: FileOpener,private database:DatabaseService) {
+    pdfMake.vfs = pdfFonts.pdfMake.vfs;
+   }
+
+  ngOnInit(){
+    this.database.getTravelisPaidDate(this.mydate,1).then(data =>{
+      this.travels = data;
+      });
+
+  }
  
-  createPdf() {
+  createPdf(travel: Travel) {
     var docDefinition = {
       content: [
-        { text: 'REMINDER', style: 'header' },
-        { text: new Date().toTimeString(), alignment: 'right' },
+
+        { text: 'FOGLIO DI SERVIZIO NCC', style: 'header',alignment:'right' },
+        { text: 'ID VIAGGIO : '+ travel.travel_id,style: 'header',alignment:'right' },
+        { text: 'DATA : '+ this.mydate, alignment: 'right', style: 'header' },
  
-        { text: 'From', style: 'subheader' },
-        { text: this.letterObj.from },
- 
-        { text: 'To', style: 'subheader' },
-        this.letterObj.to,
- 
-        { text: this.letterObj.text, style: 'story', margin: [0, 20, 0, 20] },
+        { text: 'TARGA VEICOLO: _________________ ' +travel.licence_plate +'____________________' , style: 'subheader' },
+        { text: 'NOME E COGNOME CONDUCENTE: _________________ ' +travel.name_driver + '  ' + travel.surname_driver , style: 'subheader' },
+        { text: 'DATA DI PARTENZA: _________________ ' +travel.date +'____________________' , style: 'subheader' },
+        { text: 'DATA DI ARRIVO: _________________ ' +travel.date +'____________________' , style: 'subheader' },
+        { text: 'LUOGO DI PARTENZA: _________________ ' +travel.address_departure + ', ' +travel.city_departure +' ('+ travel.province_departure + ' ) ____________________' , style: 'subheader' },
+        { text: 'LUOGO DI ARRIVO: _________________ ' +travel.address_arrival + ', ' +travel.city_arrival +' ('+ travel.province_arrival + ' ) ____________________' , style: 'subheader' },
+
+
+
+        //COME VANNO MODELLATI I KM?????
+
+        { text: 'KM DI PARTENZA: _________________ ' +travel.travel_id +'____________________   KM DI ARRIVO: _________________ ' +travel.travel_id +'____________________ ' , style: 'subheader' },
+        { text: 'ORA INIZIO SERVIZIO: _________________ ' +travel.hour +'____________________' , style: 'subheader' },
+        //SOMMARE ORA PERCORRENZA + TEMPO IMPIEGATO 
+        { text: 'ORA FINE SERVIZIO: _________________ ' +travel.hour +'____________________' , style: 'subheader' },
+        { text: 'DATI COMMITTENTE: _________________ ' +travel.name_client +'____________________' , style: 'subheader' },
+
  
         {
           ul: [
@@ -197,16 +228,18 @@ export class ServicepaperPage {
       ],
       styles: {
         header: {
-          fontSize: 18,
+          margin: [50, 0, 30, 0],
+          fontSize: 20,
           bold: true,
+          //lineHeight: 1
         },
         subheader: {
           fontSize: 14,
           bold: true,
-          margin: [0, 15, 0, 0]
+          margin: [0, 15, 0, 0],
+          lineHeight: 2,
         },
         story: {
-          italic: true,
           alignment: 'center',
           width: '50%',
         }
@@ -215,15 +248,15 @@ export class ServicepaperPage {
     this.pdfObj = pdfMake.createPdf(docDefinition);
   }
  
-  downloadPdf() {
+  downloadPdf(travel : Travel) {
     if (this.plt.is('cordova')) {
-      this.pdfObj.getBuffer((buffer) => {
+      this.pdfObj.getBuffer((buffer: BlobPart) => {
         var blob = new Blob([buffer], { type: 'application/pdf' });
  
         // Save the PDF to the data Directory of our App
-        this.file.writeFile(this.file.dataDirectory, 'myletter.pdf', blob, { replace: true }).then(fileEntry => {
+        this.file.writeFile(this.file.dataDirectory, 'travel_'+ travel.travel_id +'.pdf', blob, { replace: true }).then(fileEntry => {
           // Open the PDf with the correct OS tools
-          this.fileOpener.open(this.file.dataDirectory + 'myletter.pdf', 'application/pdf');
+          this.fileOpener.open(this.file.dataDirectory + 'travel_'+ travel.travel_id +'.pdf', 'application/pdf');
         })
       });
     } else {
