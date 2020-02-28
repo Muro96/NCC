@@ -27,11 +27,10 @@ const routes: Routes = [
         path: 'myjourney',
         loadChildren: () => import('./pages/myjourney/myjourney.module').then(m => m.MyjourneyPageModule)
     },
-    /*{
-        path: 'departures',
-        loadChildren: () => import('./pages/settings/departures/departures.module').then( m => m.DeparturesPageModule)
-    }, */
-
+    {
+        path: 'servicepaper',
+        loadChildren: () => import('./pages/servicepaper/servicepaper.module').then( m => m.ServicepaperPageModule)
+    },
 
 ];
 

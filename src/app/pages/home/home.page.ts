@@ -46,6 +46,10 @@ export class HomePage {
         this.router.navigate(['/myjourney']);
     }
 
+    servicePaper(){
+        this.router.navigate(['/servicepaper']);
+    }
+
     //return name of driver login
     async getDriverLogin() {
         let res = await this.database.getDriverLogin();

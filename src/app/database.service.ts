@@ -90,6 +90,7 @@ export interface Register {
     date:string;
     km_start: number;
     km_end: number;
+    fk_vehicle: number;
                 
 }
 
@@ -650,6 +651,47 @@ export class DatabaseService {
                     return departure;
                 });
             }
+        async addRegister(print_reg:number,date:string,km_start:number,km_end:number,fk_Idvehicle:number){
+            let data =[print_reg,date,km_start,km_end,fk_Idvehicle];
+            const query = await this.database.executeSql('INSERT INTO register (print_reg,date,km_start,km_end,fk_vehicle) VALUES (?,?,?,?,?)',data);
+        
+
+        }
+
+       /*async getRegister(date:string,vehicle_id:number){
+            
+            let query = 'SELECT register.*,vehicle.* FROM register AS register JOIN vehicle AS vehicle ON register.fk_vehicle='  + '\'' + vehicle_id + '\'' + 'AND date=' + '\'' + date + '\'' + ';';
+            console.log("queryyy"+query);
+            return this.database.executeSql(query, []).then(data => {
+                return{
+                    register_id: data.rows.item(0).register_id,
+                    print_reg: data.rows.item(0).print_reg,
+                    date: data.rows.item(0).date,
+                    km_start: data.rows.item(0).km_start,
+                    km_end: data.rows.item(0).end,
+                    fk_vehicle: data.rows.item(0).fk_vehicle,
+
+                }
+            });
+        } */
+
+        async getRegister(date:string){
+            
+            let query = 'SELECT register.* FROM register AS register WHERE register.date=' + '\'' + date + '\'' + ';';
+            console.log("queryyy"+query);
+            return this.database.executeSql(query, []).then(data => {
+                return{
+                    register_id: data.rows.item(0).register_id,
+                    print_reg: data.rows.item(0).print_reg,
+                    date: data.rows.item(0).date,
+                    km_start: data.rows.item(0).km_start,
+                    km_end: data.rows.item(0).end,
+                    fk_vehicle: data.rows.item(0).fk_vehicle,
+
+                }
+            });
+        }
+
 
 
     

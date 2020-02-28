@@ -1,9 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {ModalController} from '@ionic/angular';
 import {Ionic4DatepickerModalComponent} from '@logisticinfotech/ionic4-datepicker';
-import * as moment_ from 'moment';
 
-const moment = moment_;
+import { Register, DatabaseService, Vehicle } from 'src/app/database.service';
+import {NavigationExtras, Router} from '@angular/router';
+
+
+
 
 @Component({
     selector: 'app-datadays',
@@ -34,43 +37,84 @@ export class DatadaysPage implements OnInit {
         'Novembre',
         'Dicembre'
     ];
-    weeksList = ['LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB', 'DOM'];
+    weeksList = ['DOM','LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB'];
     selectedDate;
+    register = {};
+    registers: Register [] = [];
+    vehicles : Vehicle [] = [];
+    vehicle_id_select: any;
 
-    constructor(public modalCtrl: ModalController) {
+    constructor(public modalCtrl: ModalController,private database:DatabaseService,private router:Router) {
+
+        if (this.router.getCurrentNavigation().extras.state) {
+            this.vehicle_id_select = this.router.getCurrentNavigation().extras.state.vehicle_id;
+            console.log("diooo"+this.vehicle_id_select);
+        }
     }
 
+
+    /*ionViewDidEnter(){
+        console.log("diooo");
+        this.database.getRegister(this.mydate).then(data =>{
+                
+            //problema undefined valore fk_vehicle
+                this.registers['register_id'] = data.register_id;
+                this.registers['print_reg'] = data.print_reg;
+                this.registers['date'] = data.date;
+                this.registers['km_start'] = data.km_start;
+                this.registers['km_end'] = data.km_end;
+                this.registers['fk_vehicle'] = data.fk_vehicle;
+        });
+            
+        
+    
+    } */
+
     ngOnInit() {
+        
+        this.database.getDatabaseState().subscribe(ready => {
+            if (ready) {
+                this.database.getAllVehicles().then(data => {
+                    this.vehicles = data;
+                });
+              
+                this.database.getRegister(this.mydate).then(data =>{
+                
+                    //problema undefined valore fk_vehicle
+                        this.registers['register_id'] = data.register_id;
+                        this.registers['print_reg'] = data.print_reg;
+                        this.registers['date'] = data.date;
+                        this.registers['km_start'] = data.km_start;
+                        this.registers['km_end'] = data.km_end;
+                        this.registers['fk_vehicle'] = data.fk_vehicle;
+                    
+                
+                });
+            }
+
+        });
+        
 
         // EXAMPLE OBJECT
-        this.datePickerObj = {
-            // inputDate: new Date('12'), // If you want to set month in date-picker
-            // inputDate: new Date('2018'), // If you want to set year in date-picker
-            // inputDate: new Date('2018-12'), // If you want to set year & month in date-picker
-            // inputDate: new Date('2018-12-01'), // If you want to set date in date-picker
-
+      /*  this.datePickerObj = {
             inputDate: this.mydate,
 
-            dateFormat: 'DD/MM/YYYY',
+            dateFormat: 'DD/M/YYYY',
             fromDate: new Date('01/01/1960'), // default null
-            // toDate: new Date('2018-12-28'), // default null
-            // showTodayButton: true, // default true
             closeOnSelect: true, // default false
-            // disableWeekDays: [4], // default []
-            // mondayFirst: false, // default false
-            // setLabel: 'Conferma',  // default 'Set'
+          
             todayLabel: 'Oggi', // default 'Today'
             closeLabel: 'Chiudi', // default 'Close'
-            // disabledDates: disabledDates, // default []
             titleLabel: 'Conferma Data', // default null
             monthsList: this.monthsList,
             weeksList: this.weeksList,
             momentLocale: 'it-IT',
             yearInAscending: true
         };
-    }
+    } */
+}
 
-    onChangeDate() {
+   /* onChangeDate() {
         console.log('onChangeDate date ', this.mydate);
     }
 
@@ -102,7 +146,7 @@ export class DatadaysPage implements OnInit {
           weeksList: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
           dateFormat: 'DD.MM.YYYY',
           clearButton: true
-        };  */
+        };  
 
         const datePickerModal = await this.modalCtrl.create({
             component: Ionic4DatepickerModalComponent,
@@ -116,6 +160,22 @@ export class DatadaysPage implements OnInit {
             console.log(data);
             this.selectedDate = data.data.date;
         });
+    }
+    /*getVehicleIdSelect() {
+        console.log("this_vehicleeeeeee"+this.vehicle_id_select);
+        return this.vehicle_id_select;
+    } */
+
+    updateRegister(register:Register){
+        let navigationExtras: NavigationExtras = {
+            state: {
+                register: register
+            }
+        };
+        
+        this.router.navigate(['datadays/updatedatadays'], navigationExtras);
+        
+
     }
 }
 

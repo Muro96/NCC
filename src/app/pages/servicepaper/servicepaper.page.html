@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+      <ion-buttons slot="start">
+          <ion-back-button defaultHref="/home"></ion-back-button>
+      </ion-buttons>
+
+      <ion-title>Service del giorno</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+ 
+<ion-content padding>
+ 
+  <ion-item>
+    <ion-label stacked>From</ion-label>
+    <ion-input [(ngModel)]="letterObj.from"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label stacked>To</ion-label>
+    <ion-input [(ngModel)]="letterObj.to"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label stacked>Text</ion-label>
+    <ion-textarea [(ngModel)]="letterObj.text" rows="10"></ion-textarea>
+  </ion-item>
+ 
+  <ion-button expand="full" (click)="createPdf()">Create PDF</ion-button>
+  <ion-button expand="full" (click)="downloadPdf()" color="secondary" [disabled]="!pdfObj">Download PDF</ion-button>
+ 
+</ion-content>
