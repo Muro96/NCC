@@ -10,7 +10,10 @@
 
  
 <ion-content padding>
-
+  <ion-item lines="none">
+    <ion-label>Data viaggi</ion-label>
+    <ion-input readonly [(ngModel)]="mydate" (ionChange)="onChangeDate()" [liIonic4Datepicker]="datePickerObj"></ion-input>
+  </ion-item>
   <ion-card *ngFor="let travel of travels;">   
     <ion-card-header>
         <ion-item lines="none">
@@ -29,8 +32,8 @@
     <ion-card-content>
       Founded in 1829 on an isthmus between Lake Monona and Lake Mendota, Madison was named the capital of the Wisconsin Territory in 1836.
     </ion-card-content>
-    <ion-button expand="full" (click)="createPdf(travel)">Create PDF</ion-button>
-    <ion-button expand="full" (click)="downloadPdf(travel)" color="secondary" [disabled]="!pdfObj">Download PDF</ion-button>
+    <!--<ion-button expand="full" (click)="createPdf(travel)">Create PDF</ion-button> -->
+    <ion-button expand="full" (click)="downloadPdf(travel)" color="primary">Download PDF</ion-button>
   
     </ion-card>
  

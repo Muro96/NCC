@@ -6,6 +6,19 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {Md5} from 'ts-md5/dist/md5';
 
+
+export interface Agency {
+    agency_id: number;
+    name_agency: string;
+    vat_agency: string 
+    address_agency: string;
+    city_agency: string;
+    cap_agency: string;
+    province_agency: string;
+    owner_agency : string;
+    phone_agency: string;
+}
+
 export interface Driver {
     driver_id: number;
     name: string;
@@ -120,8 +133,18 @@ export class DatabaseService {
                 location: 'default'
             }).then((db: SQLiteObject) => {
                 this.database = db;
-    
-        
+
+                db.executeSql('CREATE TABLE IF NOT EXISTS agency' +
+                    '(agency_id INTEGER PRIMARY KEY,' +
+                    'name_agency TEXT,' +
+                    'vat_agency TEXT,' +
+                    'address_agency TEXT,' +
+                    'city_agency TEXT,' +
+                    'cap_agency TEXT,' +
+                    'province_agency TEXT,' +
+                    'owner_agency TEXT,' +
+                    'phone_agency TEXT);', []);
+
                 //CONDUCENTI
                 db.executeSql('CREATE TABLE IF NOT EXISTS driver' +
                     '(driver_id INTEGER PRIMARY KEY,' +
@@ -207,7 +230,7 @@ export class DatabaseService {
                     'FOREIGN KEY(fk_vehicle) REFERENCES vehicle(vehicle_id));',[]); 
                             
 
-
+                this.addAgency();
                 this.databaseReady.next(true);
             });
         });
@@ -217,18 +240,40 @@ export class DatabaseService {
         return this.databaseReady.asObservable();
     }
 
-    async addAgency() {
-        let data = ['04278440278','Via Massaua 37', 'Jesolo', '30016', 'VE', 'Talon Marco', '3441158768'];
-        const data_1 = await this.database.executeSql('INSERT INTO agency (vat_agency,address_agency,city_agency,cap_agency,province_agency,owner_agency,phone_agency) VALUES (?,?,?,?,?,?,?)', data);
-        
+    getDrivers(): Observable<Driver[]> {
+        return this.driver.asObservable();
     }
 
     getVehicles(): Observable<Vehicle[]> {
         return this.vehicle.asObservable();
     }
 
+    async addAgency() {
+        let data = ['04278440278','Via Massaua 37', 'Jesolo', '30016', 'VE', 'Talon Marco', '3441158768'];
+        const data_1 = await this.database.executeSql('INSERT INTO agency (vat_agency,address_agency,city_agency,cap_agency,province_agency,owner_agency,phone_agency) VALUES (?,?,?,?,?,?,?)', data);
+        
+    }
+
+    async getAgency() {
+        let query = 'SELECT * FROM agency;';
+        return this.database.executeSql(query, []).then(data => {
+            return {
+                agency_id: data.rows.item(0).agency_id,
+                name_agency: data.rows.item(0).name_agency,
+                vat_agency: data.rows.item(0).vat_agency,
+                address_agency: data.rows.item(0).address_agency,
+                city_agency: data.rows.item(0).city_agency,
+                cap_agency: data.rows.item(0).cap_agency,
+                province_agency: data.rows.item(0).province_agency,
+                owner_agency: data.rows.item(0).owner_agency,
+                phone_agency: data.rows.item(0).phone_agency,
+            };
+        });
 
 
+
+
+    }
 
     /*
 
@@ -456,8 +501,8 @@ export class DatabaseService {
                         fk_departure: data.rows.item(i).fk_departure,
                         fk_arrival: data.rows.item(i).fk_arrival,
                         fk_client: data.rows.item(i).fk_client,
-                        name_client: data.rows.item(i).name,
-                        surname_client: data.rows.item(i).surname,
+                        name_client: data.rows.item(i).name_client,
+                        surname_client: data.rows.item(i).surname_client,
                         billing_notes_client: data.rows.item(i).billing_notes,
                         name_arrival: data.rows.item(i).name_arr,
                         lat_arr: data.rows.item(i).lat_arr,

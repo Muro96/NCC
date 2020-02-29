@@ -9,12 +9,14 @@ import { ServicepaperPageRoutingModule } from './servicepaper-routing.module';
 import { ServicepaperPage } from './servicepaper.page';
 import {File} from '@ionic-native/file/ngx';
 import {FileOpener} from '@ionic-native/file-opener/ngx';
+import {Ionic4DatepickerModule} from '@logisticinfotech/ionic4-datepicker';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
+    Ionic4DatepickerModule,
     ServicepaperPageRoutingModule
   ],
   declarations: [ServicepaperPage],

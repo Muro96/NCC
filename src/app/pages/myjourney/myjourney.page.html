@@ -29,15 +29,15 @@
             </ion-item>
             <ion-item lines="none">
                 <ion-icon src="../../assets/icon/location.svg"></ion-icon>
-                <ion-card-title>Destinazione: {{travel.city_arrival}}</ion-card-title>
+                <ion-card-title>Partenza: {{travel.city_departure}}</ion-card-title>
             </ion-item>
             <ion-item lines="none">
                 <ion-icon src="../../assets/icon/location.svg"></ion-icon>
-                <ion-card-title>Partenza: {{travel.city_departure}}</ion-card-title>
+                <ion-card-title>Destinazione: {{travel.address_arrival + ','+travel.city_arrival + '( '+travel.province_arrival+' )'}}</ion-card-title>
             </ion-item>
         </ion-card-header>
         <ion-card-content>
-          Founded in 1829 on an isthmus between Lake Monona and Lake Mendota, Madison was named the capital of the Wisconsin Territory in 1836.
+            Cliente: {{ travel.name_client + ' ' +travel.surname_client}}
         </ion-card-content>
         <ion-button expand="block" (click)="cancel(travel.travel_id);">Cancella viaggio</ion-button>
       </ion-card>
