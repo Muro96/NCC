@@ -217,8 +217,10 @@ export class DatabaseService {
         return this.databaseReady.asObservable();
     }
 
-    getDrivers(): Observable<Driver[]> {
-        return this.driver.asObservable();
+    async addAgency() {
+        let data = ['04278440278','Via Massaua 37', 'Jesolo', '30016', 'VE', 'Talon Marco', '3441158768'];
+        const data_1 = await this.database.executeSql('INSERT INTO agency (vat_agency,address_agency,city_agency,cap_agency,province_agency,owner_agency,phone_agency) VALUES (?,?,?,?,?,?,?)', data);
+        
     }
 
     getVehicles(): Observable<Vehicle[]> {
