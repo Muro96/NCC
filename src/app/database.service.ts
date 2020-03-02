@@ -157,7 +157,7 @@ export class DatabaseService {
                     'is_login INTEGER DEFAULT "0" NOT NULL)', []);
 
                 //VEICOLI
-                db.executeSql('CREATE TABLE IF NOT EXISTS vehicle' +
+                db.executeSql('CREATE TABLE vehicle' +
                     '(vehicle_id INTEGER PRIMARY KEY,' +
                     'car_model TEXT,' +
                     'license_plate TEXT not null,' +
@@ -249,8 +249,19 @@ export class DatabaseService {
     }
 
     async addAgency() {
-        let data = ['04278440278','Via Massaua 37', 'Jesolo', '30016', 'VE', 'Talon Marco', '3441158768'];
-        const data_1 = await this.database.executeSql('INSERT INTO agency (vat_agency,address_agency,city_agency,cap_agency,province_agency,owner_agency,phone_agency) VALUES (?,?,?,?,?,?,?)', data);
+        let res:any;
+        await this.database.executeSql('SELECT * FROM agency;',[]).then(data =>{
+            res = data.rows.length;
+            console.log("resssss"+res);
+        });
+        if(res===0){
+            let data = ['04278440278','Via Massaua 37', 'Jesolo', '30016', 'VE', 'Talon Marco', '3441158768'];
+            const data_1 = await this.database.executeSql('INSERT INTO agency (vat_agency,address_agency,city_agency,cap_agency,province_agency,owner_agency,phone_agency) VALUES (?,?,?,?,?,?,?)', data);
+        }
+        else{
+            console.log("agency already present");
+
+        }
         
     }
 
@@ -269,10 +280,6 @@ export class DatabaseService {
                 phone_agency: data.rows.item(0).phone_agency,
             };
         });
-
-
-
-
     }
 
     /*
@@ -397,6 +404,29 @@ export class DatabaseService {
 
     }
 
+    getFirstVehicle(){
+        return this.database.executeSql('SELECT * FROM driver JOIN vehicle ON driver.driver_id = vehicle.fk_driver WHERE driver.is_login = ? LIMIT 1',[1]).then(data => {
+            return {
+                vehicle_id: data.rows.item(0).vehicle_id,
+                car_model: data.rows.item(0).car_model,
+                license_plate: data.rows.item(0).license_plate
+            }
+    });
+    
+}
+/*async getVehicleId(vehicle_id:number){
+    let query = 'SELECT * FROM driver JOIN vehicle ON driver.driver_id = vehicle.fk_driver WHERE driver.is_login = 1 AND vehicle.vehicle_id=' + '\'' + vehicle_id + '\'' + ';';
+    return this.database.executeSql(query,[]).then(data=>{
+        return {
+            vehicle_id: data.rows.item(0).vehicle_id,
+            car_model: data.rows.item(0).car_model,
+            license_plate: data.rows.item(0).license_plate
+        }
+
+
+    });
+} */
+
     async getClients() {
         let data = [1];
         return this.database.executeSql('SELECT c.* FROM client AS c,driver AS d ON d.driver_id = c.fk_driver WHERE d.is_login= ?', data).then(data => {
@@ -439,6 +469,7 @@ export class DatabaseService {
     async getTravel(travel_id:number) {
         let query = 'SELECT travel.*,client.*,arrival.*,departure.*,driver.*,vehicle.* ' +
         'FROM travel AS travel '+
+        'JOIN vehicle AS vehicle ON travel.fk_vehicle = vehicle.vehicle_id ' +
         'JOIN driver AS driver ON travel.fk_driver = driver.driver_id ' +
         'JOIN client AS client ON travel.fk_client = client.client_id ' +
         'JOIN arrival AS arrival ON travel.fk_arrival = arrival.arrival_id ' +
@@ -471,6 +502,11 @@ export class DatabaseService {
                 country_departure: data.rows.item(0).country_dep,
                 address_departure: data.rows.item(0).address_dep,
                 notes_travel: data.rows.item(0).notes_travel,
+                fk_vehicle: data.rows.item(0).fk_vehicle,
+                car_model: data.rows.item(0).car_model,
+                licence_plate: data.rows.item(0).license_plate,
+                name_driver: data.rows.item(0).name,
+                surname_driver: data.rows.item(0).surname,
     
                 }
     
@@ -486,7 +522,7 @@ export class DatabaseService {
         'JOIN client AS client ON travel.fk_client = client.client_id ' +
         'JOIN arrival AS arrival ON travel.fk_arrival = arrival.arrival_id ' +
         'JOIN departure AS departure ON travel.fk_departure = departure.departure_id ' +
-        'WHERE driver.is_login = 1 AND travel.date =' + '\'' + date + '\''+ 'AND travel.is_paid=' + '\'' + is_paid + '\''
+        'WHERE driver.is_login = 1 AND travel.date =' + '\'' + date + '\''+ 'AND travel.is_paid=' + '\'' + is_paid + '\' ORDER BY travel.hour DESC'
         return this.database.executeSql(query, []).then(data => {
             let travel: Travel[] = [];
             if (data.rows.length > 0) {
@@ -529,6 +565,60 @@ export class DatabaseService {
         });
 
     }
+
+    async getTravelVehicle(date: string,vehicle_id:number) {
+        let query = 'SELECT travel.*,client.*,arrival.*,departure.*,driver.*,vehicle.* ' +
+        'FROM travel AS travel '+
+        'JOIN vehicle AS vehicle ON travel.fk_vehicle = vehicle.vehicle_id ' +
+        'JOIN driver AS driver ON travel.fk_driver = driver.driver_id ' +
+        'JOIN client AS client ON travel.fk_client = client.client_id ' +
+        'JOIN arrival AS arrival ON travel.fk_arrival = arrival.arrival_id ' +
+        'JOIN departure AS departure ON travel.fk_departure = departure.departure_id ' +
+        'WHERE driver.is_login = 1 AND travel.date =' + '\'' + date + '\'AND ORDER BY travel.hour DESC'
+        return this.database.executeSql(query, []).then(data => {
+            let travel: Travel[] = [];
+            if (data.rows.length > 0) {
+                for (var i = 0; i < data.rows.length; i++) {
+                    travel.push({
+                        travel_id: data.rows.item(i).travel_id,
+                        is_paid: data.rows.item(i).is_paid,
+                        n_pass: data.rows.item(i).n_passenger,
+                        km_tot: data.rows.item(i).km_tot,
+                        date: data.rows.item(i).date,
+                        hour: data.rows.item(i).hour,
+                        fk_departure: data.rows.item(i).fk_departure,
+                        fk_arrival: data.rows.item(i).fk_arrival,
+                        fk_client: data.rows.item(i).fk_client,
+                        name_client: data.rows.item(i).name_client,
+                        surname_client: data.rows.item(i).surname_client,
+                        billing_notes_client: data.rows.item(i).billing_notes,
+                        name_arrival: data.rows.item(i).name_arr,
+                        lat_arr: data.rows.item(i).lat_arr,
+                        long_arr: data.rows.item(i).long_arr,
+                        city_arrival: data.rows.item(i).city_arr,
+                        province_arrival: data.rows.item(i).province_arr,
+                        address_arrival: data.rows.item(i).address_arr,
+                        name_departure: data.rows.item(i).name_dep,
+                        lat_dep: data.rows.item(i).lat_dep,
+                        long_dep: data.rows.item(i).long_dep,
+                        city_departure: data.rows.item(i).city_dep,
+                        province_departure: data.rows.item(i).province_dep,
+                        address_departure: data.rows.item(i).address_dep,
+                        notes_travel: data.rows.item(i).notes_travel,
+                        fk_vehicle: data.rows.item(i).fk_vehicle,
+                        car_model: data.rows.item(i).car_model,
+                        licence_plate: data.rows.item(i).license_plate,
+                        name_driver: data.rows.item(i).name,
+                        surname_driver: data.rows.item(i).surname,
+                    });
+                }
+            }
+            return travel;
+        });
+
+    }
+
+  
     // check if arrival is already present in db; (for map)
     /*async checkArrival_present(lat:any,lng:any) {
         let result: any;
