@@ -118,6 +118,7 @@ export interface Register {
     providedIn: 'root'
 })
 export class DatabaseService {
+ 
     database: SQLiteObject;
     private databaseReady: BehaviorSubject<boolean>;
 
@@ -459,6 +460,12 @@ export class DatabaseService {
         const a = await this.database.executeSql('INSERT INTO client (name_client,surname_client,city,province,is_private,is_agency,cf,vat,billing_notes,fk_driver) VALUES (?,?,?,?,?,?,?,?,?,?)', data);
 
     }
+
+    async updateClient(client_id:number,name: string, surname: string, city: string, province: string, is_private: number, is_agency: number, cf: string, vat: string, billing_notes: string) {
+        let data = [name, surname, city, province, is_private, is_agency,cf,vat,billing_notes,client_id];
+        const update = await this.database.executeSql('UPDATE client SET name_client = ?, surname_client = ?, city = ?, province = ?, is_private = ?, is_agency = ?, cf = ?, vat = ?, billing_notes = ? WHERE client_id = ?', data);
+    
+      }
 
     async deleteClient(client_id:number){
         await this.database.executeSql('DELETE FROM client WHERE client_id = ?', [client_id]); 

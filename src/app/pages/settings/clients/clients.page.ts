@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {DatabaseService, Client} from 'src/app/database.service';
 import {ToastController, AlertController} from '@ionic/angular';
+import { NavigationExtras, Router } from '@angular/router';
 
 @Component({
     selector: 'app-clients',
@@ -14,7 +15,7 @@ export class ClientsPage implements OnInit {
     toast: any;
     checked = false;
 
-    constructor(public database: DatabaseService, private toastController: ToastController,private alertController:AlertController) {
+    constructor(public database: DatabaseService, private toastController: ToastController,private alertController:AlertController,private router:Router) {
     }
 
     ngOnInit() {
@@ -103,6 +104,15 @@ export class ClientsPage implements OnInit {
         });
 
         await alert.present();
+    }
+
+    async updateClient(client: Client){
+        let navigationExtras: NavigationExtras = {
+            state: {
+                client: client
+            }
+        };
+        this.router.navigate(['settings/clients/updateclient'], navigationExtras);
     }
 
 

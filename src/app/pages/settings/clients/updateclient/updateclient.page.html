@@ -1,0 +1,81 @@
+<ion-header>
+  <ion-toolbar>
+      <ion-buttons slot="start">
+          <ion-back-button defaultHref="/settings/clients"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Aggiorna dati cliente</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-item>
+    <ion-label position="stacked">Nome</ion-label>
+    <ion-input *ngIf="client.name_client != null; else nullName" type="text" placeholder=""
+    [(ngModel)]="client.name_client"></ion-input>
+    <ng-template #nullName>
+      <ion-input type="text" placeholder="" [(ngModel)]="client.name_client"></ion-input>
+    </ng-template>
+  </ion-item>
+  
+  <ion-item>
+    <ion-label position="stacked">Cognome</ion-label>
+    <ion-input *ngIf="client.surname_client != null; else nullSurName" type="text" placeholder=""
+    [(ngModel)]="client.surname_client"></ion-input>
+    <ng-template #nullSurName>
+      <ion-input type="text" placeholder="" [(ngModel)]="client.surname_client"></ion-input>
+    </ng-template>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Città</ion-label>
+    <ion-input *ngIf="client.city != null; else nullCity" type="text" placeholder=""
+    [(ngModel)]="client.city"></ion-input>
+    <ng-template #nullCity>
+      <ion-input type="text" placeholder="" [(ngModel)]="client.city"></ion-input>
+    </ng-template>
+  </ion-item>
+
+  <ion-item>
+      <ion-label position="stacked">Provincia</ion-label>
+      <ion-input *ngIf="client.province != null; else nullProvince" type="text" placeholder=""
+      [(ngModel)]="client.province"></ion-input>
+      <ng-template #nullProvince>
+        <ion-input type="text" placeholder="" [(ngModel)]="client.province"></ion-input>
+      </ng-template>
+      
+  </ion-item>
+
+  <ion-item>
+      <ion-label position="stacked">Codice Fiscale</ion-label>
+      <ion-input *ngIf="client.cf != null; else nullCf" type="text" placeholder=""
+      [(ngModel)]="client.cf"></ion-input>
+      <ng-template #nullCf>
+        <ion-input type="text" placeholder="" [(ngModel)]="client.cf"></ion-input>
+      </ng-template>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Partita Iva</ion-label>
+    <ion-input *ngIf="client.vat != null; else nullVat" type="text" placeholder=""
+    [(ngModel)]="client.vat"></ion-input>
+    <ng-template #nullVat>
+      <ion-input type="text" placeholder="" [(ngModel)]="client.vat"></ion-input>
+    </ng-template>
+  </ion-item>
+
+  <ion-item>
+      <ion-label position="stacked">Note di fatturazione</ion-label>
+      <ion-input *ngIf="client.billing_notes != null; else nullBillingNotes" type="text" placeholder=""
+      [(ngModel)]="client.billing_notes"></ion-input>
+      <ng-template #nullBillingNotes>
+        <ion-input type="text" placeholder="" maxlength="50" [(ngModel)]="client.billing_notes"></ion-input>
+      </ng-template> 
+  </ion-item>
+  <ion-item>
+      <ion-label>Privato?</ion-label>
+      <ion-checkbox color="primary" checked slot="start" (ionChange)="checkPrivate()"></ion-checkbox>
+  </ion-item>
+<ion-button expand="block" (click)="save()">Salva</ion-button>
+
+</ion-content>
