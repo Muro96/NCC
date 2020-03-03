@@ -19,6 +19,10 @@
     <div [ngSwitch]="selectedView">
         <div *ngSwitchCase="'add_vehicle'">
             <ion-item>
+                <ion-label position="stacked">Casa Automobilistica</ion-label>
+                <ion-input type="text" placeholder="" [(ngModel)]="vehicle.car_brand" required></ion-input>
+            </ion-item>
+            <ion-item>
                 <ion-label position="stacked">Modello Auto</ion-label>
                 <ion-input type="text" placeholder="" [(ngModel)]="vehicle.car_model" required></ion-input>
             </ion-item>
@@ -33,6 +37,9 @@
             <ion-card *ngFor="let vehicle of vehicles;">   
                 <ion-card-header>
                     <ion-item lines="none">
+                        <ion-card-title>Casa Automobilistica : {{vehicle.car_brand}}</ion-card-title>
+                    </ion-item>
+                    <ion-item lines="none">
                         <ion-card-title>Modello Auto: {{vehicle.car_model}}</ion-card-title>
                     </ion-item>
                     <ion-item lines="none">
@@ -42,33 +49,6 @@
 
                 <ion-button expand="block" (click)="cancelVehicle(vehicle.vehicle_id)">Cancella Mezzo</ion-button>
               </ion-card>
-            <!--<ion-grid>
-                <ion-row align-items-start>
-                    <ion-col col-6>
-                        <ion-label>Modello Mezzo</ion-label>
-                    </ion-col>
-                    <ion-col col-6>
-                        <ion-label>Targa Mezzo</ion-label>
-                    </ion-col>
-                </ion-row>
-
-
-
-
-                <ion-row *ngFor="let vehicle of vehicles; let i= index" align-items-start
-                         style="margin-top:20px; height:30px">
-                    <ion-col col-4>
-                        <ion-label>{{ vehicle.car_model }}</ion-label>
-                    </ion-col>
-                    <ion-col col-4>
-                        <ion-label>{{ vehicle.license_plate }}</ion-label>
-                    </ion-col>
-                    <!--<ion-col col-4>
-                      <ion-icon name="eye" (click)="detailAgency(agency)"></ion-icon>
-                    </ion-col> 
-                </ion-row>
-            </ion-grid> -->
-
         </div>
     </div>
 </ion-content>

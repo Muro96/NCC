@@ -33,6 +33,7 @@ export interface Driver {
 
 export interface Vehicle {
     vehicle_id: number;
+    car_brand: string;
     car_model: string;
     license_plate: string;
 }
@@ -97,6 +98,7 @@ export interface Travel {
     address_departure: string;
     notes_travel:string;
     fk_vehicle: number;
+    car_brand: string;
     car_model: string;
     licence_plate: string;
     name_driver: string;
@@ -160,8 +162,9 @@ export class DatabaseService {
                 //VEICOLI
                 db.executeSql('CREATE TABLE vehicle' +
                     '(vehicle_id INTEGER PRIMARY KEY,' +
+                    'car_brand TEXT,' + 
                     'car_model TEXT,' +
-                    'license_plate TEXT not null,' +
+                    'license_plate TEXT,' +
                     'fk_driver INTEGER,' +
                     'FOREIGN KEY(fk_driver) REFERENCES driver(driver_id));', []);
 
@@ -373,11 +376,11 @@ export class DatabaseService {
 
     }
 
-    async addVehicle(car_model: string, license_plate: string) {
+    async addVehicle(car_brand:string,car_model: string, license_plate: string) {
         let driverIdFk = await (await this.getDriverLogin()).driver_id;
         console.log('driver id q' + driverIdFk);
-        let data = [car_model, license_plate, driverIdFk];
-        const a = await this.database.executeSql('INSERT INTO vehicle (car_model,license_plate,fk_driver) VALUES (?,?,?)', data);
+        let data = [car_brand,car_model, license_plate, driverIdFk];
+        const a = await this.database.executeSql('INSERT INTO vehicle (car_brand,car_model,license_plate,fk_driver) VALUES (?,?,?,?)', data);
         await this.getAllVehicles();
     }
 
@@ -389,6 +392,7 @@ export class DatabaseService {
                 for (var i = 0; i < data.rows.length; i++) {
                     vehicle.push({
                         vehicle_id: data.rows.item(i).vehicle_id,
+                        car_brand: data.rows.item(i).car_brand,
                         car_model: data.rows.item(i).car_model,
                         license_plate: data.rows.item(i).license_plate
 
@@ -409,6 +413,7 @@ export class DatabaseService {
         return this.database.executeSql('SELECT * FROM driver JOIN vehicle ON driver.driver_id = vehicle.fk_driver WHERE driver.is_login = ? LIMIT 1',[1]).then(data => {
             return {
                 vehicle_id: data.rows.item(0).vehicle_id,
+                car_brand: data.rows.item(0).car_brand,
                 car_model: data.rows.item(0).car_model,
                 license_plate: data.rows.item(0).license_plate
             }
@@ -510,6 +515,7 @@ export class DatabaseService {
                 address_departure: data.rows.item(0).address_dep,
                 notes_travel: data.rows.item(0).notes_travel,
                 fk_vehicle: data.rows.item(0).fk_vehicle,
+                car_brand : data.rows.item(0).car_brand,
                 car_model: data.rows.item(0).car_model,
                 licence_plate: data.rows.item(0).license_plate,
                 name_driver: data.rows.item(0).name,
@@ -529,7 +535,7 @@ export class DatabaseService {
         'JOIN client AS client ON travel.fk_client = client.client_id ' +
         'JOIN arrival AS arrival ON travel.fk_arrival = arrival.arrival_id ' +
         'JOIN departure AS departure ON travel.fk_departure = departure.departure_id ' +
-        'WHERE driver.is_login = 1 AND travel.date =' + '\'' + date + '\''+ 'AND travel.is_paid=' + '\'' + is_paid + '\' ORDER BY travel.hour DESC'
+        'WHERE driver.is_login = 1 AND travel.date =' + '\'' + date + '\''+ 'AND travel.is_paid=' + '\'' + is_paid + '\' ORDER BY travel.hour ASC'
         return this.database.executeSql(query, []).then(data => {
             let travel: Travel[] = [];
             if (data.rows.length > 0) {
@@ -561,6 +567,7 @@ export class DatabaseService {
                         address_departure: data.rows.item(i).address_dep,
                         notes_travel: data.rows.item(i).notes_travel,
                         fk_vehicle: data.rows.item(i).fk_vehicle,
+                        car_brand : data.rows.item(0).car_brand,
                         car_model: data.rows.item(i).car_model,
                         licence_plate: data.rows.item(i).license_plate,
                         name_driver: data.rows.item(i).name,
@@ -613,6 +620,7 @@ export class DatabaseService {
                         address_departure: data.rows.item(i).address_dep,
                         notes_travel: data.rows.item(i).notes_travel,
                         fk_vehicle: data.rows.item(i).fk_vehicle,
+                        car_brand : data.rows.item(i).car_brand,
                         car_model: data.rows.item(i).car_model,
                         licence_plate: data.rows.item(i).license_plate,
                         name_driver: data.rows.item(i).name,

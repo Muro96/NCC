@@ -3,6 +3,7 @@ import {Routes, RouterModule} from '@angular/router';
 
 import {AddjourneyPage} from './addjourney.page';
 
+
 const routes: Routes = [
     {
         path: '',

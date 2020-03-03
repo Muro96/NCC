@@ -15,6 +15,7 @@ import {Geolocation} from '@ionic-native/geolocation/ngx';
 import {NativeGeocoder} from '@ionic-native/native-geocoder/ngx';
 import {File} from '@ionic-native/file/ngx';
 import {FileOpener} from '@ionic-native/file-opener/ngx';
+import { IonicSelectableModule } from 'ionic-selectable';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import {FileOpener} from '@ionic-native/file-opener/ngx';
         BrowserModule,
         IonicModule.forRoot(),
         AppRoutingModule,
+        IonicSelectableModule,
         HttpClientModule
     ],
     providers: [

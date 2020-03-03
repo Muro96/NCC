@@ -20,8 +20,40 @@
         <ion-label>Pagato?</ion-label>
         <ion-checkbox color="primary" checked slot="start" (ionChange)="checkPaid()"></ion-checkbox>
     </ion-item>
+    <ion-item>
+    <ion-grid>
+        <ion-row>
+          <ion-col col-1>
+            Orario
+          </ion-col>
+  
+          <ion-col col-3>
+            <div>Cliente</div>
+          </ion-col>
+          
+        </ion-row>
+      </ion-grid>
+    </ion-item>
 
-    <ion-card *ngFor="let travel of travels;">   
+
+    <ion-list>
+        <ion-item *ngFor="let travel of travels" (click)="updateTravel(travel.travel_id)">
+          <ion-grid>
+            <ion-row>
+              <ion-col col-1>
+                {{travel.hour}}
+              </ion-col>
+      
+              <ion-col col-3>
+                <div>{{travel.name_client + ' ' + travel.surname_client }}</div>
+              </ion-col>
+              
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+    </ion-list>
+
+   <!--<ion-card *ngFor="let travel of travels;">   
         <ion-card-header>
             <ion-item lines="none">
                 <ion-icon src="../../assets/icon/hour.svg"></ion-icon>
@@ -40,5 +72,5 @@
             Cliente: {{ travel.name_client + ' ' +travel.surname_client}}
         </ion-card-content>
         <ion-button expand="block" (click)="cancel(travel.travel_id);">Cancella viaggio</ion-button>
-      </ion-card>
+      </ion-card> -->
 </ion-content>

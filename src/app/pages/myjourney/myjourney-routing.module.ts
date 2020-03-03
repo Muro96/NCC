@@ -11,6 +11,10 @@ const routes: Routes = [
   {
     path: 'addjourney',
     loadChildren: () => import('./addjourney/addjourney.module').then( m => m.AddjourneyPageModule)
+  },
+  {
+    path: 'updatejourney',
+    loadChildren: () => import('./updatejourney/updatejourney.module').then( m => m.UpdatejourneyPageModule)
   }
 ];
 

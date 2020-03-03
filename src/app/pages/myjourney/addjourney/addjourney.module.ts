@@ -8,6 +8,7 @@ import {AddjourneyPageRoutingModule} from './addjourney-routing.module';
 
 import {AddjourneyPage} from './addjourney.page';
 import {Ionic4DatepickerModule} from '@logisticinfotech/ionic4-datepicker';
+import { IonicSelectableModule } from 'ionic-selectable';
 
 @NgModule({
     imports: [
@@ -15,6 +16,7 @@ import {Ionic4DatepickerModule} from '@logisticinfotech/ionic4-datepicker';
         FormsModule,
         IonicModule,
         Ionic4DatepickerModule,
+        IonicSelectableModule,
         AddjourneyPageRoutingModule
     ],
     declarations: [AddjourneyPage]

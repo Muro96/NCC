@@ -30,7 +30,7 @@ export class VehiclesPage implements OnInit {
     }
 
     async addVehicle() {
-        this.database.addVehicle(this.vehicle['car_model'], this.vehicle['license_plate']).then(async _ => {
+        this.database.addVehicle(this.vehicle['car_brand'],this.vehicle['car_model'], this.vehicle['license_plate']).then(async _ => {
             this.vehicle = {};
             await this.database.getAllVehicles().then(data =>{
                 this.vehicles = data;

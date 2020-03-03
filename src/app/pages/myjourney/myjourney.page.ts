@@ -76,7 +76,7 @@ export class MyjourneyPage implements OnInit {
     ngOnInit() {
         this.datePickerObj = {
             inputDate: this.mydate,
-            dateFormat: 'DD/M/YYYY',
+            dateFormat: 'D/M/YYYY',
             fromDate: new Date('01/01/1960'),
             closeOnSelect: true,
             todayLabel: 'Oggi',
@@ -160,6 +160,11 @@ export class MyjourneyPage implements OnInit {
         console.log('this.checked__paid' + this.checked_ispaid);
         console.log('check_int' + this.check_int);
         
+        }
+
+        updateTravel(travel_id:number){
+            this.router.navigate(['myjourney/updatejourney']);
+
         }
 }
 
