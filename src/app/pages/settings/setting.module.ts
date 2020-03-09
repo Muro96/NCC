@@ -10,7 +10,8 @@ const routes: Routes = [
     {
         path: '',
         component: SettingPage,
-        children: [
+    },
+
             {
                 path: 'drivers',
                 loadChildren: () => import('./drivers/drivers.module').then(m => m.DriversPageModule)
@@ -31,14 +32,14 @@ const routes: Routes = [
                 path: 'departures',
                 loadChildren: () => import('./departures/departures.module').then(m => m.DeparturesPageModule)
             },
-        ]
-    },
-    {
+        
+    
+   /* {
         path: 'settings',
         redirectTo: '/settings/drivers',
         pathMatch: 'full'
 
-    }
+    } */
 ];
 
 
