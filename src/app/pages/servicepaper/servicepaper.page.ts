@@ -226,13 +226,14 @@ export class ServicepaperPage implements OnInit {
     });
 
     var rows_driver = [];
-    rows_driver.push(['Nome Autista','Cognome Autista','Veicolo','Targa'])
+    rows_driver.push(['Nome Autista','Cognome Autista','Marca','Modello','Targa'])
     
     rows_driver.push([this.drivers['name'],this.drivers['surname'],vehicle_model.toString(),vehicle_plate.toString()]);
     //rows_driver.push([this.drivers['name'],this.drivers['surname'],vehicle_model.toString(),vehicle_plate.toString()]);
 
     var docDefinition = {
       content: [
+        {text: 'Foglio di servizio NCC n°' + this.travels['travel_id'] + 'del' + this.travels['date'],style:'header',alignment:'center'},
         {text: 'Noleggio con conducente di' + this.agency['owner_agency'], style:'header',alignment: 'center'},
         {text: 'Sede operativa e legale: ' +
         this.agency['address_agency']+ ','+ this.agency['city_agency']+ ' ' + this.agency['cap_agency'] + '( ' + this.agency['province_agency'] + ' )', style:'header',alignment: 'center'},

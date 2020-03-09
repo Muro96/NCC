@@ -842,20 +842,35 @@ export class DatabaseService {
             });
         } */
 
+
+        async checkRegister_present(date:string){
+            let res: any;
+            let query = 'SELECT register.* FROM register AS register WHERE register.date=' + '\'' + date + '\'';
+            return this.database.executeSql(query, []).then(data => {
+                res = data.rows.length;
+                return res;
+            });
+        }
+
         async getRegister(date:string){
             
-            let query = 'SELECT register.* FROM register AS register WHERE register.date=' + '\'' + date + '\'' + ';';
+            let query = 'SELECT register.* FROM register AS register WHERE register.date=' + '\'' + date + '\'';
             console.log("queryyy"+query);
             return this.database.executeSql(query, []).then(data => {
-                return{
-                    register_id: data.rows.item(0).register_id,
-                    print_reg: data.rows.item(0).print_reg,
-                    date: data.rows.item(0).date,
-                    km_start: data.rows.item(0).km_start,
-                    km_end: data.rows.item(0).end,
-                    fk_vehicle: data.rows.item(0).fk_vehicle,
+                if(data.length>0){
+                    console.log("greater than 0");
+                    return{
+                        register_id: data.rows.item(0).register_id,
+                        print_reg: data.rows.item(0).print_reg,
+                        date: data.rows.item(0).date,
+                        km_start: data.rows.item(0).km_start,
+                        km_end: data.rows.item(0).km_end,
+                        fk_vehicle: data.rows.item(0).fk_vehicle,
+                }
+                
 
                 }
+            
             });
         }
 

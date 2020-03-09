@@ -342,9 +342,8 @@ export class AddjourneyPage implements OnInit {
     async addTravel() {
         let client_id = this.getClientIdSelected();
         console.log("aggiuntttt"+client_id);
-        //let vehicle_id = this.getVehicleIdSelected();
         if (this.checkPaid() == true){
-            if (this.departure['city'] != null && this.departure['country'] != null && this.departure['address'] != null && this.arrival['city'] != null && this.arrival['country'] != null && this.arrival['address'] != null) {
+            if (this.departure['city'] != null && this.arrival['city'] != null ) {
                 //this.database.addTravel(this.departure['city'], this.departure['country'], this.departure['address'], this.arrival['city'], this.arrival['country'], this.arrival['address'], this.time, this.mydate, this.travel['n_pass'], this.travel['km_tot'], client_id,1,vehicle_id);
                 this.travel = {};
                 this.arrival = {};
@@ -356,7 +355,7 @@ export class AddjourneyPage implements OnInit {
 
         }
         else{
-            if (this.departure['city'] != null && this.departure['country'] != null && this.departure['address'] != null && this.arrival['city'] != null && this.arrival['country'] != null && this.arrival['address'] != null) {
+            if (this.departure['city'] != null && this.arrival['city'] != null ) {
                 //this.database.addTravel(this.departure['city'], this.departure['country'], this.departure['address'], this.arrival['city'], this.arrival['country'], this.arrival['address'], this.time, this.mydate, this.travel['n_pass'], this.travel['km_tot'], client_id,0,vehicle_id);
                 this.travel = {};
                 this.arrival = {};

@@ -44,59 +44,22 @@ export class DatadaysPage implements OnInit {
     vehicles : Vehicle [] = [];
     vehicle_id_select: any;
 
-    constructor(public modalCtrl: ModalController,private database:DatabaseService,private router:Router) {
-
-        if (this.router.getCurrentNavigation().extras.state) {
-            this.vehicle_id_select = this.router.getCurrentNavigation().extras.state.vehicle_id;
-            console.log("diooo"+this.vehicle_id_select);
-        }
-    }
-
-
-    /*ionViewDidEnter(){
-        console.log("diooo");
-        this.database.getRegister(this.mydate).then(data =>{
-                
-            //problema undefined valore fk_vehicle
-                this.registers['register_id'] = data.register_id;
-                this.registers['print_reg'] = data.print_reg;
-                this.registers['date'] = data.date;
-                this.registers['km_start'] = data.km_start;
-                this.registers['km_end'] = data.km_end;
-                this.registers['fk_vehicle'] = data.fk_vehicle;
-        });
-            
-        
-    
-    } */
-
+    constructor(public modalCtrl: ModalController,private database:DatabaseService,private router:Router) {}
     ngOnInit() {
         
         this.database.getDatabaseState().subscribe(ready => {
             if (ready) {
+                //get all vehicles of drivers
                 this.database.getAllVehicles().then(data => {
                     this.vehicles = data;
-                });
-              
-                this.database.getRegister(this.mydate).then(data =>{
-                
-                    //problema undefined valore fk_vehicle
-                        this.registers['register_id'] = data.register_id;
-                        this.registers['print_reg'] = data.print_reg;
-                        this.registers['date'] = data.date;
-                        this.registers['km_start'] = data.km_start;
-                        this.registers['km_end'] = data.km_end;
-                        this.registers['fk_vehicle'] = data.fk_vehicle;
-                    
-                
-                });
+                });  
             }
 
         });
         
 
         // EXAMPLE OBJECT
-      /*  this.datePickerObj = {
+        this.datePickerObj = {
             inputDate: this.mydate,
 
             dateFormat: 'DD/M/YYYY',
@@ -111,10 +74,10 @@ export class DatadaysPage implements OnInit {
             momentLocale: 'it-IT',
             yearInAscending: true
         };
-    } */
-}
+    } 
 
-   /* onChangeDate() {
+
+    onChangeDate() {
         console.log('onChangeDate date ', this.mydate);
     }
 
@@ -146,7 +109,7 @@ export class DatadaysPage implements OnInit {
           weeksList: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
           dateFormat: 'DD.MM.YYYY',
           clearButton: true
-        };  
+        };  */
 
         const datePickerModal = await this.modalCtrl.create({
             component: Ionic4DatepickerModalComponent,
@@ -161,10 +124,11 @@ export class DatadaysPage implements OnInit {
             this.selectedDate = data.data.date;
         });
     }
-    /*getVehicleIdSelect() {
+
+    getVehicleIdSelect() {
         console.log("this_vehicleeeeeee"+this.vehicle_id_select);
         return this.vehicle_id_select;
-    } */
+    } 
 
     updateRegister(register:Register){
         let navigationExtras: NavigationExtras = {
@@ -177,6 +141,11 @@ export class DatadaysPage implements OnInit {
         
 
     }
+
+    addRegister(){
+        let vehicle_id = this.getVehicleIdSelect();
+        this.database.addRegister(0,this.mydate,this.register['km_start'],this.register['km_end'],vehicle_id);
+        }
 }
 
 

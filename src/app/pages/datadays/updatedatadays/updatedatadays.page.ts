@@ -52,6 +52,19 @@ export class UpdatedatadaysPage implements OnInit {
 
 
   ngOnInit() {
+
+    this.database.getRegister(this.mydate).then(data =>{
+                
+        //problema undefined valore fk_vehicle
+           
+           /* this.registers['print_reg'] = data.print_reg;
+            this.registers['date'] = data.date;
+            this.registers['km_start'] = data.km_start;
+            this.registers['km_end'] = data.km_end;
+            this.registers['fk_vehicle'] = data.fk_vehicle; */
+        
+    
+    });
       this.database.getDatabaseState().subscribe(ready => {
           if (ready) {
               this.database.getAllVehicles().then(data => {
