@@ -9,6 +9,7 @@ import {AddjourneyPageRoutingModule} from './addjourney-routing.module';
 import {AddjourneyPage} from './addjourney.page';
 import {Ionic4DatepickerModule} from '@logisticinfotech/ionic4-datepicker';
 import { IonicSelectableModule } from 'ionic-selectable';
+import {ModalDepPage} from '../modal-dep/modal-dep.page'
 
 @NgModule({
     imports: [
@@ -19,7 +20,8 @@ import { IonicSelectableModule } from 'ionic-selectable';
         IonicSelectableModule,
         AddjourneyPageRoutingModule
     ],
-    declarations: [AddjourneyPage]
+    declarations: [AddjourneyPage,ModalDepPage],
+    entryComponents: [ModalDepPage]
 })
 export class AddjourneyPageModule {
 }

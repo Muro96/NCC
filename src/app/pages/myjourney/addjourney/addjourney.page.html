@@ -18,16 +18,17 @@
             <ion-input readonly [(ngModel)]="mydate" (ionChange)="onChangeDate()"
                        [liIonic4Datepicker]="datePickerObj"></ion-input>
         </ion-item>
-
+        
         <ion-item>
             <ion-label>Luogo di Partenza</ion-label>
-            <ion-input type="text" [(ngModel)]="departure.city" (ionBlur)="blur_city();"></ion-input>
+            <ion-input id="autocomplete_input_dep" autocomplete="off" (keyup)="getAddressDep()" (ionBlur)="blur_arrival()"></ion-input>
         </ion-item>
-    
-       <ion-item class="city">
-            <ion-label>Luogo di Destinazione</ion-label>
-            <ion-input type="text" [(ngModel)]="arrival.city" (ionBlur)="blur_npass();"></ion-input>
-        </ion-item> 
+        
+        <ion-item class="arrival">
+            <ion-label>Luogo di Arrivo</ion-label>
+            <ion-input id="autocomplete_input_arr" autocomplete="off" (keyup)="getAddressArr()" (ionBlur)="blur_npass()">
+            </ion-input>
+        </ion-item>
 
         <ion-item class="pass">
             <ion-label>N° Passeggeri</ion-label>

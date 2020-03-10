@@ -15,6 +15,10 @@ const routes: Routes = [
   {
     path: 'updatejourney',
     loadChildren: () => import('./updatejourney/updatejourney.module').then( m => m.UpdatejourneyPageModule)
+  },
+  {
+    path: 'modal-dep',
+    loadChildren: () => import('./modal-dep/modal-dep.module').then( m => m.ModalDepPageModule)
   }
 ];
 

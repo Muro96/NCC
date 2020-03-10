@@ -52,6 +52,10 @@ const routes: Routes = [
         path: 'servicepaper',
         loadChildren: () => import('./pages/servicepaper/servicepaper.module').then( m => m.ServicepaperPageModule)
     },
+  {
+    path: 'modal-dep',
+    loadChildren: () => import('./pages/myjourney/modal-dep/modal-dep.module').then( m => m.ModalDepPageModule)
+  },
 
 ];
 

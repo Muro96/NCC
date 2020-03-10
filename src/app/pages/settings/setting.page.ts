@@ -33,10 +33,4 @@ export class SettingPage implements OnInit {
         this.router.navigateByUrl('/settings/destinations');
 
     }
-
-
-    // add back when alpha.4 is out
-    // navigate(item) {
-    //   this.router.navigate(['/list', JSON.stringify(item)]);
-    // }
 }
