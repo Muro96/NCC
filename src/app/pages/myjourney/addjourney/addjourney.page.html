@@ -21,8 +21,8 @@
 
         <ion-item>
             <ion-label>Recenti destinazioni</ion-label>
-            <ionic-selectable [(ngModel)]="select_dep" [items]="departures" itemValueField="departure_id"
-             itemTextField="name_dep" headerColor="primary" searchFailText="Nessun risultato" [canSearch]="true">
+            <ionic-selectable #selectDep [(ngModel)]="select_dep" [items]="departures" itemValueField="departure_id"
+             itemTextField="name_dep" headerColor="primary" searchFailText="Nessun risultato" [canSearch]="true" searchPlaceholder="Ricerca per nome destinazione">
                 <ng-template ionicSelectableTitleTemplate>
                     Destinazioni recenti
                 </ng-template>
@@ -36,6 +36,20 @@
                     {{departure.name_dep}},{{departure.address_dep}}
                 </ng-template>
 
+                <ng-template ionicSelectableFooterTemplate>
+                    <ion-footer>
+                        <ion-row text-center>
+                            <ion-col size="6">
+                                <ion-button fill="clear" (click)="reset_dep()">Azzera</ion-button>
+                            </ion-col>
+                            <ion-col size="6">
+                                <ion-button fill="clear" (click)="confirm_dep()">Conferma</ion-button>
+                            </ion-col>
+                        </ion-row>
+                    </ion-footer>
+
+                </ng-template>
+
             </ionic-selectable>  
         </ion-item>
         
@@ -44,10 +58,9 @@
             <ion-input id="autocomplete_input_dep" autocomplete="off" (keyup)="getAddressDep()" (ionBlur)="blur_arrival()"></ion-input>
         </ion-item>
 
-
         <ion-item>
             <ion-label>Recenti arrivi</ion-label>
-            <ionic-selectable #selectArr [(ngModel)]="select_arr" [items]="arrivals" itemValueField="arrival_id"
+            <ionic-selectable #selectArr [(ngModel)]="select_arr" [items]="arrivals" itemValueField="arrival_id" searchPlaceholder="Ricerca per nome arrivo"
              itemTextField="name_arr" headerColor="primary" searchFailText="Nessun risultato" [canSearch]="true">
                 <ng-template ionicSelectableTitleTemplate>
                     Arrivi recenti
@@ -109,9 +122,9 @@
         
         <ion-item class="client">
             <ion-label>Cliente</ion-label>
-            <ionic-selectable item-content [(ngModel)]="client" itemValueField="client_id" itemTextField="surname_client" 
-                [items]="clients" [canSearch]="true" [canAddItem]="true" (onChange)="getClientIdSelected()"
-                (onAddItem)="onAddPort()">
+            <ionic-selectable #selectClient [(ngModel)]="client" itemValueField="client_id" itemTextField="surname_client" 
+                [items]="clients" [canSearch]="true" [canAddItem]="true" (onChange)="getClientIdSelected()"  headerColor="primary" searchPlaceholder="Ricerca per cognome">
+            
 
                 <ng-template ionicSelectableTitleTemplate>
                     Clienti Recenti
@@ -125,16 +138,25 @@
                 <ng-template ionicSelectableItemTemplate let-client="item">
                     {{client.name_client}} {{client.surname_client}}
                 </ng-template>
+                <ng-template ionicSelectableFooterTemplate>
+                    <ion-footer>
+                        <ion-row text-center>
+                            
+                            <ion-col size="12">
+                                <ion-button  text-center fill="clear" (click)="onAddClient($event)">Aggiungi</ion-button>
+                            </ion-col>
+                           
+                        </ion-row>
+                    </ion-footer>
+
+                </ng-template>
+
             </ionic-selectable>
             
             
            
         </ion-item>
-        
 
-    
-  
-        <!--<ion-button expand="block" (click)="gotoAddClient();">Aggiungi un nuovo cliente</ion-button> -->
         <ion-button expand="block" (click)="addTravel();" color="success">Conferma Viaggio</ion-button>
         <!--<ion-button expand="block" (click)="distanceMatrix();">Calcola KM</ion-button> -->
     </ion-list>

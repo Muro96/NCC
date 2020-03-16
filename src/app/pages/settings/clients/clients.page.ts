@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {DatabaseService, Client} from 'src/app/database.service';
-import {ToastController, AlertController} from '@ionic/angular';
-import { NavigationExtras, Router } from '@angular/router';
+import {ToastController, AlertController, NavController} from '@ionic/angular';
+import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-clients',
@@ -14,9 +14,17 @@ export class ClientsPage implements OnInit {
     clients: Client[] = [];
     toast: any;
     checked = false;
+    is_from_add:number;
 
-    constructor(public database: DatabaseService, private toastController: ToastController,private alertController:AlertController,private router:Router) {
+    constructor(public database: DatabaseService,private route: ActivatedRoute, private toastController: ToastController,private alertController:AlertController,private router:Router,private navController:NavController) {
+        this.route.queryParams.subscribe(params => {
+        if (this.router.getCurrentNavigation().extras.state) {
+            this.is_from_add = this.router.getCurrentNavigation().extras.state.is_from_add;
+            console.log("is_from_add"+this.is_from_add);
+            }
+        });
     }
+    
 
     ngOnInit() {
         this.database.getDatabaseState().subscribe(ready => {
@@ -40,6 +48,12 @@ export class ClientsPage implements OnInit {
 
             this.showToast();
             this.hideToast();
+            console.log("is_from_add dentro add"+this.is_from_add);
+            if(this.is_from_add==1){
+                this.navController.navigateBack(['myjourney/addjourney']);
+            }
+            
+            
 
         } else {
             console.log('false');
@@ -52,6 +66,9 @@ export class ClientsPage implements OnInit {
             });
             this.showToast();
             this.hideToast();
+            if(this.is_from_add==1){
+                this.navController.navigateBack(['myjourney/addjourney']);
+            }
         }
 
 
@@ -87,7 +104,7 @@ export class ClientsPage implements OnInit {
 
     async cancelClient(client_id:number) {
         const alert = await this.alertController.create({
-            header: 'SEI SICURO DI VOLER ELIMINARE IL VIAGGIO?',
+            header: 'SEI SICURO DI VOLER ELIMINARE IL CLIENTE?',
 
             buttons: [{
                 text: 'OK',

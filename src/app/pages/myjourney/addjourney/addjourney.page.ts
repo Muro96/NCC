@@ -1,8 +1,8 @@
 import {Component, OnInit, ViewChild, ElementRef, ComponentFactoryResolver, NgZone} from '@angular/core';
-import {ModalController, Platform, AlertController, ToastController} from '@ionic/angular';
+import {ModalController, Platform, AlertController, ToastController, NavController} from '@ionic/angular';
 import {Ionic4DatepickerModalComponent} from '@logisticinfotech/ionic4-datepicker';
 import {DatabaseService, Client, Travel, Departure, Arrival, Vehicle} from 'src/app/database.service';
-import {Router} from '@angular/router';
+import {Router, NavigationExtras} from '@angular/router';
 import { IonicSelectableComponent } from 'ionic-selectable';
 import { ModalDepPage } from '../modal-dep/modal-dep.page';
 
@@ -77,11 +77,13 @@ export class AddjourneyPage implements OnInit {
     location: any;
     placeid: any;
     response_dep:any;
-    @ViewChild('selectArr') selectArr : IonicSelectableComponent;
-    
+    @ViewChild('selectArr',{static:true}) selectArr : IonicSelectableComponent;
+    @ViewChild('selectDep',{static:true}) selectDep : IonicSelectableComponent;
+    @ViewChild('selectClient',{static:true}) selectClient: IonicSelectableComponent;
+   
 
 
-    constructor(public modalCtrl: ModalController, private database: DatabaseService, private platform: Platform, private router: Router, private alertController: AlertController, private toastController: ToastController) {
+    constructor(public modalCtrl: ModalController, private database: DatabaseService, private platform: Platform, private router: Router, private alertController: AlertController, private toastController: ToastController,private navController: NavController) {
     }
 
     ngOnInit() {
@@ -96,6 +98,9 @@ export class AddjourneyPage implements OnInit {
                 })
                 this.database.getArrivals().then(arrival =>{
                     this.arrivals = arrival;
+                })
+                this.database.getDepartures().then(dep =>{
+                    this.departures = dep;
                 })
             }
         });
@@ -113,6 +118,17 @@ export class AddjourneyPage implements OnInit {
             yearInAscending: true
         };
       }
+      ionViewDidEnter(){
+        console.log("quuuququququ");
+        this.database.getDatabaseState().subscribe(async ready => {
+            if (ready) {
+                this.database.getClients().then(async data => {
+                     this.clients = data;
+                });
+            }
+        });
+
+      }
 
       reset_arr(){
           this.selectArr.clear();
@@ -122,7 +138,23 @@ export class AddjourneyPage implements OnInit {
       confirm_arr(){
           this.selectArr.confirm();
           this.selectArr.close();
+          this.blur_npass();
       }
+
+      reset_dep(){
+        this.selectDep.clear();
+        this.selectDep.close();
+
+
+      }
+
+      confirm_dep(){
+          this.selectDep.confirm();
+          this.selectDep.close();
+
+
+      }
+
        
     
 
@@ -265,15 +297,7 @@ export class AddjourneyPage implements OnInit {
         return this.client.client_id;
         
       }
-        
-    
 
-   
-
-    gotoAddClient() {
-        this.router.navigate(['/settings/clients']);
-
-    }
 
     async presentModal() {
         const res = await (await this.getAddressDep());
@@ -350,7 +374,7 @@ export class AddjourneyPage implements OnInit {
     } */
 
     async addTravel() {
-        //let client_id = this.getClientIdSelected();
+        let client_id = this.getClientIdSelected();
         let res1 = this.getAddressDep();
         console.log("res2"+res1);
 
@@ -384,10 +408,25 @@ export class AddjourneyPage implements OnInit {
 
     }
 
-    async addTravelApi(){
-        //let client_id = this.getClientIdSelected();
+    onAddClient(event: {
+        component: IonicSelectableComponent
+      }) {
+        // Clean form.
+        this.selectClient.clear();
+        this.selectClient.close();
 
-    }
+        let navigationExtras: NavigationExtras = {
+            state: {
+                is_from_add : '1',
+              
+            }
+          };
+        this.navController.navigateForward(['settings/clients'],navigationExtras);
+      }
+
+
+      
+
 
     checkPaid(){
         this.checked = !this.checked;
