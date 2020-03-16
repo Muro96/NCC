@@ -14,7 +14,8 @@ declare var google;
     styleUrls: ['./addjourney.page.scss'],
 })
 export class AddjourneyPage implements OnInit {
-    selectedView = 'add_journey';
+    select_dep:null;
+    select_arr:null;
     travel = {};
     travels: Travel[] = [];
     client : Client;
@@ -76,6 +77,7 @@ export class AddjourneyPage implements OnInit {
     location: any;
     placeid: any;
     response_dep:any;
+    @ViewChild('selectArr') selectArr : IonicSelectableComponent;
     
 
 
@@ -92,6 +94,9 @@ export class AddjourneyPage implements OnInit {
                     this.vehicles = vehicle;
 
                 })
+                this.database.getArrivals().then(arrival =>{
+                    this.arrivals = arrival;
+                })
             }
         });
         this.datePickerObj = {
@@ -107,6 +112,16 @@ export class AddjourneyPage implements OnInit {
             momentLocale: 'it-IT',
             yearInAscending: true
         };
+      }
+
+      reset_arr(){
+          this.selectArr.clear();
+          this.selectArr.close();
+
+      }
+      confirm_arr(){
+          this.selectArr.confirm();
+          this.selectArr.close();
       }
        
     
