@@ -18,11 +18,18 @@
             <ion-input readonly [(ngModel)]="mydate" (ionChange)="onChangeDate()"
                        [liIonic4Datepicker]="datePickerObj"></ion-input>
         </ion-item>
+
+        <ion-item>
+            <ion-label>Scegli tra i preferiti</ion-label>
+            <ion-selectable [(ngModel)]="select_dep" [items]=""
+        </ion-item>
         
         <ion-item>
             <ion-label>Luogo di Partenza</ion-label>
             <ion-input id="autocomplete_input_dep" autocomplete="off" (keyup)="getAddressDep()" (ionBlur)="blur_arrival()"></ion-input>
         </ion-item>
+
+       
         
         <ion-item class="arrival">
             <ion-label>Luogo di Arrivo</ion-label>
@@ -46,23 +53,6 @@
           </div>
         </ion-item>
         
-
-       
-        <!--<ion-item>
-            <ion-label *ngIf="input_value=='' || input_value==null">Luogo di Partenza</ion-label>
-            <ion-searchbar id="autocomplete_input_dep"
-                       autocomplete="on" (keyup)="getAddressDep()">
-            </ion-input>
-            <ion-button (click)="getCurrentPosition()">
-                <ion-icon src="../../assets/icon/position.svg"></ion-icon>
-            </ion-button>
-        </ion-item> -->
-        <!--<ion-item>
-            <ion-label *ngIf="input_value1=='' || input_value1==null">Luogo di Arrivo</ion-label>
-            <ion-input id="autocomplete_input_arr"
-                       autocomplete="on" (keyup)="getAddressArr()">
-            </ion-input>
-        </ion-item> -->
         <ion-item class="client">
             <ion-label>Cliente</ion-label>
             <ionic-selectable item-content [(ngModel)]="client" itemValueField="client_id" itemTextField="surname_client" 

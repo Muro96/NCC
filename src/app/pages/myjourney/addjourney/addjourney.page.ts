@@ -1,12 +1,8 @@
 import {Component, OnInit, ViewChild, ElementRef, ComponentFactoryResolver, NgZone} from '@angular/core';
-import {Geolocation} from '@ionic-native/geolocation/ngx';
 import {ModalController, Platform, AlertController, ToastController} from '@ionic/angular';
 import {Ionic4DatepickerModalComponent} from '@logisticinfotech/ionic4-datepicker';
 import {DatabaseService, Client, Travel, Departure, Arrival, Vehicle} from 'src/app/database.service';
 import {Router} from '@angular/router';
-
-
-declare var google
 import { IonicSelectableComponent } from 'ionic-selectable';
 import { ModalDepPage } from '../modal-dep/modal-dep.page';
 
@@ -31,16 +27,16 @@ export class AddjourneyPage implements OnInit {
     arrivals: Arrival [] = [];
 
     client_select: any;
-    vehicle_id_select: any;
+    
 
 
-    map: any;
+  
     latlng_arr: any;
     latlng_dep: any;
     place_dep: any;
-    gmarkers_arr = [];
-    gmarkers_dep = [];
-    coords = [];
+
+   
+ 
 
     time: string = new Date().toLocaleTimeString('it-IT', {hour: '2-digit', minute: '2-digit'});
     //options = {day: 'numeric', month: 'numeric', year: 'numeric'};
@@ -278,7 +274,7 @@ export class AddjourneyPage implements OnInit {
 
     async blur_arrival(){
         document.getElementsByClassName("arrival")[0].setAttribute("style", "visibility: visible;"); 
-        await this.presentModal(); 
+        //await this.presentModal(); 
 
     }
 

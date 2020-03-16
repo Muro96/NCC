@@ -12,7 +12,6 @@ export class HomePage{
    
 
     options = {day: 'numeric', month: 'long', year: 'numeric'};
-    subscribe: any;
     driver = {};
     drivers: Driver[] = [];
     driverLogin: string;
@@ -40,17 +39,6 @@ export class HomePage{
         if (result==0){
             this.compileDataDays();
         }
-        /*else{
-            this.database.getRegister(this.mydate).then(data =>{
-                this.registers['print_reg'] = data.print_reg;
-                this.registers['date'] = data.date;
-                this.registers['km_start'] = data.km_start;
-                this.registers['km_end'] = data.km_end;
-                this.registers['fk_vehicle'] = data.fk_vehicle; 
-        
-
-        }); 
-    }      */   
     }
 
     pageSettings() {
@@ -73,21 +61,18 @@ export class HomePage{
     //return name of driver login
     async getDriverLogin() {
         let res = await this.database.getDriverLogin();
-        console.log('resemail' + res.email);
         return res.name;
 
     }
 
     async getDriverId() {
         let res = await this.database.getDriverLogin();
-        console.log('driver_id' + res.driver_id);
         return res.driver_id;
 
     }
 
     async logout() {
         let res = await this.getDriverId();
-        console.log('result user login' + res);
         this.database.updateLogut(res);
     }
 

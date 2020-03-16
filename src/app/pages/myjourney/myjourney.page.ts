@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild, ElementRef, ComponentFactoryResolver} from
 import {Geolocation} from '@ionic-native/geolocation/ngx';
 import {ModalController, Platform, AlertController, ToastController} from '@ionic/angular';
 import {Ionic4DatepickerModalComponent} from '@logisticinfotech/ionic4-datepicker';
-import {DatabaseService, Client, Travel, Departure, Arrival} from 'src/app/database.service';
+import {DatabaseService, Client, Travel} from 'src/app/database.service';
 import {LatLng} from 'leaflet';
 import {Router} from '@angular/router';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
@@ -15,38 +15,16 @@ import { NumberValueAccessor } from '@angular/forms';
     templateUrl: './myjourney.page.html',
     styleUrls: ['./myjourney.page.scss'],
 })
-export class MyjourneyPage implements OnInit {
-
-    selectedView = 'add_journey';
-    travel = {};
+export class MyjourneyPage implements OnInit {  
     travels: Travel[] = [];
 
     checked_ispaid = true;
     check_int= 1;
 
-    departure = {};
-    departures: Departure[] = [];
-
-    arrival = {};
-    arrivals: Arrival [] = [];
-
-    client_id_select: any;
-
-
-    map: any;
-    latlng_arr: any;
-    latlng_dep: any;
-    gmarkers_arr = [];
-    gmarkers_dep = [];
-    coords = [];
-
     time: string = new Date().toLocaleTimeString('it-IT', {hour: '2-digit', minute: '2-digit'});
     options = {day: 'numeric', month: 'numeric', year: 'numeric'};
     mydate: string = new Date().toLocaleDateString('it-IT');
 
-
-    input_value: any;
-    input_value1: any;
 
 
     datePickerObj: any = {};
@@ -70,7 +48,7 @@ export class MyjourneyPage implements OnInit {
     selectedDate: any;
     clients: Client[] = [];
 
-    constructor(public modalCtrl: ModalController, private database: DatabaseService, private platform: Platform, private router: Router, private alertController: AlertController, private toastController: ToastController) {
+    constructor(public modalCtrl: ModalController, private database: DatabaseService, private router: Router, private alertController: AlertController) {
     }
 
     ngOnInit() {
@@ -100,7 +78,6 @@ export class MyjourneyPage implements OnInit {
 }
 
     onChangeDate(){
-        console.log("myyydate"+this.mydate);
         this.database.getTravelisPaidDate(this.mydate,1).then(data =>{
             this.travels = data;
     });
@@ -113,7 +90,6 @@ export class MyjourneyPage implements OnInit {
     }
 
     cancelTravel(travel_id:number){
-        console.log("traaaaaavel"+travel_id);
         this.database.cancelTravel(travel_id);
         this.database.getTravelisPaidDate(this.mydate,this.check_int).then(data =>{
             this.travels = data;
@@ -156,10 +132,7 @@ export class MyjourneyPage implements OnInit {
             await this.database.getTravelisPaidDate(this.mydate,this.check_int).then(data =>{
                 this.travels = data;
             })
-        }
-        console.log('this.checked__paid' + this.checked_ispaid);
-        console.log('check_int' + this.check_int);
-        
+        }    
         }
 
         updateTravel(travel_id:number){
