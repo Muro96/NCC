@@ -21,8 +21,16 @@ export class AppComponent {
         {
             title: 'Impostazioni',
             url: '/settings',
-            icon: 'list',
+            icon: 'md-settings',
+            subPages: [
+            { title: 'Azienda', url: '' },
+            { title: 'Conducente', url: '/settings/drivers', icon: '' },
+            { title: 'Mezzi', url: '/settings/vehicles', icon:'md-car' },
+            { title: 'Clienti', url: '/settings/clients' },
+            { title: 'Partenze', url: '/settings/departures' },
+            { title: 'Destinazioni', url: '/settings/destinations' }],
         },
+    
     ];
 
     constructor(
@@ -36,6 +44,7 @@ export class AppComponent {
 
     initializeApp() {
         this.platform.ready().then(() => {
+            this.splashScreen.hide();
             this.statusBar.styleBlackOpaque();
         });
     }
