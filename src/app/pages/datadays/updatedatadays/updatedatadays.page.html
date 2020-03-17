@@ -5,17 +5,14 @@
 </ion-header>
 <ion-content>
   <ion-list>
-      <ion-item>
-          <ion-label>Seleziona Data</ion-label>
-          <ion-input readonly [(ngModel)]="mydate" (ionChange)="onChangeDate()" [liIonic4Datepicker]="datePickerObj"></ion-input>
-      </ion-item>
+    
 
       <ion-item>
           <ion-label>Km inizio giornata</ion-label>
           <ion-text *ngIf="registers.km_start != null; else nullName" type="text" placeholder=""
-           [(ngModel)]="registers.km_start"></ion-text>
+           [(ngModel)]="register.km_start"></ion-text>
           <ng-template #nullName>
-            <ion-input type="text" placeholder="" [(ngModel)]="registers.km_start"></ion-input>
+            <ion-input type="text" placeholder="" [(ngModel)]="register.km_start"></ion-input>
           </ng-template>
   
       </ion-item>

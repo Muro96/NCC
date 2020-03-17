@@ -11,28 +11,48 @@
 <ion-content padding>
     <ion-list>
         <ion-item>
-            <ion-label>Seleziona Data</ion-label>
-            <ion-input readonly [(ngModel)]="mydate" (ionChange)="onChangeDate()" [liIonic4Datepicker]="datePickerObj"></ion-input>
+            <ion-label>Data</ion-label>
+            <ion-input readonly [(ngModel)]="mydate" (ionChange)="onChangeDate()" [liIonic4Datepicker]="datePickerObj"></ion-input>         
         </ion-item>
   
         <ion-item>
-            <ion-label>Km inizio giornata</ion-label>
-            <ion-input type="text" placeholder="KM" [(ngModel)]="register.km_start"></ion-input>
+            <ion-label>Km inizio giornata: </ion-label>
+            <ion-input *ngIf="registers.km_start==null; else notnullKmStart" type="number" placeholder="KM" [(ngModel)]="register.km_start"></ion-input>
+            <ng-template #notnullKmStart>
+                <ion-text>
+                    {{registers.km_start + ' KM'}} 
+                </ion-text>
+            </ng-template>
         </ion-item>
   
         <ion-item>
-          <ion-label>Km fine giornata</ion-label>  
-          <ion-input type="text" placeholder="KM" [(ngModel)]="register.km_end"></ion-input>
+          <ion-label>Km fine giornata: </ion-label>  
+          <ion-input *ngIf="registers.km_end==null; else notnullKmEnd" type="number" placeholder="KM" [(ngModel)]="register.km_end"></ion-input>
+          <ng-template #notnullKmEnd>
+            <ion-text>
+                {{registers.km_end + ' KM'}} 
+            </ion-text>
+        </ng-template>
         </ion-item>
   
         <ion-item>
-            <ion-label>Seleziona il mezzo</ion-label>
-            <ion-select [(ngModel)]="vehicle_id_select" (ngModelChange)="getVehicleIdSelect()">
+            <ion-label>Mezzo</ion-label>
+            <ion-select *ngIf="registers.fk_vehicle==null; else notNUllVehicle" [(ngModel)]="vehicle_id_select" (ngModelChange)="getVehicleIdSelect()">
                 <ion-select-option *ngFor="let vehicle of vehicles;"
                                    [value]="vehicle['vehicle_id']">{{vehicle.car_brand + ' ' + vehicle.car_model + ' |' + vehicle.license_plate}}</ion-select-option>
             </ion-select>
+            <ng-template #notNUllVehicle>
+                <ion-text>
+                    {{vehicleselect.car_brand + ' ' + vehicleselect.car_model + ' ' + vehicleselect.license_plate }}
+                </ion-text>
+
+            </ng-template>
+
         </ion-item>
-        <ion-button expand="block" (click)="addRegister();">Aggiungi registro del giorno</ion-button>
+        <ion-button *ngIf="registers.km_start==null && registers.km_end==null && registers.date==null; else updateButt" expand="block" (click)="addRegister();">Aggiungi registro del giorno</ion-button>
+        <ng-template #updateButt>
+            <ion-button expand="block" (click)="updateRegister();">Aggiorna registro del giorno</ion-button>
+        </ng-template>
     </ion-list>
 
 </ion-content>

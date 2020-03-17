@@ -4,6 +4,7 @@ import {Ionic4DatepickerModalComponent} from '@logisticinfotech/ionic4-datepicke
 
 import { Register, DatabaseService, Vehicle } from 'src/app/database.service';
 import {NavigationExtras, Router} from '@angular/router';
+import { runInThisContext } from 'vm';
 
 
 
@@ -43,17 +44,24 @@ export class DatadaysPage implements OnInit {
     registers: Register [] = [];
     vehicles : Vehicle [] = [];
     vehicle_id_select: any;
+    vehicleselect : Vehicle [] = [];
 
     constructor(public modalCtrl: ModalController,private database:DatabaseService,private router:Router) {}
     ngOnInit() {
         
-        this.database.getDatabaseState().subscribe(ready => {
+        this.database.getDatabaseState().subscribe(async ready => {
             if (ready) {
                 //get all vehicles of drivers
                 this.database.getAllVehicles().then(data => {
                     this.vehicles = data;
-                });  
-            }
+                });
+
+                this.refreshList();
+                
+             
+
+                }
+            
 
         });
         
@@ -74,10 +82,33 @@ export class DatadaysPage implements OnInit {
             momentLocale: 'it-IT',
             yearInAscending: true
         };
-    } 
+    }
+
+    async refreshList(){
+        await this.database.getRegister(this.mydate).then(async reg =>{
+            this.registers['register_id'] = reg.register_id,
+            this.registers['print_reg'] = reg.print_reg,
+            this.registers['date'] = reg.date,
+            this.registers['km_start'] = reg.km_start,
+            this.registers['km_end'] = reg.km_end,
+            this.registers['fk_vehicle'] = reg.fk_vehicle
+        });
+        if (this.registers['fk_vehicle']!=null || this.registers['fk_vehicle']!=undefined){
+            this.database.getVehicleId(this.registers['fk_vehicle']).then(veh =>{
+                this.vehicleselect['vehicle_id'] = veh.vehicle_id,
+                this.vehicleselect['car_brand'] = veh.car_brand,
+                this.vehicleselect['car_model'] = veh.car_model,
+                this.vehicleselect['license_plate']= veh.license_plate
+            })
+        }
+
+        
+    }
 
 
     onChangeDate() {
+        this.registers =[];
+        this.refreshList();
         console.log('onChangeDate date ', this.mydate);
     }
 
@@ -130,22 +161,19 @@ export class DatadaysPage implements OnInit {
         return this.vehicle_id_select;
     } 
 
-    updateRegister(register:Register){
-        let navigationExtras: NavigationExtras = {
-            state: {
-                register: register
-            }
-        };
-        
-        this.router.navigate(['datadays/updatedatadays'], navigationExtras);
-        
-
+    updateRegister(){
+        this.database.updateRegister(0,this.registers['date'] || this.register['date'],this.registers['register_id'],this.registers['km_start'] || this.register['km_start'],this.registers['km_end'] || this.register['km_end'],this.registers['fk_vehicle'])
+        this.refreshList();
     }
+        
 
     addRegister(){
         let vehicle_id = this.getVehicleIdSelect();
         this.database.addRegister(0,this.mydate,this.register['km_start'],this.register['km_end'],vehicle_id);
+        this.refreshList();
         }
+
+   
 }
 
 

@@ -126,6 +126,7 @@ export class DatabaseService {
 
     driver = new BehaviorSubject([]);
     vehicle = new BehaviorSubject([]);
+    register = new BehaviorSubject([]);
 
 
     constructor(private platform: Platform, private http: HttpClientModule, private sqlite: SQLite) {
@@ -250,6 +251,10 @@ export class DatabaseService {
 
     getVehicles(): Observable<Vehicle[]> {
         return this.vehicle.asObservable();
+    }
+
+    getRegisters(): Observable<Register[]>{
+        return this.register.asObservable();
     }
 
     async addAgency() {
@@ -420,18 +425,19 @@ export class DatabaseService {
     });
     
 }
-/*async getVehicleId(vehicle_id:number){
+async getVehicleId(vehicle_id:number){
     let query = 'SELECT * FROM driver JOIN vehicle ON driver.driver_id = vehicle.fk_driver WHERE driver.is_login = 1 AND vehicle.vehicle_id=' + '\'' + vehicle_id + '\'' + ';';
     return this.database.executeSql(query,[]).then(data=>{
         return {
             vehicle_id: data.rows.item(0).vehicle_id,
+            car_brand: data.rows.item(0).car_brand,
             car_model: data.rows.item(0).car_model,
             license_plate: data.rows.item(0).license_plate
         }
 
 
     });
-} */
+} 
 
     async getClients() {
         let data = [1];
@@ -824,25 +830,6 @@ export class DatabaseService {
         
 
         }
-
-       /*async getRegister(date:string,vehicle_id:number){
-            
-            let query = 'SELECT register.*,vehicle.* FROM register AS register JOIN vehicle AS vehicle ON register.fk_vehicle='  + '\'' + vehicle_id + '\'' + 'AND date=' + '\'' + date + '\'' + ';';
-            console.log("queryyy"+query);
-            return this.database.executeSql(query, []).then(data => {
-                return{
-                    register_id: data.rows.item(0).register_id,
-                    print_reg: data.rows.item(0).print_reg,
-                    date: data.rows.item(0).date,
-                    km_start: data.rows.item(0).km_start,
-                    km_end: data.rows.item(0).end,
-                    fk_vehicle: data.rows.item(0).fk_vehicle,
-
-                }
-            });
-        } */
-
-
         async checkRegister_present(date:string){
             let res: any;
             let query = 'SELECT register.* FROM register AS register WHERE register.date=' + '\'' + date + '\'';
@@ -853,26 +840,31 @@ export class DatabaseService {
         }
 
         async getRegister(date:string){
-            
             let query = 'SELECT register.* FROM register AS register WHERE register.date=' + '\'' + date + '\'';
             console.log("queryyy"+query);
             return this.database.executeSql(query, []).then(data => {
-                if(data.length>0){
-                    console.log("greater than 0");
-                    return{
+                console.log("data"+data.rows.item(0).fk_vehicle);
+                return{
                         register_id: data.rows.item(0).register_id,
                         print_reg: data.rows.item(0).print_reg,
                         date: data.rows.item(0).date,
                         km_start: data.rows.item(0).km_start,
                         km_end: data.rows.item(0).km_end,
                         fk_vehicle: data.rows.item(0).fk_vehicle,
-                }
+                    }
                 
 
-                }
+                
             
             });
         }
+
+        async updateRegister(print_reg:number,date:string,register_id:number,km_start:string,km_end:string,fk_vehicle:number){
+            let data = [print_reg,date,km_start,km_end,fk_vehicle,register_id]
+            const _ = await this.database.executeSql('UPDATE register SET print_reg = ?, date = ?, km_start = ?, km_end = ?, fk_vehicle = ? WHERE register_id = ?', data);
+
+        }
+       
 
 
 
