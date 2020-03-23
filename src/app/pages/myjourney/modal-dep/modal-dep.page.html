@@ -1,8 +1,7 @@
 <div class="modalContainer">
-<ion-header>
   <ion-toolbar>
     <ion-title>Aggiungi partenza</ion-title>
-    <ion-button (click)="closeModal()">
+    <ion-button slot="end" (click)="closeModal()">
       <ion-icon slot="icon-only" name="close"></ion-icon>
     </ion-button>
   </ion-toolbar>
@@ -10,11 +9,13 @@
 
 <ion-content>
   <ion-item>
-    
     <ion-label>INDIRIZZO</ion-label>
-    <h1>{{test}}</h1>
-    
-    
+    <ion-text>{{test}}</ion-text>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Nome Partenza</ion-label>
+    <ion-input type="text" placeholder="Es. Hotel Columbus"></ion-input>
   </ion-item>
 
 </ion-content>

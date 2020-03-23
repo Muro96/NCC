@@ -20,11 +20,11 @@
         </ion-item>
 
         <ion-item>
-            <ion-label>Recenti destinazioni</ion-label>
+            <ion-label>Partenze recenti</ion-label>
             <ionic-selectable #selectDep [(ngModel)]="select_dep" [items]="departures" itemValueField="departure_id"
              itemTextField="name_dep" headerColor="primary" searchFailText="Nessun risultato" [canSearch]="true" searchPlaceholder="Ricerca per nome destinazione">
                 <ng-template ionicSelectableTitleTemplate>
-                    Destinazioni recenti
+                    Partenze recenti
                 </ng-template>
 
                 <ng-template ionicSelectableCloseButtonTemplate>
@@ -58,12 +58,12 @@
             <ion-input id="autocomplete_input_dep" autocomplete="off" (keyup)="getAddressDep()" (ionBlur)="blur_arrival()"></ion-input>
         </ion-item>
 
-        <ion-item>
-            <ion-label>Recenti arrivi</ion-label>
+        <ion-item class="arrival">
+            <ion-label>Destinazioni recenti</ion-label>
             <ionic-selectable #selectArr [(ngModel)]="select_arr" [items]="arrivals" itemValueField="arrival_id" searchPlaceholder="Ricerca per nome arrivo"
              itemTextField="name_arr" headerColor="primary" searchFailText="Nessun risultato" [canSearch]="true">
                 <ng-template ionicSelectableTitleTemplate>
-                    Arrivi recenti
+                    Destinazioni recenti
                 </ng-template>
 
                 <ng-template ionicSelectableCloseButtonTemplate>
@@ -99,7 +99,7 @@
        
         
         <ion-item [hidden]="select_arr">
-            <ion-label>Luogo di Arrivo</ion-label>
+            <ion-label>Luogo di Destinazione</ion-label>
             <ion-input id="autocomplete_input_arr" autocomplete="off" (keyup)="getAddressArr()" (ionBlur)="blur_npass()">
             </ion-input>
         </ion-item>
@@ -141,10 +141,15 @@
                 <ng-template ionicSelectableFooterTemplate>
                     <ion-footer>
                         <ion-row text-center>
-                            
-                            <ion-col size="12">
+                        
+                            <ion-col size="6">
                                 <ion-button  text-center fill="clear" (click)="onAddClient($event)">Aggiungi</ion-button>
                             </ion-col>
+
+                            <ion-col size="6">
+                                <ion-button fill="clear" (click)="confirm_client()">Conferma</ion-button>
+                            </ion-col>
+
                            
                         </ion-row>
                     </ion-footer>

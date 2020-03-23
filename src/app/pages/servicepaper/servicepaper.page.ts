@@ -152,8 +152,8 @@ export class ServicepaperPage implements OnInit {
         { text: 'NOME E COGNOME CONDUCENTE:     ' +travel.name_driver + '  ' + travel.surname_driver , style: 'subheader' },
         { text: 'DATA DI PARTENZA:     ' +travel.date, style: 'subheader' },
         { text: 'DATA DI ARRIVO:     ' +travel.date, style: 'subheader' },
-        { text: 'LUOGO DI PARTENZA:     ' +travel.address_departure + ', ' +travel.city_departure +' ('+ travel.province_departure + ' )' , style: 'subheader' },
-        { text: 'LUOGO DI ARRIVO:     ' +travel.address_arrival + ', ' +travel.city_arrival +' ('+ travel.province_arrival + ' )' , style: 'subheader' },
+        //{ text: 'LUOGO DI PARTENZA:     ' +travel.address_departure + ', ' +travel.city_departure +' ('+ travel.province_departure + ' )' , style: 'subheader' },
+        //{ text: 'LUOGO DI ARRIVO:     ' +travel.address_arrival + ', ' +travel.city_arrival +' ('+ travel.province_arrival + ' )' , style: 'subheader' },
 
 
 

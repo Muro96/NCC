@@ -155,6 +155,11 @@ export class AddjourneyPage implements OnInit {
 
       }
 
+      confirm_client(){
+          this.selectClient.confirm();
+          this.selectClient.close();
+      }
+
        
     
 
@@ -293,7 +298,7 @@ export class AddjourneyPage implements OnInit {
 
     //get the client_id selected on the ion-select-button
     getClientIdSelected() {
-        console.log(this.client.client_id);
+        console.log("clientttt"+this.client.client_id);
         return this.client.client_id;
         
       }
@@ -313,7 +318,7 @@ export class AddjourneyPage implements OnInit {
 
     async blur_arrival(){
         document.getElementsByClassName("arrival")[0].setAttribute("style", "visibility: visible;"); 
-        //await this.presentModal(); 
+        await this.presentModal(); 
 
     }
 
@@ -455,18 +460,6 @@ export class AddjourneyPage implements OnInit {
 
     
       }
-
-    //ADD DEPARTURE WITH MAP
-    /*async addDeparture() {
-        //let res = await this.
-        let response = await this.distanceMatrix();
-        let latlng = this.getAddressDep();
-        let split = latlng.split(",");
-        console.log("latlng_dest"+split);
-        let address = response.destinationAddresses;
-        this.database.addArrival(split[0],split[1],address);
-    } */
-
 
 }
 

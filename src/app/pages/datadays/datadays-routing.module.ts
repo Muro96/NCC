@@ -7,11 +7,7 @@ const routes: Routes = [
     {
         path: '',
         component: DatadaysPage
-    },  {
-    path: 'updatedatadays',
-    loadChildren: () => import('./updatedatadays/updatedatadays.module').then( m => m.UpdatedatadaysPageModule)
-  }
-
+    },
 ];
 
 @NgModule({

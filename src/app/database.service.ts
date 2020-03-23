@@ -56,8 +56,8 @@ export interface Arrival {
     name_arr: string;
     lat_arr: string;
     long_arr: string;
-    city_arr: string;
-    province_arr: string;
+    //city_arr: string;
+    //province_arr: string;
     address_arr: string;
 }
 
@@ -66,8 +66,8 @@ export interface Departure {
     name_dep: string;
     lat_dep: string;
     long_dep: string;
-    city_dep: string;
-    province_dep: string;
+    //city_dep: string;
+    //province_dep: string;
     address_dep: string;
 }
 
@@ -87,14 +87,14 @@ export interface Travel {
     name_arrival: string;
     lat_arr: string;
     long_arr: string;
-    city_arrival: string;
-    province_arrival: string;
+    //city_arrival: string;
+    //province_arrival: string;
     address_arrival: string;
     name_departure: string;
     lat_dep: string;
     long_dep: string;
-    city_departure: string;
-    province_departure: string;
+    //city_departure: string;
+    //province_departure: string;
     address_departure: string;
     notes_travel:string;
     fk_vehicle: number;
@@ -190,8 +190,6 @@ export class DatabaseService {
                     'name_dep TEXT,' +
                     'lat_dep REAL,' +
                     'long_dep REAL,' +
-                    'city_dep TEXT,' +
-                    'province_dep TEXT,' +
                     'address_dep TEXT)', []);
 
                 //ARRIVI
@@ -200,8 +198,6 @@ export class DatabaseService {
                     'name_arr TEXT,' +
                     'lat_arr REAL,' +
                     'long_arr REAL,' +
-                    'city_arr TEXT,' +
-                    'province_arr TEXT,' +
                     'address_arr TEXT)', []);
 
                 //TRAVEL
@@ -510,14 +506,10 @@ async getVehicleId(vehicle_id:number){
                 name_arrival: data.rows.item(0).name_arr,
                 lat_arr: data.rows.item(0).lat_arr,
                 long_arr: data.rows.item(0).long_arr,
-                city_arrival: data.rows.item(0).city_arr,
-                country_arrival: data.rows.item(0).country_arr,
                 address_arrival: data.rows.item(0).address_arr,
                 name_departure: data.rows.item(0).name_dep,
                 lat_dep: data.rows.item(0).lat_dep,
                 long_dep: data.rows.item(0).long_dep,
-                city_departure: data.rows.item(0).city_dep,
-                country_departure: data.rows.item(0).country_dep,
                 address_departure: data.rows.item(0).address_dep,
                 notes_travel: data.rows.item(0).notes_travel,
                 fk_vehicle: data.rows.item(0).fk_vehicle,
@@ -562,14 +554,10 @@ async getVehicleId(vehicle_id:number){
                         name_arrival: data.rows.item(i).name_arr,
                         lat_arr: data.rows.item(i).lat_arr,
                         long_arr: data.rows.item(i).long_arr,
-                        city_arrival: data.rows.item(i).city_arr,
-                        province_arrival: data.rows.item(i).province_arr,
                         address_arrival: data.rows.item(i).address_arr,
                         name_departure: data.rows.item(i).name_dep,
                         lat_dep: data.rows.item(i).lat_dep,
                         long_dep: data.rows.item(i).long_dep,
-                        city_departure: data.rows.item(i).city_dep,
-                        province_departure: data.rows.item(i).province_dep,
                         address_departure: data.rows.item(i).address_dep,
                         notes_travel: data.rows.item(i).notes_travel,
                         fk_vehicle: data.rows.item(i).fk_vehicle,
@@ -615,14 +603,10 @@ async getVehicleId(vehicle_id:number){
                         name_arrival: data.rows.item(i).name_arr,
                         lat_arr: data.rows.item(i).lat_arr,
                         long_arr: data.rows.item(i).long_arr,
-                        city_arrival: data.rows.item(i).city_arr,
-                        province_arrival: data.rows.item(i).province_arr,
                         address_arrival: data.rows.item(i).address_arr,
                         name_departure: data.rows.item(i).name_dep,
                         lat_dep: data.rows.item(i).lat_dep,
                         long_dep: data.rows.item(i).long_dep,
-                        city_departure: data.rows.item(i).city_dep,
-                        province_departure: data.rows.item(i).province_dep,
                         address_departure: data.rows.item(i).address_dep,
                         notes_travel: data.rows.item(i).notes_travel,
                         fk_vehicle: data.rows.item(i).fk_vehicle,
@@ -787,8 +771,6 @@ async getVehicleId(vehicle_id:number){
                         name_arr: data.rows.item(i).name_arr,
                         lat_arr: data.rows.item(i).lat_arr,
                         long_arr: data.rows.item(i).long_arr,
-                        city_arr: data.rows.item(i).city_arr,
-                        province_arr: data.rows.item(i).province_arr,
                         address_arr: data.rows.item(i).address_arr
                         });
 
@@ -814,8 +796,6 @@ async getVehicleId(vehicle_id:number){
                             name_dep: data.rows.item(i).name_dep,
                             lat_dep: data.rows.item(i).lat_dep,
                             long_dep: data.rows.item(i).long_dep,
-                            city_dep: data.rows.item(i).city_dep,
-                            province_dep: data.rows.item(i).province_dep,
                             address_dep: data.rows.item(i).address_dep
                             });
     
