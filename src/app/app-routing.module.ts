@@ -1,5 +1,5 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
     {
@@ -50,12 +50,21 @@ const routes: Routes = [
     },
     {
         path: 'servicepaper',
-        loadChildren: () => import('./pages/servicepaper/servicepaper.module').then( m => m.ServicepaperPageModule)
+        loadChildren: () => import('./pages/servicepaper/servicepaper.module').then(m => m.ServicepaperPageModule)
     },
-  {
-    path: 'modal-dep',
-    loadChildren: () => import('./pages/myjourney/modal-dep/modal-dep.module').then( m => m.ModalDepPageModule)
-  },
+    {
+        path: 'modal-dep',
+        loadChildren: () => import('./pages/myjourney/modal-dep/modal-dep.module').then(m => m.ModalDepPageModule)
+    },
+    {
+        path: 'modal-arr',
+        loadChildren: () => import('./pages/myjourney/modal-arr/modal-arr.module').then(m => m.ModalArrPageModule)
+    },
+    {
+        path: 'agency',
+        loadChildren: () => import('./pages/settings/agency/agency.module').then(m => m.AgencyPageModule)
+    },
+
 
 ];
 

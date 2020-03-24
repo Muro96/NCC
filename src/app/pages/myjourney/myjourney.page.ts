@@ -121,6 +121,7 @@ export class MyjourneyPage implements OnInit {
 
     async checkPaid(){
         this.checked_ispaid = !this.checked_ispaid;
+        console.log("thischecked",this.checked_ispaid);
         if(this.checked_ispaid==true){
             this.check_int=1;
             await this.database.getTravelisPaidDate(this.mydate,this.check_int).then(data =>{
@@ -128,6 +129,7 @@ export class MyjourneyPage implements OnInit {
             })
         }
         else{
+            console.log("è false")
             this.check_int=0;
             await this.database.getTravelisPaidDate(this.mydate,this.check_int).then(data =>{
                 this.travels = data;

@@ -116,7 +116,6 @@ export class AddjourneyPage implements OnInit {
         };
     }
     ionViewDidEnter() {
-        console.log("quuuququququ");
         this.database.getDatabaseState().subscribe(async ready => {
             if (ready) {
                 this.database.getClients().then(async data => {
@@ -141,14 +140,15 @@ export class AddjourneyPage implements OnInit {
     reset_dep() {
         this.selectDep.clear();
         this.selectDep.close();
+        document.getElementsByClassName("arrival")[0].setAttribute("style", "visibility: hidden;");
 
 
     }
 
     confirm_dep() {
         this.selectDep.confirm();
-        console.log("DOOOOOOOOOOOO"+this.selectDep.itemValueField.valueOf());
         this.selectDep.close();
+        document.getElementsByClassName("arrival")[0].setAttribute("style", "visibility: visible;");
 
 
     }
@@ -349,7 +349,7 @@ export class AddjourneyPage implements OnInit {
 
    
 
-    async blur_arrival() {
+    async blur_arrival() {   
         document.getElementsByClassName("arrival")[0].setAttribute("style", "visibility: visible;");
         await this.presentModalDep();
 
@@ -359,9 +359,9 @@ export class AddjourneyPage implements OnInit {
         document.getElementsByClassName("client")[0].setAttribute("style", "visibility: visible;");
 
     }
-    blur_npass() {
-        console.log("qui");
+    async blur_npass() {
         document.getElementsByClassName("pass")[0].setAttribute("style", "visibility: visible;");
+        await this.presentModalArr();
     }
     blur_check() {
         document.getElementsByClassName("check")[0].setAttribute("style", "visibility: visible;");
@@ -374,7 +374,7 @@ export class AddjourneyPage implements OnInit {
         if (this.checkPaid() == true) {
             
             /*if (this.departure['city'] != null && this.arrival['city'] != null ) { */
-            this.database.addTravel(this.getDepSelect() || await this.getAddressDep(), "test" || this.getAddressArr(), this.time, this.mydate, this.travel['n_pass'], client_id, 1);
+            this.database.addTravel(this.getDepSelect() || await this.getAddressDep(), this.getArrSelect() || this.getAddressArr(), this.time, this.mydate, this.travel['n_pass'], client_id, 1);
             this.travel = {};
             this.arrival = {};
             this.departure = {};
@@ -386,7 +386,7 @@ export class AddjourneyPage implements OnInit {
         }
         else {
             /*if (this.departure['city'] != null && this.arrival['city'] != null ) { */
-            this.database.addTravel(this.getDepSelect() || await this.getAddressDep(), "test" || this.getAddressArr(), this.time, this.mydate, this.travel['n_pass'], client_id, 0);
+            this.database.addTravel(this.getDepSelect() || await this.getAddressDep(), this.getArrSelect() || this.getAddressArr(), this.time, this.mydate, this.travel['n_pass'], client_id, 0);
             this.travel = {};
             this.arrival = {};
             this.departure = {};

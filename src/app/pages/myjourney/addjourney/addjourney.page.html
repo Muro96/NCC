@@ -57,8 +57,8 @@
             <ion-label>Luogo di Partenza</ion-label>
             <ion-input id="autocomplete_input_dep" autocomplete="off" (keyup)="getAddressDep()" (ionBlur)="blur_arrival()"></ion-input>
         </ion-item>
-
-        <ion-item class="arrival">
+        <div class="arrival">
+        <ion-item>
             <ion-label>Destinazioni recenti</ion-label>
             <ionic-selectable #selectArr [(ngModel)]="select_arr" [items]="arrivals" itemValueField="arrival_id" searchPlaceholder="Ricerca per nome arrivo"
              itemTextField="name_arr" headerColor="primary" searchFailText="Nessun risultato" [canSearch]="true" (onChange)="getArrSelect()">
@@ -103,6 +103,7 @@
             <ion-input id="autocomplete_input_arr" autocomplete="off" (keyup)="getAddressArr()" (ionBlur)="blur_npass()">
             </ion-input>
         </ion-item>
+        </div>
 
         <ion-item class="pass">
             <ion-label>N° Passeggeri</ion-label>
