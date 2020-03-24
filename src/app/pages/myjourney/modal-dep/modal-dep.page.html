@@ -5,19 +5,18 @@
       <ion-icon slot="icon-only" name="close"></ion-icon>
     </ion-button>
   </ion-toolbar>
-</ion-header>
 
-<ion-content>
-  <ion-item>
+  <ion-content>
     <ion-label>INDIRIZZO</ion-label>
-    <ion-text>{{test}}</ion-text>
-  </ion-item>
+    <ion-text>{{dep_address}}</ion-text>
 
-  <ion-item>
-    <ion-label>Nome Partenza</ion-label>
-    <ion-input type="text" placeholder="Es. Hotel Columbus"></ion-input>
-  </ion-item>
 
-</ion-content>
+    <ion-item>
+      <ion-label>Nome Partenza</ion-label>
+      <ion-input type="text" placeholder="Es. Hotel Columbus" [(ngModel)]="dep_input"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" (click)="addDep()">Aggiungi Partenza</ion-button>
+  </ion-content>
 
 </div>

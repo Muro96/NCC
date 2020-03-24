@@ -22,7 +22,7 @@
         <ion-item>
             <ion-label>Partenze recenti</ion-label>
             <ionic-selectable #selectDep [(ngModel)]="select_dep" [items]="departures" itemValueField="departure_id"
-             itemTextField="name_dep" headerColor="primary" searchFailText="Nessun risultato" [canSearch]="true" searchPlaceholder="Ricerca per nome destinazione">
+             itemTextField="name_dep" headerColor="primary" searchFailText="Nessun risultato" [canSearch]="true" searchPlaceholder="Ricerca per nome destinazione" (onChange)="getDepSelect()">
                 <ng-template ionicSelectableTitleTemplate>
                     Partenze recenti
                 </ng-template>
@@ -61,7 +61,7 @@
         <ion-item class="arrival">
             <ion-label>Destinazioni recenti</ion-label>
             <ionic-selectable #selectArr [(ngModel)]="select_arr" [items]="arrivals" itemValueField="arrival_id" searchPlaceholder="Ricerca per nome arrivo"
-             itemTextField="name_arr" headerColor="primary" searchFailText="Nessun risultato" [canSearch]="true">
+             itemTextField="name_arr" headerColor="primary" searchFailText="Nessun risultato" [canSearch]="true" (onChange)="getArrSelect()">
                 <ng-template ionicSelectableTitleTemplate>
                     Destinazioni recenti
                 </ng-template>

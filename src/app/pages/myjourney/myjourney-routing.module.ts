@@ -19,7 +19,11 @@ const routes: Routes = [
   {
     path: 'modal-dep',
     loadChildren: () => import('./modal-dep/modal-dep.module').then( m => m.ModalDepPageModule)
+  },  {
+    path: 'modal-arr',
+    loadChildren: () => import('./modal-arr/modal-arr.module').then( m => m.ModalArrPageModule)
   }
+
 ];
 
 @NgModule({

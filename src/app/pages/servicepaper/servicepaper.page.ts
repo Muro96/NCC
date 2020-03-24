@@ -220,9 +220,9 @@ export class ServicepaperPage implements OnInit {
     })
 
     var rows_travel = [];
-    rows_travel.push(['Ora partenza', 'Partenza','Indirizzo Partenza','Destinazione','Indirizzo Destinazione','Note']);
+    rows_travel.push(['Ora partenza','Indirizzo Partenza','Indirizzo Destinazione','Note']);
     travel_table.forEach(element => {
-      rows_travel.push([element.hour, element.city_departure,element.address_departure,element.city_arrival,element.address_arrival,element.billing_notes_client]);
+      rows_travel.push([element.hour,element.address_departure,element.address_arrival,element.billing_notes_client]);
     });
 
     var rows_driver = [];

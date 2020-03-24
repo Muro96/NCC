@@ -1,0 +1,22 @@
+<div class="modalContainer">
+  <ion-toolbar>
+    <ion-title>Aggiungi Destinazione</ion-title>
+    <ion-button slot="end" (click)="closeModal()">
+      <ion-icon slot="icon-only" name="close"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+
+  <ion-content>
+    <ion-label>INDIRIZZO</ion-label>
+    <ion-text>{{arr_address}}</ion-text>
+
+
+    <ion-item>
+      <ion-label>Nome Destinazione</ion-label>
+      <ion-input type="text" placeholder="Es. Hotel Columbus" [(ngModel)]="arr_input"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" (click)="addArr()">Aggiungi Destinazione</ion-button>
+  </ion-content>
+
+</div>

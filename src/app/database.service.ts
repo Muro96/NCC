@@ -1,21 +1,22 @@
-import {Injectable} from '@angular/core';
-import {Platform} from '@ionic/angular';
-import {SQLite, SQLiteObject} from '@ionic-native/sqlite/ngx';
-import {map} from 'rxjs/operators';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
-import {Md5} from 'ts-md5/dist/md5';
+import { Injectable } from '@angular/core';
+import { Platform } from '@ionic/angular';
+import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
+import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Md5 } from 'ts-md5/dist/md5';
+import { AddjourneyPage } from './pages/myjourney/addjourney/addjourney.page';
 
 
 export interface Agency {
     agency_id: number;
     name_agency: string;
-    vat_agency: string 
+    vat_agency: string
     address_agency: string;
     city_agency: string;
     cap_agency: string;
     province_agency: string;
-    owner_agency : string;
+    owner_agency: string;
     phone_agency: string;
 }
 
@@ -96,7 +97,7 @@ export interface Travel {
     //city_departure: string;
     //province_departure: string;
     address_departure: string;
-    notes_travel:string;
+    notes_travel: string;
     fk_vehicle: number;
     car_brand: string;
     car_model: string;
@@ -104,24 +105,25 @@ export interface Travel {
     name_driver: string;
     surname_driver: string;
 
-    
+
 }
 export interface Register {
     register_id: number;
     print_reg: number;
-    date:string;
+    date: string;
     km_start: number;
     km_end: number;
     fk_vehicle: number;
-                
+
 }
 
 @Injectable({
     providedIn: 'root'
 })
 export class DatabaseService {
- 
+
     database: SQLiteObject;
+    mydate: string = new Date().toLocaleDateString('it-IT');
     private databaseReady: BehaviorSubject<boolean>;
 
     driver = new BehaviorSubject([]);
@@ -163,7 +165,7 @@ export class DatabaseService {
                 //VEICOLI
                 db.executeSql('CREATE TABLE vehicle' +
                     '(vehicle_id INTEGER PRIMARY KEY,' +
-                    'car_brand TEXT,' + 
+                    'car_brand TEXT,' +
                     'car_model TEXT,' +
                     'license_plate TEXT,' +
                     'fk_driver INTEGER,' +
@@ -190,7 +192,9 @@ export class DatabaseService {
                     'name_dep TEXT,' +
                     'lat_dep REAL,' +
                     'long_dep REAL,' +
-                    'address_dep TEXT)', []);
+                    'address_dep TEXT,' +
+                    'fk_driver INTEGER,' +
+                    'FOREIGN KEY(fk_driver) REFERENCES driver(driver_id));', []);
 
                 //ARRIVI
                 db.executeSql('CREATE TABLE arrival' +
@@ -198,7 +202,9 @@ export class DatabaseService {
                     'name_arr TEXT,' +
                     'lat_arr REAL,' +
                     'long_arr REAL,' +
-                    'address_arr TEXT)', []);
+                    'address_arr TEXT,' +
+                    'fk_driver INTEGER,' +
+                    'FOREIGN KEY(fk_driver) REFERENCES driver(driver_id));', []);
 
                 //TRAVEL
                 db.executeSql('CREATE TABLE travel' +
@@ -228,8 +234,8 @@ export class DatabaseService {
                     'km_start INTEGER,' +
                     'km_end INTEGER,' +
                     'fk_vehicle INTEGER,' +
-                    'FOREIGN KEY(fk_vehicle) REFERENCES vehicle(vehicle_id));',[]); 
-                            
+                    'FOREIGN KEY(fk_vehicle) REFERENCES vehicle(vehicle_id));', []);
+
 
                 this.addAgency();
                 this.databaseReady.next(true);
@@ -249,25 +255,25 @@ export class DatabaseService {
         return this.vehicle.asObservable();
     }
 
-    getRegisters(): Observable<Register[]>{
+    getRegisters(): Observable<Register[]> {
         return this.register.asObservable();
     }
 
     async addAgency() {
-        let res:any;
-        await this.database.executeSql('SELECT * FROM agency;',[]).then(data =>{
+        let res: any;
+        await this.database.executeSql('SELECT * FROM agency;', []).then(data => {
             res = data.rows.length;
-            console.log("resssss"+res);
+            console.log("resssss" + res);
         });
-        if(res===0){
-            let data = ['04278440278','Via Massaua 37', 'Jesolo', '30016', 'VE', 'Talon Marco', '3441158768'];
+        if (res === 0) {
+            let data = ['04278440278', 'Via Massaua 37', 'Jesolo', '30016', 'VE', 'Talon Marco', '3441158768'];
             const data_1 = await this.database.executeSql('INSERT INTO agency (vat_agency,address_agency,city_agency,cap_agency,province_agency,owner_agency,phone_agency) VALUES (?,?,?,?,?,?,?)', data);
         }
-        else{
+        else {
             console.log("agency already present");
 
         }
-        
+
     }
 
     async getAgency() {
@@ -377,10 +383,10 @@ export class DatabaseService {
 
     }
 
-    async addVehicle(car_brand:string,car_model: string, license_plate: string) {
+    async addVehicle(car_brand: string, car_model: string, license_plate: string) {
         let driverIdFk = await (await this.getDriverLogin()).driver_id;
         console.log('driver id q' + driverIdFk);
-        let data = [car_brand,car_model, license_plate, driverIdFk];
+        let data = [car_brand, car_model, license_plate, driverIdFk];
         const a = await this.database.executeSql('INSERT INTO vehicle (car_brand,car_model,license_plate,fk_driver) VALUES (?,?,?,?)', data);
         await this.getAllVehicles();
     }
@@ -405,35 +411,35 @@ export class DatabaseService {
         });
 
     }
-    async deleteVehicles(vehicle_id:number){
+    async deleteVehicles(vehicle_id: number) {
         await this.database.executeSql('DELETE FROM vehicle WHERE vehicle_id = ?', [vehicle_id]);
 
     }
 
-    getFirstVehicle(){
-        return this.database.executeSql('SELECT * FROM driver JOIN vehicle ON driver.driver_id = vehicle.fk_driver WHERE driver.is_login = ? LIMIT 1',[1]).then(data => {
+    getFirstVehicle() {
+        return this.database.executeSql('SELECT * FROM driver JOIN vehicle ON driver.driver_id = vehicle.fk_driver WHERE driver.is_login = ? LIMIT 1', [1]).then(data => {
             return {
                 vehicle_id: data.rows.item(0).vehicle_id,
                 car_brand: data.rows.item(0).car_brand,
                 car_model: data.rows.item(0).car_model,
                 license_plate: data.rows.item(0).license_plate
             }
-    });
-    
-}
-async getVehicleId(vehicle_id:number){
-    let query = 'SELECT * FROM driver JOIN vehicle ON driver.driver_id = vehicle.fk_driver WHERE driver.is_login = 1 AND vehicle.vehicle_id=' + '\'' + vehicle_id + '\'' + ';';
-    return this.database.executeSql(query,[]).then(data=>{
-        return {
-            vehicle_id: data.rows.item(0).vehicle_id,
-            car_brand: data.rows.item(0).car_brand,
-            car_model: data.rows.item(0).car_model,
-            license_plate: data.rows.item(0).license_plate
-        }
+        });
+
+    }
+    async getVehicleId(vehicle_id: number) {
+        let query = 'SELECT * FROM driver JOIN vehicle ON driver.driver_id = vehicle.fk_driver WHERE driver.is_login = 1 AND vehicle.vehicle_id=' + '\'' + vehicle_id + '\'' + ';';
+        return this.database.executeSql(query, []).then(data => {
+            return {
+                vehicle_id: data.rows.item(0).vehicle_id,
+                car_brand: data.rows.item(0).car_brand,
+                car_model: data.rows.item(0).car_model,
+                license_plate: data.rows.item(0).license_plate
+            }
 
 
-    });
-} 
+        });
+    }
 
     async getClients() {
         let data = [1];
@@ -468,29 +474,29 @@ async getVehicleId(vehicle_id:number){
 
     }
 
-    async updateClient(client_id:number,name: string, surname: string, city: string, province: string, is_private: number, is_agency: number, cf: string, vat: string, billing_notes: string) {
-        let data = [name, surname, city, province, is_private, is_agency,cf,vat,billing_notes,client_id];
+    async updateClient(client_id: number, name: string, surname: string, city: string, province: string, is_private: number, is_agency: number, cf: string, vat: string, billing_notes: string) {
+        let data = [name, surname, city, province, is_private, is_agency, cf, vat, billing_notes, client_id];
         const update = await this.database.executeSql('UPDATE client SET name_client = ?, surname_client = ?, city = ?, province = ?, is_private = ?, is_agency = ?, cf = ?, vat = ?, billing_notes = ? WHERE client_id = ?', data);
-    
-      }
 
-    async deleteClient(client_id:number){
-        await this.database.executeSql('DELETE FROM client WHERE client_id = ?', [client_id]); 
+    }
+
+    async deleteClient(client_id: number) {
+        await this.database.executeSql('DELETE FROM client WHERE client_id = ?', [client_id]);
 
     }
 
     //get all travel on this day
-    async getTravel(travel_id:number) {
+    async getTravel(travel_id: number) {
         let query = 'SELECT travel.*,client.*,arrival.*,departure.*,driver.*,vehicle.* ' +
-        'FROM travel AS travel '+
-        'JOIN vehicle AS vehicle ON travel.fk_vehicle = vehicle.vehicle_id ' +
-        'JOIN driver AS driver ON travel.fk_driver = driver.driver_id ' +
-        'JOIN client AS client ON travel.fk_client = client.client_id ' +
-        'JOIN arrival AS arrival ON travel.fk_arrival = arrival.arrival_id ' +
-        'JOIN departure AS departure ON travel.fk_departure = departure.departure_id ' +
-        'WHERE driver.is_login = 1 AND travel.travel_id =' + '\'' + travel_id + '\''
+            'FROM travel AS travel ' +
+            'JOIN vehicle AS vehicle ON travel.fk_vehicle = vehicle.vehicle_id ' +
+            'JOIN driver AS driver ON travel.fk_driver = driver.driver_id ' +
+            'JOIN client AS client ON travel.fk_client = client.client_id ' +
+            'JOIN arrival AS arrival ON travel.fk_arrival = arrival.arrival_id ' +
+            'JOIN departure AS departure ON travel.fk_departure = departure.departure_id ' +
+            'WHERE driver.is_login = 1 AND travel.travel_id =' + '\'' + travel_id + '\''
         return this.database.executeSql(query, []).then(data => {
-            return{
+            return {
                 travel_id: data.rows.item(0).travel_id,
                 is_paid: data.rows.item(0).is_paid,
                 n_pass: data.rows.item(0).n_passenger,
@@ -513,27 +519,27 @@ async getVehicleId(vehicle_id:number){
                 address_departure: data.rows.item(0).address_dep,
                 notes_travel: data.rows.item(0).notes_travel,
                 fk_vehicle: data.rows.item(0).fk_vehicle,
-                car_brand : data.rows.item(0).car_brand,
+                car_brand: data.rows.item(0).car_brand,
                 car_model: data.rows.item(0).car_model,
                 licence_plate: data.rows.item(0).license_plate,
                 name_driver: data.rows.item(0).name,
                 surname_driver: data.rows.item(0).surname,
-    
-                }
-    
+
+            }
+
         });
 
     }
 
-    async getTravelisPaidDate(date: string,is_paid:number) {
+    async getTravelisPaidDate(date: string, is_paid: number) {
         let query = 'SELECT travel.*,client.*,arrival.*,departure.*,driver.*,vehicle.* ' +
-        'FROM travel AS travel '+
-        'JOIN vehicle AS vehicle ON travel.fk_vehicle = vehicle.vehicle_id ' +
-        'JOIN driver AS driver ON travel.fk_driver = driver.driver_id ' +
-        'JOIN client AS client ON travel.fk_client = client.client_id ' +
-        'JOIN arrival AS arrival ON travel.fk_arrival = arrival.arrival_id ' +
-        'JOIN departure AS departure ON travel.fk_departure = departure.departure_id ' +
-        'WHERE driver.is_login = 1 AND travel.date =' + '\'' + date + '\''+ 'AND travel.is_paid=' + '\'' + is_paid + '\' ORDER BY travel.hour ASC'
+            'FROM travel AS travel ' +
+            'JOIN vehicle AS vehicle ON travel.fk_vehicle = vehicle.vehicle_id ' +
+            'JOIN driver AS driver ON travel.fk_driver = driver.driver_id ' +
+            'JOIN client AS client ON travel.fk_client = client.client_id ' +
+            'JOIN arrival AS arrival ON travel.fk_arrival = arrival.arrival_id ' +
+            'JOIN departure AS departure ON travel.fk_departure = departure.departure_id ' +
+            'WHERE driver.is_login = 1 AND travel.date =' + '\'' + date + '\'' + 'AND travel.is_paid=' + '\'' + is_paid + '\' ORDER BY travel.hour ASC'
         return this.database.executeSql(query, []).then(data => {
             let travel: Travel[] = [];
             if (data.rows.length > 0) {
@@ -561,7 +567,7 @@ async getVehicleId(vehicle_id:number){
                         address_departure: data.rows.item(i).address_dep,
                         notes_travel: data.rows.item(i).notes_travel,
                         fk_vehicle: data.rows.item(i).fk_vehicle,
-                        car_brand : data.rows.item(0).car_brand,
+                        car_brand: data.rows.item(0).car_brand,
                         car_model: data.rows.item(i).car_model,
                         licence_plate: data.rows.item(i).license_plate,
                         name_driver: data.rows.item(i).name,
@@ -574,15 +580,15 @@ async getVehicleId(vehicle_id:number){
 
     }
 
-    async getTravelVehicle(date: string,vehicle_id:number) {
+    async getTravelVehicle(date: string, vehicle_id: number) {
         let query = 'SELECT travel.*,client.*,arrival.*,departure.*,driver.*,vehicle.* ' +
-        'FROM travel AS travel '+
-        'JOIN vehicle AS vehicle ON travel.fk_vehicle = vehicle.vehicle_id ' +
-        'JOIN driver AS driver ON travel.fk_driver = driver.driver_id ' +
-        'JOIN client AS client ON travel.fk_client = client.client_id ' +
-        'JOIN arrival AS arrival ON travel.fk_arrival = arrival.arrival_id ' +
-        'JOIN departure AS departure ON travel.fk_departure = departure.departure_id ' +
-        'WHERE driver.is_login = 1 AND travel.date =' + '\'' + date + '\'AND ORDER BY travel.hour DESC'
+            'FROM travel AS travel ' +
+            'JOIN vehicle AS vehicle ON travel.fk_vehicle = vehicle.vehicle_id ' +
+            'JOIN driver AS driver ON travel.fk_driver = driver.driver_id ' +
+            'JOIN client AS client ON travel.fk_client = client.client_id ' +
+            'JOIN arrival AS arrival ON travel.fk_arrival = arrival.arrival_id ' +
+            'JOIN departure AS departure ON travel.fk_departure = departure.departure_id ' +
+            'WHERE driver.is_login = 1 AND travel.date =' + '\'' + date + '\'AND ORDER BY travel.hour DESC'
         return this.database.executeSql(query, []).then(data => {
             let travel: Travel[] = [];
             if (data.rows.length > 0) {
@@ -610,7 +616,7 @@ async getVehicleId(vehicle_id:number){
                         address_departure: data.rows.item(i).address_dep,
                         notes_travel: data.rows.item(i).notes_travel,
                         fk_vehicle: data.rows.item(i).fk_vehicle,
-                        car_brand : data.rows.item(i).car_brand,
+                        car_brand: data.rows.item(i).car_brand,
                         car_model: data.rows.item(i).car_model,
                         licence_plate: data.rows.item(i).license_plate,
                         name_driver: data.rows.item(i).name,
@@ -623,47 +629,11 @@ async getVehicleId(vehicle_id:number){
 
     }
 
-  
-    // check if arrival is already present in db; (for map)
-    /*async checkArrival_present(lat:any,lng:any) {
-        let result: any;
-        let query = 'SELECT * FROM arrival WHERE lat_arr =' + '\'' + lat + '\'' + 'AND long_arr=' + '\'' + lng + '\'' + ';';
-        return this.database.executeSql(query, []).then(data => {
-            result = data.rows.length;
-            return result;
-        });
 
-    } 
 
-    //check if departure is already in db (for map)
-    /*checkDest_present(lat: any, lng: any) {
+    async checkArrival_present(address: string) {
         let res: any;
-        let query = 'SELECT * FROM departure WHERE lat_dest =' + '\'' + lat + '\'' + 'AND long_dest=' + '\'' + lng + '\'' + ';';
-        return this.database.executeSql(query, []).then(data => {
-            res = data.rows.length;
-            return res;
-        });
-
-    }*/
-
-      //add arrival with map 
-    /*async addArrival(lat:any,lng:any,address:string) {
-        let data = [lat,lng,address];
-        const query = await this.database.executeSql('INSERT INTO arrival (lat_arr,long_arr,address_arr) VALUES (?,?,?)',data);
-
-    } 
-    //add departure with map
-    async addDestination(lat:any,lng:any,address:string) {
-        let data = [lat,lng,address];
-        const query = await this.database.executeSql('INSERT INTO departure (lat_dep,long_dep,address_dep) VALUES (?,?,?)',data);
-
-    } */
-
-    //===============================================NO MAP================================================================
-
-    async checkArrival_present(address:string,city:string){
-        let res: any;
-        let query = 'SELECT * FROM arrival WHERE address_arr =' + '\'' + address + '\'' + 'AND city_arr=' + '\'' + city + '\'' + ';';
+        let query = 'SELECT * FROM arrival WHERE address_arr =' + '\'' + address + '\'';
         return this.database.executeSql(query, []).then(data => {
             res = data.rows.length;
             return res;
@@ -671,9 +641,9 @@ async getVehicleId(vehicle_id:number){
 
 
     }
-    async checkDep_present(address:string,city:string){
+    async checkDep_present(address: string) {
         let res: any;
-        let query = 'SELECT * FROM departure WHERE address_dep =' + '\'' + address + '\'' + 'AND city_dep=' + '\'' + city + '\'' + ';';
+        let query = 'SELECT * FROM departure WHERE address_dep =' + '\'' + address + '\'';
         return this.database.executeSql(query, []).then(data => {
             res = data.rows.length;
             return res;
@@ -681,88 +651,72 @@ async getVehicleId(vehicle_id:number){
 
 
     }
-
-    async addTravel(city_dep:string, country_dep:string,address_dep:string,city_arr:string, country_arr:string,address_arr:string,hour:string,date:string,n_pass:string,km_tot:number,client_id:number,is_paid:number,vehicle_id:number) {
-        let result_row_arrival = await this.checkArrival_present(address_arr,city_arr);
+    //km_tot?
+    async addTravel(address_dep: string,address_arr: string, hour: string, date: string, n_pass: string, client_id: number, is_paid: number) {
+        //let result_row_arrival = await this.checkArrival_present(address_arr);
         let arrival_id: any;
         let departure_id: any;
-        if(result_row_arrival==0){
-            arrival_id = await this.addArrival(city_arr,country_arr,address_arr);
-            //console.log("arrival_id"+arrival_id);
-        }
-        else{
-            //console.log("è gia presente arrival");
-            let query = 'SELECT arrival_id FROM arrival WHERE address_arr =' + '\'' + address_arr + '\'' + 'AND city_arr=' + '\'' + city_arr + '\'' + ';';
-            const a = await this.database.executeSql(query,[]).then(data => {
-                arrival_id = data.rows.item(0).arrival_id
-                //console.log("arrival_id in else"+arrival_id);
-            });
-            
-        }
-        let result_row_departure = await this.checkDep_present(address_dep,city_dep);
-        if (result_row_departure==0){
-            departure_id = await this.addDeparture(city_dep,country_dep,address_dep);
-            //console.log("dep_id"+departure_id);
-        }
-        else{
-            //console.log("è gia presente departure");
-            let query = 'SELECT departure_id FROM departure WHERE address_dep =' + '\'' + address_dep + '\'' + 'AND city_dep=' + '\'' + city_dep + '\'' + ';';
-            const b = await this.database.executeSql(query,[]).then(data => {
-                departure_id = data.rows.item(0).departure_id
-                //console.log("arrival_id in else"+departure_id);
-            });
+        let query_arr = 'SELECT arrival_id FROM arrival WHERE address_arr =' + '\'' + address_arr + '\'';
+        const a = await this.database.executeSql(query_arr, []).then(data => {
+            arrival_id = data.rows.item(0).arrival_id
            
+        });
 
-        }
+        let query_dep = 'SELECT departure_id FROM departure WHERE address_dep =' + '\'' + address_dep + '\'';
+        console.error("queryy"+query_dep);
+        const b = await this.database.executeSql(query_dep, []).then(data => {
+            departure_id = data.rows.item(0).departure_id
+        });
 
+        let vehicleid = await (await this.getRegister(this.mydate)).fk_vehicle
         let driverid = await (await this.getDriverLogin()).driver_id;
-        const query_main = await this.database.executeSql('INSERT INTO travel (is_paid,n_passenger,km_tot,date,hour,fk_departure,fk_arrival,fk_client,fk_driver,fk_vehicle)' + 
-                                                          'VALUES (?,?,?,?,?,?,?,?,?,?)',[is_paid,n_pass,km_tot,date,hour,departure_id,arrival_id,client_id,driverid,vehicle_id]);
-
+        const query_main = await this.database.executeSql('INSERT INTO travel (is_paid,n_passenger,date,hour,fk_departure,fk_arrival,fk_client,fk_driver,fk_vehicle)' +
+            'VALUES (?,?,?,?,?,?,?,?,?)', [is_paid, n_pass, date, hour, departure_id, arrival_id, client_id, driverid, vehicleid]);
     }
 
     //ADD ARRIVAL WITH NO MAP
-    async addArrival(city:string,country:string,address:string){
-        let data = [city,country,address];
+    async addArrival(name_arr: string, address: string) {
+        let driverid = await (await this.getDriverLogin()).driver_id;
+        let data = [name_arr, address,driverid];
         let res: any;
-        await this.database.executeSql('INSERT INTO arrival (city_arr,province_arr,address_arr) VALUES (?,?,?)',data).then((row: any) => {
+        await this.database.executeSql('INSERT INTO arrival (name_arr,address_arr,fk_driver) VALUES (?,?,?)', data).then((row: any) => {
             console.log('ID ARRIVO', row.insertId);
             res = row.insertId;
-           
+
         })
         return res;
     }
     //ADD DEPARTURE WITH NO MAP
-    async addDeparture(city:string,country:string,address:string){
-        let data = [city,country,address];
+    async addDeparture(name_dep: string, address: string) {
+        let driverid = await (await this.getDriverLogin()).driver_id;
+        let data = [name_dep, address, driverid];
         let res: any;
-        await this.database.executeSql('INSERT INTO departure (city_dep,province_dep,address_dep) VALUES (?,?,?)',data).then((row: any) => {
+        await this.database.executeSql('INSERT INTO departure (name_dep,address_dep,fk_driver) VALUES (?,?,?)', data).then((row: any) => {
             console.log('ID DEP', row.insertId);
-            res = row.insertId;   
+            res = row.insertId;
         })
         return res;
     }
 
-    async cancelTravel(travel_id:number){
-        let fk_arr  = await (await this.getTravel(travel_id)).fk_arrival;
+    async cancelTravel(travel_id: number) {
+        let fk_arr = await (await this.getTravel(travel_id)).fk_arrival;
         let fk_dep = await (await this.getTravel(travel_id)).fk_departure;
-        let fk_client  = await (await this.getTravel(travel_id)).fk_client;
-        await this.database.executeSql('DELETE FROM arrival WHERE arrival_id = ?',[fk_arr]);
-        await this.database.executeSql('DELETE FROM departure WHERE departure_id = ?',[fk_dep]);
-        await this.database.executeSql('DELETE FROM client WHERE client_id = ?',[fk_client]);
+        let fk_client = await (await this.getTravel(travel_id)).fk_client;
+        await this.database.executeSql('DELETE FROM arrival WHERE arrival_id = ?', [fk_arr]);
+        await this.database.executeSql('DELETE FROM departure WHERE departure_id = ?', [fk_dep]);
+        await this.database.executeSql('DELETE FROM client WHERE client_id = ?', [fk_client]);
         await this.database.executeSql('DELETE FROM travel WHERE travel_id = ?', [travel_id]);
 
 
     }
 
-    async getArrivals(){
+    async getArrivals() {
         let query = 'SELECT arrival.*,driver.* ' +
-        'FROM arrival AS arrival '+
-        'JOIN travel AS travel ON arrival.arrival_id = travel.fk_arrival ' +
-        'JOIN driver AS driver ON travel.fk_driver = driver.driver_id ' +
-        'WHERE driver.is_login = 1';
+            'FROM arrival AS arrival ' +
+            'JOIN driver AS driver ON arrival.fk_driver = driver.driver_id ' +
+            'WHERE driver.is_login = 1';
 
-        return this.database.executeSql(query,[]).then(data =>{
+        return this.database.executeSql(query, []).then(data => {
             let arrival: Arrival[] = [];
             if (data.rows.length > 0) {
                 for (var i = 0; i < data.rows.length; i++) {
@@ -772,81 +726,80 @@ async getVehicleId(vehicle_id:number){
                         lat_arr: data.rows.item(i).lat_arr,
                         long_arr: data.rows.item(i).long_arr,
                         address_arr: data.rows.item(i).address_arr
-                        });
+                    });
 
-                    }
                 }
-                return arrival;
-            });
-        }
-
-        async getDepartures(){
-            let query = 'SELECT departure.*,driver.* ' +
-            'FROM departure AS departure '+
-            'JOIN travel AS travel ON departure.departure_id = travel.fk_departure ' +
-            'JOIN driver AS driver ON travel.fk_driver = driver.driver_id ' +
-            'WHERE driver.is_login = 1';
-    
-            return this.database.executeSql(query,[]).then(data =>{
-                let departure: Departure[] = [];
-                if (data.rows.length > 0) {
-                    for (var i = 0; i < data.rows.length; i++) {
-                        departure.push({
-                            departure_id: data.rows.item(i).departure_id,
-                            name_dep: data.rows.item(i).name_dep,
-                            lat_dep: data.rows.item(i).lat_dep,
-                            long_dep: data.rows.item(i).long_dep,
-                            address_dep: data.rows.item(i).address_dep
-                            });
-    
-                        }
-                    }
-                    return departure;
-                });
             }
-        async addRegister(print_reg:number,date:string,km_start:number,km_end:number,fk_Idvehicle:number){
-            let data =[print_reg,date,km_start,km_end,fk_Idvehicle];
-            const query = await this.database.executeSql('INSERT INTO register (print_reg,date,km_start,km_end,fk_vehicle) VALUES (?,?,?,?,?)',data);
-        
+            return arrival;
+        });
+    }
 
-        }
-        async checkRegister_present(date:string){
-            let res: any;
-            let query = 'SELECT register.* FROM register AS register WHERE register.date=' + '\'' + date + '\'';
-            return this.database.executeSql(query, []).then(data => {
-                res = data.rows.length;
-                return res;
-            });
-        }
+    async getDepartures() {
+        let query = 'SELECT departure.*,driver.* ' +
+            'FROM departure AS departure ' +
+            'JOIN driver AS driver ON departure.fk_driver = driver.driver_id ' +
+            'WHERE driver.is_login = 1';
 
-        async getRegister(date:string){
-            let query = 'SELECT register.* FROM register AS register WHERE register.date=' + '\'' + date + '\'';
-            console.log("queryyy"+query);
-            return this.database.executeSql(query, []).then(data => {
-                console.log("data"+data.rows.item(0).fk_vehicle);
-                return{
-                        register_id: data.rows.item(0).register_id,
-                        print_reg: data.rows.item(0).print_reg,
-                        date: data.rows.item(0).date,
-                        km_start: data.rows.item(0).km_start,
-                        km_end: data.rows.item(0).km_end,
-                        fk_vehicle: data.rows.item(0).fk_vehicle,
-                    }
-                
+        return this.database.executeSql(query, []).then(data => {
+            let departure: Departure[] = [];
+            if (data.rows.length > 0) {
+                for (var i = 0; i < data.rows.length; i++) {
+                    departure.push({
+                        departure_id: data.rows.item(i).departure_id,
+                        name_dep: data.rows.item(i).name_dep,
+                        lat_dep: data.rows.item(i).lat_dep,
+                        long_dep: data.rows.item(i).long_dep,
+                        address_dep: data.rows.item(i).address_dep
+                    });
 
-                
-            
-            });
-        }
-
-        async updateRegister(print_reg:number,date:string,register_id:number,km_start:string,km_end:string,fk_vehicle:number){
-            let data = [print_reg,date,km_start,km_end,fk_vehicle,register_id]
-            const _ = await this.database.executeSql('UPDATE register SET print_reg = ?, date = ?, km_start = ?, km_end = ?, fk_vehicle = ? WHERE register_id = ?', data);
-
-        }
-       
+                }
+            }
+            return departure;
+        });
+    }
+    async addRegister(print_reg: number, date: string, km_start: number, km_end: number, fk_Idvehicle: number) {
+        let data = [print_reg, date, km_start, km_end, fk_Idvehicle];
+        const query = await this.database.executeSql('INSERT INTO register (print_reg,date,km_start,km_end,fk_vehicle) VALUES (?,?,?,?,?)', data);
 
 
+    }
+    async checkRegister_present(date: string) {
+        let res: any;
+        let query = 'SELECT register.* FROM register AS register WHERE register.date=' + '\'' + date + '\'';
+        return this.database.executeSql(query, []).then(data => {
+            res = data.rows.length;
+            return res;
+        });
+    }
 
-    
+    async getRegister(date: string) {
+        let query = 'SELECT register.* FROM register AS register WHERE register.date=' + '\'' + date + '\'';
+        console.log("queryyy" + query);
+        return this.database.executeSql(query, []).then(data => {
+            console.log("data" + data.rows.item(0).fk_vehicle);
+            return {
+                register_id: data.rows.item(0).register_id,
+                print_reg: data.rows.item(0).print_reg,
+                date: data.rows.item(0).date,
+                km_start: data.rows.item(0).km_start,
+                km_end: data.rows.item(0).km_end,
+                fk_vehicle: data.rows.item(0).fk_vehicle,
+            }
+
+
+
+
+        });
+    }
+
+    async updateRegister(print_reg: number, date: string, register_id: number, km_start: string, km_end: string, fk_vehicle: number) {
+        let data = [print_reg, date, km_start, km_end, fk_vehicle, register_id]
+        const _ = await this.database.executeSql('UPDATE register SET print_reg = ?, date = ?, km_start = ?, km_end = ?, fk_vehicle = ? WHERE register_id = ?', data);
+
+    }
+
+
+
+
+
 }
