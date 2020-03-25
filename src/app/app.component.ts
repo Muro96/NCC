@@ -23,7 +23,7 @@ export class AppComponent {
             url: '/settings',
             icon: 'md-settings',
             subPages: [
-            { title: 'Azienda', url: '' },
+            { title: 'Azienda', url: '/settings/agency' },
             { title: 'Conducente', url: '/settings/drivers', icon: '' },
             { title: 'Mezzi', url: '/settings/vehicles', icon:'md-car' },
             { title: 'Clienti', url: '/settings/clients' },

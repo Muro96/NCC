@@ -12,6 +12,7 @@ export class SettingPage implements OnInit {
     ngOnInit() {
     }
     agencyInfo(){
+        this.router.navigateByUrl('/settings/agency');
 
     }
     driverInfo(){

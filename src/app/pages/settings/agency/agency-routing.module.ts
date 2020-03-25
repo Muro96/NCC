@@ -7,6 +7,10 @@ const routes: Routes = [
   {
     path: '',
     component: AgencyPage
+  },
+  {
+    path: 'updateagency',
+    loadChildren: () => import('./updateagency/updateagency.module').then( m => m.UpdateagencyPageModule)
   }
 ];
 

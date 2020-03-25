@@ -1,9 +1,61 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>agency</ion-title>
+      <ion-buttons slot="start">
+          <ion-back-button defaultHref="/home"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Azienda</ion-title>
   </ion-toolbar>
 </ion-header>
 
+
+
+
 <ion-content>
+  <!--Label Nome Azienda -->
+  <ion-item>
+    <ion-label position="stacked">Nome Azienda</ion-label>
+    <ion-text>{{agency.name_agency}}</ion-text>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">VAT</ion-label>
+    <ion-text>{{agency.vat_agency}}</ion-text>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Indirizzo</ion-label>
+    <ion-text>{{agency.address_agency}}</ion-text>
+  </ion-item>
+
+
+  <ion-item>
+    <ion-label position="stacked">Città</ion-label>
+    <ion-text>{{agency.city_agency}}</ion-text>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Cap</ion-label>
+    <ion-text>{{agency.cap_agency}}</ion-text>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Provincia</ion-label>
+    <ion-text>{{agency.province_agency}}</ion-text>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Proprietario azienda</ion-label>
+    <ion-text>{{agency.owner_agency}}</ion-text>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Telefono</ion-label>
+    <ion-text>{{agency.phone_agency}}</ion-text>
+  </ion-item>
+
+  <ion-button expand="block" click="updateAgency()">Aggiorna dati azienda</ion-button>
+
+
+ 
 
 </ion-content>
