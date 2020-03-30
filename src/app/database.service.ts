@@ -293,15 +293,14 @@ export class DatabaseService {
         });
     }
 
-    /*
 
-    async updateAgency(agency: Agency) {
-        let data = [agency.name, agency.vat, agency.cf, agency.address, agency.city, agency.cap, agency.province, agency.phone, agency.agency_id];
-        console.log('agency_id' + agency.agency_id);
-        const _ = await this.database.executeSql('UPDATE agency SET name = ?, vat = ?, cf = ?, address = ?, city = ?, cap = ?, province = ?, phone = ? WHERE agency_id = ?', data);
-        this.getAllAgency();
 
-    } */
+    async updateAgency(agency_name: string, vat_agency:string, address_agency:string, city_agency:string, cap_agency:string, province_agency:string, owner_agency:string, phone_agency:string) {
+        let data = [agency_name, vat_agency, address_agency, city_agency, cap_agency, province_agency, owner_agency, phone_agency];
+        const _ = await this.database.executeSql('UPDATE agency SET name_agency = ?, vat_agency = ?, address_agency = ?, city_agency = ?, cap_agency = ?, province_agency = ?, owner_agency = ?, phone_agency = ?', data);
+        this.getAgency();
+
+    }
 
     async addDriver(name: string, surname: string, cf_driver: string, phone: string, email: string, password: string, is_login: number) {
         let data = [name, surname, cf_driver, phone, email, Md5.hashStr(password), is_login = 0];
@@ -532,13 +531,14 @@ export class DatabaseService {
     }
     //RICORDATI DI METTERE PURE ARRIVAL CONDIZIONE WHERE E NEL SELECT 
     async getTravelisPaidDate(date: string, is_paid: number) {
-        let query = 'SELECT travel.*,client.*,departure.*,driver.*,vehicle.* ' +
+        let query = 'SELECT travel.*,client.*,departure.*,arrival.*,driver.*,vehicle.* ' +
             'FROM travel AS travel ' +
             'JOIN vehicle AS vehicle ON travel.fk_vehicle = vehicle.vehicle_id ' +
             'JOIN driver AS driver ON travel.fk_driver = driver.driver_id ' +
             'JOIN client AS client ON travel.fk_client = client.client_id ' +
             'JOIN departure AS departure ' +
-            'WHERE driver.is_login = 1 AND travel.date =' + '\'' + date + '\'' + 'AND travel.is_paid=' + '\'' + is_paid + '\' AND departure.fk_driver = driver.driver_id ' +
+            'JOIN arrival AS arrival ' +
+            'WHERE driver.is_login = 1 AND travel.date =' + '\'' + date + '\'' + 'AND travel.is_paid=' + '\'' + is_paid + '\' AND departure.fk_driver = driver.driver_id AND arrival.fk_driver = driver.driver_id ' +
             'ORDER BY travel.hour ASC;'
         console.log("queryyyy" + query);
         return this.database.executeSql(query, []).then(data => {

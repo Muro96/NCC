@@ -74,6 +74,9 @@ export class AddjourneyPage implements OnInit {
     location: any;
     placeid: any;
     response_dep: any;
+
+    arr_sel: any;
+    dep_sel: any;
     @ViewChild('selectArr', { static: true }) selectArr: IonicSelectableComponent;
     @ViewChild('selectDep', { static: true }) selectDep: IonicSelectableComponent;
     @ViewChild('selectClient', { static: true }) selectClient: IonicSelectableComponent;
@@ -99,6 +102,7 @@ export class AddjourneyPage implements OnInit {
                 this.database.getDepartures().then(dep => {
                     this.departures = dep;
                 })
+            
             }
         });
         this.datePickerObj = {
@@ -129,12 +133,13 @@ export class AddjourneyPage implements OnInit {
     reset_arr() {
         this.selectArr.clear();
         this.selectArr.close();
+        document.getElementsByClassName("arrival")[0].setAttribute("style", "visibility: hidden;");
 
     }
     confirm_arr() {
         this.selectArr.confirm();
         this.selectArr.close();
-        this.blur_npass();
+        document.getElementsByClassName("pass")[0].setAttribute("style", "visibility: visible;");
     }
 
     reset_dep() {
@@ -226,14 +231,14 @@ export class AddjourneyPage implements OnInit {
 
     }
 
-    getAddressArr(): any {
+    async getAddressArr(): Promise<any> {
         let inputfield = document.getElementById('autocomplete_input_arr').getElementsByTagName('input')[0];
         if (inputfield.value.length > 7) {
         let autocomplete_arr = new google.maps.places.Autocomplete((inputfield), {
             types: ['address'],
             componentRestrictions: { country: 'it' },
         });
-        autocomplete_arr.setFields(['formatted_address']);
+        autocomplete_arr.setFields(['formatted_address','name', 'geometry']);
 
         google.maps.event.addListener(autocomplete_arr, `place_changed`, () => {
             var place = autocomplete_arr.getPlace();
@@ -308,12 +313,13 @@ export class AddjourneyPage implements OnInit {
     getArrSelect(){
         console.log("dep_arr"+this.select_arr.address_arr);
         return this.select_arr.address_arr;
+     
 
     }
 
 
     async presentModalArr(){
-        await new Promise(resolve => setTimeout(resolve, 250))
+        await new Promise(resolve => setTimeout(resolve, 700))
         const res = await this.getAddressArr();
         const modal = await this.modalCtrl.create({
             component: ModalArrPage,
@@ -331,7 +337,7 @@ export class AddjourneyPage implements OnInit {
 
 
     async presentModalDep() {
-        await new Promise(resolve => setTimeout(resolve, 250))
+        await new Promise(resolve => setTimeout(resolve, 700))
         const res = await this.getAddressDep();
         console.log("response modal" + res);
         const modal = await this.modalCtrl.create({
@@ -371,35 +377,104 @@ export class AddjourneyPage implements OnInit {
 
     async addTravel() {
         let client_id = this.getClientIdSelected();
-        if (this.checkPaid() == true) {
+        let response_dep = await this.getAddressDep();
+        let response_arr = await this.getAddressArr();
+        if(!this.selectDep.hasValue()){
             
-            /*if (this.departure['city'] != null && this.arrival['city'] != null ) { */
-            this.database.addTravel(this.getDepSelect() || await this.getAddressDep(), this.getArrSelect() || this.getAddressArr(), this.time, this.mydate, this.travel['n_pass'], client_id, 1);
-            this.travel = {};
-            this.arrival = {};
-            this.departure = {};
-            /* } else {
-                 this.checkForm();
-     
-             } */
-
+            this.dep_sel = undefined;
         }
         else {
-            /*if (this.departure['city'] != null && this.arrival['city'] != null ) { */
-            this.database.addTravel(this.getDepSelect() || await this.getAddressDep(), this.getArrSelect() || this.getAddressArr(), this.time, this.mydate, this.travel['n_pass'], client_id, 0);
-            this.travel = {};
-            this.arrival = {};
-            this.departure = {};
-            /* } else {
-                 this.checkForm();
-     
-             } */
+            this.dep_sel = this.getDepSelect();
+        }
+            
+        if (!this.selectArr.hasValue()){
+            this.arr_sel = undefined
+        }
+        else{
+            this.arr_sel = this.getArrSelect();
+        }
+        
+        console.log("RES1"+response_dep)
+        console.log("RES2"+response_arr)
+
+        
+
+        //if((this.getDepSelect() == undefined || this.getAddressDep()!= undefined) && (this.getArrSelect() != undefined || this.getAddressArr()!= undefined)){
+        if (this.checkPaid() == true) {
+            if (this.dep_sel == undefined && this.arr_sel == undefined){ 
+                console.log("CASO 1")          
+                this.database.addTravel(response_dep,response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 1);
+                this.travel = {};
+                this.arrival = {};
+                this.departure = {};
+            }
+            else if(this.dep_sel != undefined && this.arr_sel == undefined){
+                console.log("CASO 2")
+                this.database.addTravel(this.getDepSelect(),response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 1);
+                this.travel = {};
+                this.arrival = {};
+                this.departure = {};
+
+            }
+            else if(this.dep_sel == undefined && this.arr_sel != undefined){
+                console.log("CASO 3")
+                this.database.addTravel(response_dep,this.getArrSelect(), this.time, this.mydate, this.travel['n_pass'], client_id, 1);
+                this.travel = {};
+                this.arrival = {};
+                this.departure = {};
+
+            }
+            else{
+                console.log("CASO 4")
+                this.database.addTravel(this.dep_sel,this.arr_sel, this.time, this.mydate, this.travel['n_pass'], client_id, 1);
+                this.travel = {};
+                this.arrival = {};
+                this.departure = {};
+
+            }
+
+           
+        }
+        else {
+            if (this.dep_sel == undefined && this.arr_sel == undefined){ 
+                console.log("CASO 5")          
+                this.database.addTravel(response_dep,response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 0);
+                this.travel = {};
+                this.arrival = {};
+                this.departure = {};
+            }
+            else if(this.dep_sel != undefined && this.arr_sel == undefined){
+                console.log("CASO 6")
+                this.database.addTravel(this.getDepSelect(),response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 0);
+                this.travel = {};
+                this.arrival = {};
+                this.departure = {};
+
+            }
+            else if(this.dep_sel == undefined && this.arr_sel != undefined){
+                console.log("CASO 7")
+                this.database.addTravel(response_dep,this.getArrSelect(), this.time, this.mydate, this.travel['n_pass'], client_id, 0);
+                this.travel = {};
+                this.arrival = {};
+                this.departure = {};
+
+            }
+            else{
+                console.log("CASO 8")
+                this.database.addTravel(this.dep_sel,this.arr_sel, this.time, this.mydate, this.travel['n_pass'], client_id, 0);
+                this.travel = {};
+                this.arrival = {};
+                this.departure = {};
+
+            }
 
         }
-
-
-
     }
+   
+
+
+
+    
 
     onAddClient(event: {
         component: IonicSelectableComponent
@@ -441,12 +516,6 @@ export class AddjourneyPage implements OnInit {
         });
 
         await alert.present();
-    }
-
-    onAddPort() {
-        this.router.navigate(['settings/clients'])
-
-
     }
 
 }

@@ -15,14 +15,15 @@
         </ion-item>
         <ion-item>
             <ion-label>Data Partenza</ion-label>
-            <ion-input readonly [(ngModel)]="mydate" (ionChange)="onChangeDate()"
-                       [liIonic4Datepicker]="datePickerObj"></ion-input>
+            <ion-input readonly [(ngModel)]="mydate" (ionChange)="onChangeDate()" [liIonic4Datepicker]="datePickerObj">
+            </ion-input>
         </ion-item>
 
         <ion-item>
             <ion-label>Partenze recenti</ion-label>
             <ionic-selectable #selectDep [(ngModel)]="select_dep" [items]="departures" itemValueField="departure_id"
-             itemTextField="name_dep" headerColor="primary" searchFailText="Nessun risultato" [canSearch]="true" searchPlaceholder="Ricerca per nome destinazione" (onChange)="getDepSelect()">
+                itemTextField="name_dep" headerColor="primary" searchFailText="Nessun risultato" [canSearch]="true"
+                searchPlaceholder="Ricerca per nome destinazione" (onChange)="getDepSelect()">
                 <ng-template ionicSelectableTitleTemplate>
                     Partenze recenti
                 </ng-template>
@@ -50,82 +51,89 @@
 
                 </ng-template>
 
-            </ionic-selectable>  
+            </ionic-selectable>
         </ion-item>
-        
+
         <ion-item [hidden]="select_dep">
             <ion-label>Luogo di Partenza</ion-label>
-            <ion-input id="autocomplete_input_dep" autocomplete="off" (keyup)="getAddressDep()" (ionBlur)="blur_arrival()"></ion-input>
+            <ion-input id="autocomplete_input_dep" autocomplete="off" (keyup)="getAddressDep()"
+                (ionBlur)="blur_arrival()"></ion-input>
         </ion-item>
+
         <div class="arrival">
-        <ion-item>
-            <ion-label>Destinazioni recenti</ion-label>
-            <ionic-selectable #selectArr [(ngModel)]="select_arr" [items]="arrivals" itemValueField="arrival_id" searchPlaceholder="Ricerca per nome arrivo"
-             itemTextField="name_arr" headerColor="primary" searchFailText="Nessun risultato" [canSearch]="true" (onChange)="getArrSelect()">
-                <ng-template ionicSelectableTitleTemplate>
-                    Destinazioni recenti
-                </ng-template>
+            <ion-item>
+                <ion-label>Destinazioni recenti</ion-label>
+                <ionic-selectable #selectArr [(ngModel)]="select_arr" [items]="arrivals" itemValueField="arrival_id"
+                    searchPlaceholder="Ricerca per nome arrivo" itemTextField="name_arr" headerColor="primary"
+                    searchFailText="Nessun risultato" [canSearch]="true" (onChange)="getArrSelect()">
+                    <ng-template ionicSelectableTitleTemplate>
+                        Destinazioni recenti
+                    </ng-template>
 
-                <ng-template ionicSelectableCloseButtonTemplate>
-                    <ion-icon name="close-circle"></ion-icon>
+                    <ng-template ionicSelectableCloseButtonTemplate>
+                        <ion-icon name="close-circle"></ion-icon>
 
-                </ng-template>
+                    </ng-template>
 
-                <ng-template ionicSelectableItemTemplate let-arrival="item">
-                    {{arrival.name_arr}},{{arrival.address_arr}}
-                </ng-template>
-                <ng-template ionicSelectableFooterTemplate>
-                    <ion-footer>
-                        <ion-row text-center>
-                            <ion-col size="6">
-                                <ion-button fill="clear" (click)="reset_arr()">Azzera</ion-button>
-                            </ion-col>
-                            <ion-col size="6">
-                                <ion-button fill="clear" (click)="confirm_arr()">Conferma</ion-button>
-                            </ion-col>
-                        </ion-row>
-                    </ion-footer>
+                    <ng-template ionicSelectableItemTemplate let-arrival="item">
+                        {{arrival.name_arr}},{{arrival.address_arr}}
+                    </ng-template>
+                    <ng-template ionicSelectableFooterTemplate>
+                        <ion-footer>
+                            <ion-row text-center>
+                                <ion-col size="6">
+                                    <ion-button fill="clear" (click)="reset_arr()">Azzera</ion-button>
+                                </ion-col>
+                                <ion-col size="6">
+                                    <ion-button fill="clear" (click)="confirm_arr()">Conferma</ion-button>
+                                </ion-col>
+                            </ion-row>
+                        </ion-footer>
 
-                </ng-template>
+                    </ng-template>
 
-            </ionic-selectable>
-             
+                </ionic-selectable>
 
-            
-            
-        </ion-item>
-        
 
-       
-        
-        <ion-item [hidden]="select_arr">
-            <ion-label>Luogo di Destinazione</ion-label>
-            <ion-input id="autocomplete_input_arr" autocomplete="off" (keyup)="getAddressArr()" (ionBlur)="blur_npass()">
-            </ion-input>
-        </ion-item>
+
+
+            </ion-item>
+
+
+
+
+            <ion-item [hidden]="select_arr">
+                <ion-label>Luogo di Destinazione</ion-label>
+                <ion-input id="autocomplete_input_arr" autocomplete="off" (keyup)="getAddressArr()"
+                    (ionBlur)="blur_npass()">
+                </ion-input>
+            </ion-item>
         </div>
 
         <ion-item class="pass">
             <ion-label>N° Passeggeri</ion-label>
-            <ion-input slot="end" type="number" placeholder="" [(ngModel)]="travel.n_pass" (ionBlur)="blur_check();"></ion-input>
+            <ion-input slot="end" type="number" placeholder="" [(ngModel)]="travel.n_pass" (ionBlur)="blur_check();">
+            </ion-input>
         </ion-item>
         <ion-item class="check">
-        <ion-label>Pagato?</ion-label>
-        <div float-left class="my-checkbox">
-            <ion-label>SI</ion-label>
-            <ion-checkbox color="primary" checked (ionChange)="checkPaid()"></ion-checkbox>
-          </div>
-          <div float-right class="my-checkbox">
-            <ion-label>NO</ion-label>
-            <ion-checkbox color="primary" checked (ionChange)="checkPaid()" (ionBlur)="blur_client();"></ion-checkbox>
-          </div>
+            <ion-label>Pagato?</ion-label>
+            <div float-left class="my-checkbox">
+                <ion-label>SI</ion-label>
+                <ion-checkbox color="primary" checked (ionChange)="checkPaid()"></ion-checkbox>
+            </div>
+            <div float-right class="my-checkbox">
+                <ion-label>NO</ion-label>
+                <ion-checkbox color="primary" checked (ionChange)="checkPaid()" (ionBlur)="blur_client();">
+                </ion-checkbox>
+            </div>
         </ion-item>
-        
+
         <ion-item class="client">
             <ion-label>Cliente</ion-label>
-            <ionic-selectable #selectClient [(ngModel)]="client" itemValueField="client_id" itemTextField="surname_client" 
-                [items]="clients" [canSearch]="true" [canAddItem]="true" (onChange)="getClientIdSelected()"  headerColor="primary" searchPlaceholder="Ricerca per cognome">
-            
+            <ionic-selectable #selectClient [(ngModel)]="client" itemValueField="client_id"
+                itemTextField="surname_client" [items]="clients" [canSearch]="true" [canAddItem]="true"
+                (onChange)="getClientIdSelected()" headerColor="primary" searchPlaceholder="Ricerca per cognome">
+
 
                 <ng-template ionicSelectableTitleTemplate>
                     Clienti Recenti
@@ -142,25 +150,25 @@
                 <ng-template ionicSelectableFooterTemplate>
                     <ion-footer>
                         <ion-row text-center>
-                        
+
                             <ion-col size="6">
-                                <ion-button  text-center fill="clear" (click)="onAddClient($event)">Aggiungi</ion-button>
+                                <ion-button text-center fill="clear" (click)="onAddClient($event)">Aggiungi</ion-button>
                             </ion-col>
 
                             <ion-col size="6">
                                 <ion-button fill="clear" (click)="confirm_client()">Conferma</ion-button>
                             </ion-col>
 
-                           
+
                         </ion-row>
                     </ion-footer>
 
                 </ng-template>
 
             </ionic-selectable>
-            
-            
-           
+
+
+
         </ion-item>
 
         <ion-button expand="block" (click)="addTravel();" color="success">Conferma Viaggio</ion-button>
