@@ -295,7 +295,7 @@ export class DatabaseService {
 
 
 
-    async updateAgency(agency_name: string, vat_agency:string, address_agency:string, city_agency:string, cap_agency:string, province_agency:string, owner_agency:string, phone_agency:string) {
+    async updateAgency(agency_name: string, vat_agency: string, address_agency: string, city_agency: string, cap_agency: string, province_agency: string, owner_agency: string, phone_agency: string) {
         let data = [agency_name, vat_agency, address_agency, city_agency, cap_agency, province_agency, owner_agency, phone_agency];
         const _ = await this.database.executeSql('UPDATE agency SET name_agency = ?, vat_agency = ?, address_agency = ?, city_agency = ?, cap_agency = ?, province_agency = ?, owner_agency = ?, phone_agency = ?', data);
         this.getAgency();
@@ -529,15 +529,14 @@ export class DatabaseService {
         });
 
     }
-    //RICORDATI DI METTERE PURE ARRIVAL CONDIZIONE WHERE E NEL SELECT 
     async getTravelisPaidDate(date: string, is_paid: number) {
         let query = 'SELECT travel.*,client.*,departure.*,arrival.*,driver.*,vehicle.* ' +
             'FROM travel AS travel ' +
             'JOIN vehicle AS vehicle ON travel.fk_vehicle = vehicle.vehicle_id ' +
             'JOIN driver AS driver ON travel.fk_driver = driver.driver_id ' +
             'JOIN client AS client ON travel.fk_client = client.client_id ' +
-            'JOIN departure AS departure ' +
-            'JOIN arrival AS arrival ' +
+            'JOIN departure AS departure ON departure.departure_id = travel.fk_departure AND departure.fk_driver = driver.driver_id ' +
+            'JOIN arrival AS arrival ON arrival.arrival_id = travel.fk_arrival AND arrival.fk_driver = driver.driver_id ' +
             'WHERE driver.is_login = 1 AND travel.date =' + '\'' + date + '\'' + 'AND travel.is_paid=' + '\'' + is_paid + '\' AND departure.fk_driver = driver.driver_id AND arrival.fk_driver = driver.driver_id ' +
             'ORDER BY travel.hour ASC;'
         console.log("queryyyy" + query);
@@ -578,6 +577,61 @@ export class DatabaseService {
             }
             return travel;
         });
+
+    }
+
+
+    async getAllTravel(date:string){
+
+        let query = 'SELECT travel.*,client.*,departure.*,arrival.*,driver.*,vehicle.* ' +
+        'FROM travel AS travel ' +
+        'JOIN vehicle AS vehicle ON travel.fk_vehicle = vehicle.vehicle_id ' +
+        'JOIN driver AS driver ON travel.fk_driver = driver.driver_id ' +
+        'JOIN client AS client ON travel.fk_client = client.client_id ' +
+        'JOIN departure AS departure ON departure.departure_id = travel.fk_departure AND departure.fk_driver = driver.driver_id ' +
+        'JOIN arrival AS arrival ON arrival.arrival_id = travel.fk_arrival AND arrival.fk_driver = driver.driver_id ' +
+        'WHERE driver.is_login = 1 AND travel.date =' + '\'' + date + '\'' + 'AND departure.fk_driver = driver.driver_id AND arrival.fk_driver = driver.driver_id ' +
+        'ORDER BY travel.hour ASC;'
+    console.log("queryyyy" + query);
+    return this.database.executeSql(query, []).then(data => {
+        let travel: Travel[] = [];
+        if (data.rows.length > 0) {
+            for (var i = 0; i < data.rows.length; i++) {
+                travel.push({
+                    travel_id: data.rows.item(i).travel_id,
+                    is_paid: data.rows.item(i).is_paid,
+                    n_pass: data.rows.item(i).n_passenger,
+                    km_tot: data.rows.item(i).km_tot,
+                    date: data.rows.item(i).date,
+                    hour: data.rows.item(i).hour,
+                    fk_departure: data.rows.item(i).fk_departure,
+                    fk_arrival: data.rows.item(i).fk_arrival,
+                    fk_client: data.rows.item(i).fk_client,
+                    name_client: data.rows.item(i).name_client,
+                    surname_client: data.rows.item(i).surname_client,
+                    billing_notes_client: data.rows.item(i).billing_notes,
+                    name_arrival: data.rows.item(i).name_arr,
+                    lat_arr: data.rows.item(i).lat_arr,
+                    long_arr: data.rows.item(i).long_arr,
+                    address_arrival: data.rows.item(i).address_arr,
+                    name_departure: data.rows.item(i).name_dep,
+                    lat_dep: data.rows.item(i).lat_dep,
+                    long_dep: data.rows.item(i).long_dep,
+                    address_departure: data.rows.item(i).address_dep,
+                    notes_travel: data.rows.item(i).notes_travel,
+                    fk_vehicle: data.rows.item(i).fk_vehicle,
+                    car_brand: data.rows.item(0).car_brand,
+                    car_model: data.rows.item(i).car_model,
+                    licence_plate: data.rows.item(i).license_plate,
+                    name_driver: data.rows.item(i).name,
+                    surname_driver: data.rows.item(i).surname,
+                });
+            }
+        }
+        return travel;
+    });
+
+
 
     }
 

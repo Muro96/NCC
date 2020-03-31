@@ -119,12 +119,11 @@
             <ion-label>Pagato?</ion-label>
             <div float-left class="my-checkbox">
                 <ion-label>SI</ion-label>
-                <ion-checkbox color="primary" checked (ionChange)="checkPaid()"></ion-checkbox>
+                <ion-checkbox #check_yes color="primary" (ionChange)="checkPaid()"></ion-checkbox>
             </div>
             <div float-right class="my-checkbox">
                 <ion-label>NO</ion-label>
-                <ion-checkbox color="primary" checked (ionChange)="checkPaid()" (ionBlur)="blur_client();">
-                </ion-checkbox>
+                <ion-checkbox #check_no color="primary" (ionChange)="checkPaid1()"></ion-checkbox>
             </div>
         </ion-item>
 

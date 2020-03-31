@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, ComponentFactoryResolver, NgZone } from '@angular/core';
-import { ModalController, Platform, AlertController, ToastController, NavController } from '@ionic/angular';
+import { ModalController, Platform, AlertController, ToastController, NavController, IonCheckbox } from '@ionic/angular';
 import { Ionic4DatepickerModalComponent } from '@logisticinfotech/ionic4-datepicker';
 import { DatabaseService, Client, Travel, Departure, Arrival, Vehicle } from 'src/app/database.service';
 import { Router, NavigationExtras } from '@angular/router';
@@ -20,7 +20,8 @@ export class AddjourneyPage implements OnInit {
     travel = {};
     travels: Travel[] = [];
     client: Client;
-    checked = false;
+    checked = true;
+    checked_no = false;
 
     departure = {};
     departures: Departure[] = [];
@@ -38,8 +39,8 @@ export class AddjourneyPage implements OnInit {
     mydate: string = new Date().toLocaleDateString('it-IT');
 
 
-    input_value: any;
-    input_value1: any;
+    input_value: string;
+    input_value1: string;
 
 
     datePickerObj: any = {};
@@ -73,13 +74,18 @@ export class AddjourneyPage implements OnInit {
 
     location: any;
     placeid: any;
-    response_dep: any;
+    
 
     arr_sel: any;
     dep_sel: any;
+    //check_yes:boolean;
+    //check_no: boolean;
+
     @ViewChild('selectArr', { static: true }) selectArr: IonicSelectableComponent;
     @ViewChild('selectDep', { static: true }) selectDep: IonicSelectableComponent;
     @ViewChild('selectClient', { static: true }) selectClient: IonicSelectableComponent;
+    @ViewChild ('check_yes',{static:true}) check_yes: IonCheckbox;
+    @ViewChild ('check_no',{static:true}) check_no: IonCheckbox;
 
 
 
@@ -102,7 +108,7 @@ export class AddjourneyPage implements OnInit {
                 this.database.getDepartures().then(dep => {
                     this.departures = dep;
                 })
-            
+
             }
         });
         this.datePickerObj = {
@@ -192,7 +198,7 @@ export class AddjourneyPage implements OnInit {
             this.selectedDate = data.data.date;
         });
     }
-    async getAddressDep(): Promise<any> {
+    async getAddressDep(): Promise<string> {
 
         let inputfield = document.getElementById('autocomplete_input_dep').getElementsByTagName('input')[0];
 
@@ -231,27 +237,27 @@ export class AddjourneyPage implements OnInit {
 
     }
 
-    async getAddressArr(): Promise<any> {
+    async getAddressArr(): Promise<string> {
         let inputfield = document.getElementById('autocomplete_input_arr').getElementsByTagName('input')[0];
         if (inputfield.value.length > 7) {
-        let autocomplete_arr = new google.maps.places.Autocomplete((inputfield), {
-            types: ['address'],
-            componentRestrictions: { country: 'it' },
-        });
-        autocomplete_arr.setFields(['formatted_address','name', 'geometry']);
+            let autocomplete_arr = new google.maps.places.Autocomplete((inputfield), {
+                types: ['address'],
+                componentRestrictions: { country: 'it' },
+            });
+            autocomplete_arr.setFields(['formatted_address', 'name', 'geometry']);
 
-        google.maps.event.addListener(autocomplete_arr, `place_changed`, () => {
-            var place = autocomplete_arr.getPlace();
-            this.input_value1 =  place.formatted_address;
-            return this.input_value1;
-            //this.latlng_arr = new google.maps.LatLng(place.geometry.location.lat(), place.geometry.location.lng());
+            google.maps.event.addListener(autocomplete_arr, `place_changed`, () => {
+                var place = autocomplete_arr.getPlace();
+                this.input_value1 = place.formatted_address;
+                return this.input_value1;
+                //this.latlng_arr = new google.maps.LatLng(place.geometry.location.lat(), place.geometry.location.lng());
 
-            //return [this.latlng_arr, place.formatted_address];
+                //return [this.latlng_arr, place.formatted_address];
 
 
-        });
-    }
-    return this.input_value1;
+            });
+        }
+        return this.input_value1;
     }
 
     /* async distanceMatrix(): Promise<any> {
@@ -305,20 +311,20 @@ export class AddjourneyPage implements OnInit {
 
     }
 
-    getDepSelect(){
-        console.log("dep_select"+this.select_dep.address_dep);
+    getDepSelect() {
+        console.log("dep_select" + this.select_dep.address_dep);
         return this.select_dep.address_dep;
     }
 
-    getArrSelect(){
-        console.log("dep_arr"+this.select_arr.address_arr);
+    getArrSelect() {
+        console.log("dep_arr" + this.select_arr.address_arr);
         return this.select_arr.address_arr;
-     
+
 
     }
 
 
-    async presentModalArr(){
+    async presentModalArr() {
         await new Promise(resolve => setTimeout(resolve, 700))
         const res = await this.getAddressArr();
         const modal = await this.modalCtrl.create({
@@ -329,7 +335,7 @@ export class AddjourneyPage implements OnInit {
         });
         modal.onDidDismiss().then(data => {
             this.arr_modal = data['data'];
-            console.log("response from "+this.arr_modal);
+            console.log("response from " + this.arr_modal);
         })
         return await modal.present();
 
@@ -348,17 +354,16 @@ export class AddjourneyPage implements OnInit {
         });
         modal.onDidDismiss().then(data => {
             this.dep_modal = data['data'];
-            console.log("response from "+this.dep_modal);
+            console.log("response from " + this.dep_modal);
         })
         return await modal.present();
-    } 
+    }
 
-   
 
-    async blur_arrival() {   
+
+    async blur_arrival() {
         document.getElementsByClassName("arrival")[0].setAttribute("style", "visibility: visible;");
         await this.presentModalDep();
-
     }
 
     blur_client() {
@@ -368,7 +373,9 @@ export class AddjourneyPage implements OnInit {
     async blur_npass() {
         document.getElementsByClassName("pass")[0].setAttribute("style", "visibility: visible;");
         await this.presentModalArr();
+        
     }
+
     blur_check() {
         document.getElementsByClassName("check")[0].setAttribute("style", "visibility: visible;");
 
@@ -379,89 +386,89 @@ export class AddjourneyPage implements OnInit {
         let client_id = this.getClientIdSelected();
         let response_dep = await this.getAddressDep();
         let response_arr = await this.getAddressArr();
-        if(!this.selectDep.hasValue()){
-            
+        if (!this.selectDep.hasValue()) {
+
             this.dep_sel = undefined;
         }
         else {
             this.dep_sel = this.getDepSelect();
         }
-            
-        if (!this.selectArr.hasValue()){
+
+        if (!this.selectArr.hasValue()) {
             this.arr_sel = undefined
         }
-        else{
+        else {
             this.arr_sel = this.getArrSelect();
         }
-        
-        console.log("RES1"+response_dep)
-        console.log("RES2"+response_arr)
 
-        
+        console.log("RES1" + response_dep)
+        console.log("RES2" + response_arr)
+
+
 
         //if((this.getDepSelect() == undefined || this.getAddressDep()!= undefined) && (this.getArrSelect() != undefined || this.getAddressArr()!= undefined)){
         if (this.checkPaid() == true) {
-            if (this.dep_sel == undefined && this.arr_sel == undefined){ 
-                console.log("CASO 1")          
-                this.database.addTravel(response_dep,response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 1);
+            if (this.dep_sel == undefined && this.arr_sel == undefined) {
+                console.log("CASO 1")
+                this.database.addTravel(response_dep, response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 1);
                 this.travel = {};
                 this.arrival = {};
                 this.departure = {};
             }
-            else if(this.dep_sel != undefined && this.arr_sel == undefined){
+            else if (this.dep_sel != undefined && this.arr_sel == undefined) {
                 console.log("CASO 2")
-                this.database.addTravel(this.getDepSelect(),response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 1);
+                this.database.addTravel(this.getDepSelect(), response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 1);
                 this.travel = {};
                 this.arrival = {};
                 this.departure = {};
 
             }
-            else if(this.dep_sel == undefined && this.arr_sel != undefined){
+            else if (this.dep_sel == undefined && this.arr_sel != undefined) {
                 console.log("CASO 3")
-                this.database.addTravel(response_dep,this.getArrSelect(), this.time, this.mydate, this.travel['n_pass'], client_id, 1);
+                this.database.addTravel(response_dep, this.getArrSelect(), this.time, this.mydate, this.travel['n_pass'], client_id, 1);
                 this.travel = {};
                 this.arrival = {};
                 this.departure = {};
 
             }
-            else{
+            else {
                 console.log("CASO 4")
-                this.database.addTravel(this.dep_sel,this.arr_sel, this.time, this.mydate, this.travel['n_pass'], client_id, 1);
+                this.database.addTravel(this.dep_sel, this.arr_sel, this.time, this.mydate, this.travel['n_pass'], client_id, 1);
                 this.travel = {};
                 this.arrival = {};
                 this.departure = {};
 
             }
 
-           
+
         }
         else {
-            if (this.dep_sel == undefined && this.arr_sel == undefined){ 
-                console.log("CASO 5")          
-                this.database.addTravel(response_dep,response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 0);
+            if (this.dep_sel == undefined && this.arr_sel == undefined) {
+                console.log("CASO 5")
+                this.database.addTravel(response_dep, response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 0);
                 this.travel = {};
                 this.arrival = {};
                 this.departure = {};
             }
-            else if(this.dep_sel != undefined && this.arr_sel == undefined){
+            else if (this.dep_sel != undefined && this.arr_sel == undefined) {
                 console.log("CASO 6")
-                this.database.addTravel(this.getDepSelect(),response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 0);
+                this.database.addTravel(this.getDepSelect(), response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 0);
                 this.travel = {};
                 this.arrival = {};
                 this.departure = {};
 
             }
-            else if(this.dep_sel == undefined && this.arr_sel != undefined){
+            else if (this.dep_sel == undefined && this.arr_sel != undefined) {
                 console.log("CASO 7")
-                this.database.addTravel(response_dep,this.getArrSelect(), this.time, this.mydate, this.travel['n_pass'], client_id, 0);
+                this.database.addTravel(response_dep, this.getArrSelect(), this.time, this.mydate, this.travel['n_pass'], client_id, 0);
                 this.travel = {};
                 this.arrival = {};
                 this.departure = {};
 
             }
-            else{
+            else {
                 console.log("CASO 8")
-                this.database.addTravel(this.dep_sel,this.arr_sel, this.time, this.mydate, this.travel['n_pass'], client_id, 0);
+                this.database.addTravel(this.dep_sel, this.arr_sel, this.time, this.mydate, this.travel['n_pass'], client_id, 0);
                 this.travel = {};
                 this.arrival = {};
                 this.departure = {};
@@ -470,11 +477,11 @@ export class AddjourneyPage implements OnInit {
 
         }
     }
-   
 
 
 
-    
+
+
 
     onAddClient(event: {
         component: IonicSelectableComponent
@@ -500,6 +507,13 @@ export class AddjourneyPage implements OnInit {
         this.checked = !this.checked;
         console.log('this.checked__paid' + this.checked);
         return this.checked;
+    }
+
+    checkPaid1() {
+        this.checked_no = !this.checked_no;
+        this.checked = !this.checked;
+        console.log('dio cann' + this.checked);
+        return this.checked_no;
     }
 
 

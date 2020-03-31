@@ -4,7 +4,7 @@ import {ModalController, Platform, AlertController, ToastController} from '@ioni
 import {Ionic4DatepickerModalComponent} from '@logisticinfotech/ionic4-datepicker';
 import {DatabaseService, Client, Travel} from 'src/app/database.service';
 import {LatLng} from 'leaflet';
-import {Router} from '@angular/router';
+import {Router, NavigationExtras} from '@angular/router';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { NumberValueAccessor } from '@angular/forms';
 
@@ -137,10 +137,17 @@ export class MyjourneyPage implements OnInit {
         }    
         }
 
-        updateTravel(travel_id:number){
-            this.router.navigate(['myjourney/updatejourney']);
+        updateTravel(travel:Travel){
+            let navigationExtras: NavigationExtras = {
+                state: {
+                    travel : travel
+                }
+            };
+            this.router.navigate(['myjourney/updatejourney'], navigationExtras);
 
         }
+
+        
 }
 
 

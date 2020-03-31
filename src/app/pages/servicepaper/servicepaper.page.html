@@ -14,13 +14,7 @@
     <ion-label>Data viaggi</ion-label>
     <ion-input readonly [(ngModel)]="mydate" (ionChange)="onChangeDate()" [liIonic4Datepicker]="datePickerObj"></ion-input>
   </ion-item>
-  <!--<ion-item>
-    <ion-label>Veicolo:</ion-label>
-    <ion-select [(ngModel)]="vehicle_id_select" (ionChange)="getVehicleIdSelected()" [selectedText]="selectVehicle"
-    interface="popover">
-        <ion-select-option *ngFor="let vehicle of vehicles;" [value]="vehicle['vehicle_id']" [selected]="selectVehicle">{{vehicle.car_model}} </ion-select-option>
-    </ion-select> 
-</ion-item> -->
+ 
   <ion-card *ngFor="let travel of travels;">   
     <ion-card-header>
         <ion-item lines="none">
@@ -29,11 +23,11 @@
         </ion-item>
         <ion-item lines="none">
             <ion-icon src="../../assets/icon/location.svg"></ion-icon>
-            <ion-card-title>Destinazione: {{travel.city_arrival}}</ion-card-title>
+            <ion-card-title>Destinazione: {{travel.address_arrival}}</ion-card-title>
         </ion-item>
         <ion-item lines="none">
             <ion-icon src="../../assets/icon/location.svg"></ion-icon>
-            <ion-card-title>Partenza: {{travel.city_departure}}</ion-card-title>
+            <ion-card-title>Partenza: {{travel.address_departure}}</ion-card-title>
         </ion-item>
     </ion-card-header>
     <ion-card-content>
