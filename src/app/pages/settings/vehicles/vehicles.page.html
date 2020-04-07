@@ -20,15 +20,15 @@
         <div *ngSwitchCase="'add_vehicle'">
             <ion-item>
                 <ion-label position="stacked">Casa Automobilistica</ion-label>
-                <ion-input type="text" placeholder="" [(ngModel)]="vehicle.car_brand" required></ion-input>
+                <ion-input type="text" placeholder="" [(ngModel)]="vehicle.car_brand"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-label position="stacked">Modello Auto</ion-label>
-                <ion-input type="text" placeholder="" [(ngModel)]="vehicle.car_model" required></ion-input>
+                <ion-input type="text" placeholder="" [(ngModel)]="vehicle.car_model"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-label position="stacked">Targa</ion-label>
-                <ion-input type="text" placeholder="" [(ngModel)]="vehicle.license_plate" required></ion-input>
+                <ion-input type="text" placeholder="" [(ngModel)]="vehicle.license_plate"></ion-input>
             </ion-item>
             <ion-button expand="block" (click)="addVehicle()">Aggiungi Mezzo</ion-button>
         </div>
@@ -46,7 +46,7 @@
                         <ion-card-title>Targa: {{vehicle.license_plate}}</ion-card-title>
                     </ion-item>
                 </ion-card-header>
-
+                <ion-button expand="block" (click)="updateVehicle(vehicle)">Aggiorna Mezzo</ion-button>
                 <ion-button expand="block" (click)="cancelVehicle(vehicle.vehicle_id)">Cancella Mezzo</ion-button>
               </ion-card>
         </div>

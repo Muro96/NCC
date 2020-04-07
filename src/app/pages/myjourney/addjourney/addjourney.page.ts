@@ -21,7 +21,7 @@ export class AddjourneyPage implements OnInit {
     travels: Travel[] = [];
     client: Client;
     checked = true;
-    checked_no = false;
+
 
     departure = {};
     departures: Departure[] = [];
@@ -74,18 +74,16 @@ export class AddjourneyPage implements OnInit {
 
     location: any;
     placeid: any;
-    
+
 
     arr_sel: any;
     dep_sel: any;
-    //check_yes:boolean;
-    //check_no: boolean;
+
 
     @ViewChild('selectArr', { static: true }) selectArr: IonicSelectableComponent;
     @ViewChild('selectDep', { static: true }) selectDep: IonicSelectableComponent;
     @ViewChild('selectClient', { static: true }) selectClient: IonicSelectableComponent;
-    @ViewChild ('check_yes',{static:true}) check_yes: IonCheckbox;
-    @ViewChild ('check_no',{static:true}) check_no: IonCheckbox;
+
 
 
 
@@ -113,7 +111,7 @@ export class AddjourneyPage implements OnInit {
         });
         this.datePickerObj = {
             inputDate: this.mydate,
-            dateFormat: 'DD/M/YYYY',
+            dateFormat: 'D/M/YYYY',
             fromDate: new Date('01/01/1960'),
             closeOnSelect: true,
             todayLabel: 'Oggi',
@@ -215,7 +213,7 @@ export class AddjourneyPage implements OnInit {
                 var place = autocomplete_dep.getPlace();
                 this.input_value = place.formatted_address;
                 console.log("input_value" + this.input_value);
-                return this.input_value;
+                //return this.input_value;
                 //this.latlng_dep = new google.maps.LatLng(place.geometry.location.lat(), place.geometry.location.lng());
 
                 //console.log("latlng_dfiowehfiwofhep"+this.latlng_dep);
@@ -249,7 +247,7 @@ export class AddjourneyPage implements OnInit {
             google.maps.event.addListener(autocomplete_arr, `place_changed`, () => {
                 var place = autocomplete_arr.getPlace();
                 this.input_value1 = place.formatted_address;
-                return this.input_value1;
+                //return this.input_value1;
                 //this.latlng_arr = new google.maps.LatLng(place.geometry.location.lat(), place.geometry.location.lng());
 
                 //return [this.latlng_arr, place.formatted_address];
@@ -373,7 +371,7 @@ export class AddjourneyPage implements OnInit {
     async blur_npass() {
         document.getElementsByClassName("pass")[0].setAttribute("style", "visibility: visible;");
         await this.presentModalArr();
-        
+
     }
 
     blur_check() {
@@ -386,6 +384,7 @@ export class AddjourneyPage implements OnInit {
         let client_id = this.getClientIdSelected();
         let response_dep = await this.getAddressDep();
         let response_arr = await this.getAddressArr();
+        let res = await this.database.checkRegister_present(this.mydate);
         if (!this.selectDep.hasValue()) {
 
             this.dep_sel = undefined;
@@ -403,79 +402,83 @@ export class AddjourneyPage implements OnInit {
 
         console.log("RES1" + response_dep)
         console.log("RES2" + response_arr)
+        console.log("RES3" + this.dep_sel)
+        console.log("RES4" + this.arr_sel)
 
 
 
-        //if((this.getDepSelect() == undefined || this.getAddressDep()!= undefined) && (this.getArrSelect() != undefined || this.getAddressArr()!= undefined)){
-        if (this.checkPaid() == true) {
-            if (this.dep_sel == undefined && this.arr_sel == undefined) {
-                console.log("CASO 1")
-                this.database.addTravel(response_dep, response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 1);
-                this.travel = {};
-                this.arrival = {};
-                this.departure = {};
-            }
-            else if (this.dep_sel != undefined && this.arr_sel == undefined) {
-                console.log("CASO 2")
-                this.database.addTravel(this.getDepSelect(), response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 1);
-                this.travel = {};
-                this.arrival = {};
-                this.departure = {};
-
-            }
-            else if (this.dep_sel == undefined && this.arr_sel != undefined) {
-                console.log("CASO 3")
-                this.database.addTravel(response_dep, this.getArrSelect(), this.time, this.mydate, this.travel['n_pass'], client_id, 1);
-                this.travel = {};
-                this.arrival = {};
-                this.departure = {};
-
-            }
-            else {
-                console.log("CASO 4")
-                this.database.addTravel(this.dep_sel, this.arr_sel, this.time, this.mydate, this.travel['n_pass'], client_id, 1);
-                this.travel = {};
-                this.arrival = {};
-                this.departure = {};
-
-            }
-
-
+        if ((this.dep_sel == undefined || response_dep == 'undefined') && (this.arr_sel == undefined || response_arr == 'undefined' ) && res==0) {
+            this.checkForm();
         }
         else {
-            if (this.dep_sel == undefined && this.arr_sel == undefined) {
-                console.log("CASO 5")
-                this.database.addTravel(response_dep, response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 0);
-                this.travel = {};
-                this.arrival = {};
-                this.departure = {};
-            }
-            else if (this.dep_sel != undefined && this.arr_sel == undefined) {
-                console.log("CASO 6")
-                this.database.addTravel(this.getDepSelect(), response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 0);
-                this.travel = {};
-                this.arrival = {};
-                this.departure = {};
+            if (this.checkPaid() == true) {
+                if (this.dep_sel == undefined && this.arr_sel == undefined) {
+                    console.log("CASO 1")
+                    this.database.addTravel(response_dep, response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 1);
+                    this.travel = {};
+                    this.resetAll();
+                }
+                else if (this.dep_sel != undefined && this.arr_sel == undefined) {
+                    console.log("CASO 2")
+                    this.database.addTravel(this.getDepSelect(), response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 1);
+                    this.travel = {};
+                    this.resetAll();
+                }
+                else if (this.dep_sel == undefined && this.arr_sel != undefined) {
+                    console.log("CASO 3")
+                    this.database.addTravel(response_dep, this.getArrSelect(), this.time, this.mydate, this.travel['n_pass'], client_id, 1);
+                    this.travel = {};
+                    this.resetAll();
 
-            }
-            else if (this.dep_sel == undefined && this.arr_sel != undefined) {
-                console.log("CASO 7")
-                this.database.addTravel(response_dep, this.getArrSelect(), this.time, this.mydate, this.travel['n_pass'], client_id, 0);
-                this.travel = {};
-                this.arrival = {};
-                this.departure = {};
+                }
+                else {
+                    console.log("CASO 4")
+                    this.database.addTravel(this.dep_sel, this.arr_sel, this.time, this.mydate, this.travel['n_pass'], client_id, 1);
+                    this.travel = {};
+                    this.resetAll();
+                }
+
 
             }
             else {
-                console.log("CASO 8")
-                this.database.addTravel(this.dep_sel, this.arr_sel, this.time, this.mydate, this.travel['n_pass'], client_id, 0);
-                this.travel = {};
-                this.arrival = {};
-                this.departure = {};
+                if (this.dep_sel == undefined && this.arr_sel == undefined) {
+                    console.log("CASO 5")
+                    this.database.addTravel(response_dep, response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 0);
+                    this.travel = {};
+                    this.resetAll();
+                }
+                else if (this.dep_sel != undefined && this.arr_sel == undefined) {
+                    console.log("CASO 6")
+                    this.database.addTravel(this.getDepSelect(), response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 0);
+                    this.travel = {};
+                    this.resetAll();
+                }
+                else if (this.dep_sel == undefined && this.arr_sel != undefined) {
+                    console.log("CASO 7")
+                    this.database.addTravel(response_dep, this.getArrSelect(), this.time, this.mydate, this.travel['n_pass'], client_id, 0);
+                    this.travel = {};
+                    this.resetAll();
+
+                }
+                else {
+                    console.log("CASO 8")
+                    this.database.addTravel(this.dep_sel, this.arr_sel, this.time, this.mydate, this.travel['n_pass'], client_id, 0);
+                    this.travel = {};
+                    this.resetAll();
+
+                }
 
             }
-
         }
+
+    }
+
+    resetAll() {
+        this.input_value = "";
+        this.input_value1 = "";
+        this.selectDep.clear();
+        this.selectArr.clear();
+        this.selectClient.clear();
     }
 
 
@@ -504,23 +507,20 @@ export class AddjourneyPage implements OnInit {
 
 
     checkPaid() {
+        this.blur_client();
         this.checked = !this.checked;
         console.log('this.checked__paid' + this.checked);
         return this.checked;
     }
 
-    checkPaid1() {
-        this.checked_no = !this.checked_no;
-        this.checked = !this.checked;
-        console.log('dio cann' + this.checked);
-        return this.checked_no;
-    }
+
+
 
 
     async checkForm() {
         const alert = await this.alertController.create({
             header: 'COMPILA TUTTI I CAMPI!',
-            subHeader: 'Assicurati di aver compilato i campi di partenza e destinazione',
+            subHeader: 'Assicurati di aver compilato i campi di partenza e destinazione e registro del giorno',
 
             buttons: [{
                 text: 'OK',

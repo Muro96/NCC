@@ -121,6 +121,7 @@ export interface Register {
     providedIn: 'root'
 })
 export class DatabaseService {
+  
 
     database: SQLiteObject;
     mydate: string = new Date().toLocaleDateString('it-IT');
@@ -415,17 +416,14 @@ export class DatabaseService {
 
     }
 
-    getFirstVehicle() {
-        return this.database.executeSql('SELECT * FROM driver JOIN vehicle ON driver.driver_id = vehicle.fk_driver WHERE driver.is_login = ? LIMIT 1', [1]).then(data => {
-            return {
-                vehicle_id: data.rows.item(0).vehicle_id,
-                car_brand: data.rows.item(0).car_brand,
-                car_model: data.rows.item(0).car_model,
-                license_plate: data.rows.item(0).license_plate
-            }
-        });
+    async updateVehicle(vehicle_id:number,car_brand: string, car_model: string, license_plate: string) {
+        let driverIdFk = await (await this.getDriverLogin()).driver_id;
+        let data = [car_brand, car_model, license_plate,vehicle_id,driverIdFk];
+        const query = await this.database.executeSql('UPDATE vehicle SET car_brand = ?, car_model = ?, license_plate = ? WHERE vehicle_id = ? AND fk_driver = ?', data);
 
-    }
+      }
+
+   
     async getVehicleId(vehicle_id: number) {
         let query = 'SELECT * FROM driver JOIN vehicle ON driver.driver_id = vehicle.fk_driver WHERE driver.is_login = 1 AND vehicle.vehicle_id=' + '\'' + vehicle_id + '\'' + ';';
         return this.database.executeSql(query, []).then(data => {
@@ -481,6 +479,25 @@ export class DatabaseService {
 
     async deleteClient(client_id: number) {
         await this.database.executeSql('DELETE FROM client WHERE client_id = ?', [client_id]);
+
+    }
+
+    async getClientData(client_id: number){
+        return this.database.executeSql('SELECT * FROM client WHERE client_id = ?', [client_id]).then(data => {
+            return {
+                client_id: data.rows.item(0).client_id,
+                name_client: data.rows.item(0).name_client,
+                surname_client: data.rows.item(0).surname_client,
+                city: data.rows.item(0).city,
+                province: data.rows.item(0).province,
+                is_private: data.rows.item(0).is_private,
+                is_agency: data.rows.item(0).is_agency,
+                cf: data.rows.item(0).cf,
+                vat: data.rows.item(0).vat,
+                billing_notes: data.rows.item(0).billing_notes,
+            };
+        });
+
 
     }
 
@@ -592,7 +609,6 @@ export class DatabaseService {
         'JOIN arrival AS arrival ON arrival.arrival_id = travel.fk_arrival AND arrival.fk_driver = driver.driver_id ' +
         'WHERE driver.is_login = 1 AND travel.date =' + '\'' + date + '\'' + 'AND departure.fk_driver = driver.driver_id AND arrival.fk_driver = driver.driver_id ' +
         'ORDER BY travel.hour ASC;'
-    console.log("queryyyy" + query);
     return this.database.executeSql(query, []).then(data => {
         let travel: Travel[] = [];
         if (data.rows.length > 0) {
@@ -742,6 +758,20 @@ export class DatabaseService {
         });
     }
 
+    
+    async getArrivalData(arrival_id:number){
+        return this.database.executeSql('SELECT * FROM arrival WHERE arrival_id = ?', [arrival_id]).then(data => {
+            return {
+                arrival_id: data.rows.item(0).arrival_id,
+                name_arr: data.rows.item(0).name_arr,
+                lat_arr: data.rows.item(0).lat_arr,
+                long_arr: data.rows.item(0).long_arr,
+                address_arr: data.rows.item(0).address_arr,
+                
+            };
+        });
+    }
+
     async getDepartures() {
         let query = 'SELECT departure.*,driver.* ' +
             'FROM departure AS departure ' +
@@ -763,6 +793,21 @@ export class DatabaseService {
                 }
             }
             return departure;
+        });
+    }
+
+
+
+    async getDepartureData(departure_id:number){
+        return this.database.executeSql('SELECT * FROM departure WHERE departure_id = ?', [departure_id]).then(data => {
+            return {
+                departure_id: data.rows.item(0).departure_id,
+                name_dep: data.rows.item(0).name_dep,
+                lat_dep: data.rows.item(0).lat_dep,
+                long_dep: data.rows.item(0).long_dep,
+                address_dep: data.rows.item(0).address_dep,
+                
+            };
         });
     }
     async addRegister(print_reg: number, date: string, km_start: number, km_end: number, fk_Idvehicle: number) {

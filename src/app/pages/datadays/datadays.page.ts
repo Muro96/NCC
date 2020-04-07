@@ -75,7 +75,7 @@ export class DatadaysPage implements OnInit {
         this.datePickerObj = {
             inputDate: this.mydate,
 
-            dateFormat: 'DD/M/YYYY',
+            dateFormat: 'D/M/YYYY',
             fromDate: new Date('01/01/1960'), // default null
             closeOnSelect: true, // default false
 

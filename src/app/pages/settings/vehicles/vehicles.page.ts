@@ -1,6 +1,7 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {DatabaseService, Vehicle} from 'src/app/database.service';
 import {ToastController, AlertController} from '@ionic/angular';
+import { NavigationExtras, Router } from '@angular/router';
 
 @Component({
     selector: 'app-vehicles',
@@ -15,7 +16,7 @@ export class VehiclesPage implements OnInit {
     toast: any;
 
 
-    constructor(public database: DatabaseService, private toastController: ToastController,private alertController:AlertController) {
+    constructor(public database: DatabaseService, private toastController: ToastController,private alertController:AlertController,private router: Router) {
 
     }
 
@@ -81,6 +82,15 @@ export class VehiclesPage implements OnInit {
         });
 
         await alert.present();
+    }
+
+    async updateVehicle(vehicle: Vehicle){
+        let navigationExtras: NavigationExtras = {
+            state: {
+                vehicle: vehicle
+            }
+        };
+        this.router.navigate(['settings/vehicles/updatevehicle'], navigationExtras);
     }
 }
   

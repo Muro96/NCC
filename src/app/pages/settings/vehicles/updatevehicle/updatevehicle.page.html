@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+      <ion-buttons slot="start">
+          <ion-back-button defaultHref="/settings/vehicles"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Aggiorna dati mezzo</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-item>
+    <ion-label position="stacked">Casa automobilistica</ion-label>
+    <ion-input *ngIf="vehicle.car_brand != null; else nullBrand" type="text" placeholder=""
+    [(ngModel)]="vehicle.car_brand"></ion-input>
+    <ng-template #nullBrand>
+      <ion-input type="text" placeholder="" [(ngModel)]="vehicle.car_brand"></ion-input>
+    </ng-template>
+  </ion-item>
+  
+  <ion-item>
+    <ion-label position="stacked">Modello</ion-label>
+    <ion-input *ngIf="vehicle.car_model != null; else nullModel" type="text" placeholder=""
+    [(ngModel)]="vehicle.car_model"></ion-input>
+    <ng-template #nullModel>
+      <ion-input type="text" placeholder="" [(ngModel)]="vehicle.car_model"></ion-input>
+    </ng-template>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Targa</ion-label>
+    <ion-input *ngIf="vehicle.license_plate != null; else nullPlate" type="text" placeholder=""
+    [(ngModel)]="vehicle.license_plate"></ion-input>
+    <ng-template #nullCity>
+      <ion-input type="text" placeholder="" [(ngModel)]="vehicle.license_plate"></ion-input>
+    </ng-template>
+  </ion-item>
+  <ion-button expand="block" (click)="save()">Salva</ion-button>
+  </ion-content>

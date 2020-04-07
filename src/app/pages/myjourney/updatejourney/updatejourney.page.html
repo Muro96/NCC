@@ -1,9 +1,44 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Dettagli Viaggio</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/myjourney"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Dettagli viaggio</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-item>
+    <ion-label position="stacked">Orario</ion-label>
+    <ion-text>{{travel.hour}}</ion-text>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Dati Cliente</ion-label>
+    <ion-text>{{client.name_client + ' ' + client.surname_client }}</ion-text>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Note di fatturazione cliente</ion-label>
+    <ion-text>{{client.billing_notes}}</ion-text>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Partenza</ion-label>
+    <ion-text>{{departure.name_dep + ', ' + departure.address_dep }}</ion-text>
+
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Destinazione</ion-label>
+    <ion-text>{{arrival.name_arr + ', ' + arrival.address_arr }}</ion-text>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">N° Passeggeri</ion-label>
+    <ion-text>{{travel.n_pass}}</ion-text>
+  </ion-item>
+  
+
 
 </ion-content>
