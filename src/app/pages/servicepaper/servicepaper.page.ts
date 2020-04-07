@@ -58,8 +58,8 @@ export class ServicepaperPage implements OnInit {
   ngOnInit() {
     this.datePickerObj = {
       inputDate: this.mydate,
-      dateFormat: 'DD/M/YYYY',
-      fromDate: new Date('01/01/1960'),
+      dateFormat: 'D/M/YYYY',
+      fromDate: new Date('1/1/1960'),
       closeOnSelect: true,
       todayLabel: 'Oggi',
       closeLabel: 'Chiudi',
@@ -348,6 +348,7 @@ export class ServicepaperPage implements OnInit {
   async downloadPdfAll() {
     console.log('thisss.regstart'+this.register['km_start']);
     console.log('ENDDD'+this.register['km_end']);
+    //posso scaricare il pdf solo se km_start e km_end sono compilati
     if (this.register['km_start'] == null || this.register['km_end'] == null) {
       await this.notCompleteRegister();
     }
