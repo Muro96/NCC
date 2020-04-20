@@ -1,16 +1,22 @@
-ion-item {
-  --background: #3880ff;
+ion-item{
+  --background: #2e8ca3;
   --color: #fff;
-} 
-
-ion-button {
-  --background: #3880ff;
-} 
-
-ion-input {
-  font-size: medium;
-  --background:#3880ff;
 }
-ion-content{
-  --background:#3880ff;
+
+ion-button{
+  --background: #5a1212;
+}
+
+
+p {
+  font-size: 0.8em;
+  color: #d2d2d2;
+}
+
+ion-label, .select-text {
+  margin-left: 10px;
+}
+
+.invalid {
+  border: 1px solid #ea6153;
 }

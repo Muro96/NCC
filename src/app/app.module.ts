@@ -16,6 +16,7 @@ import {NativeGeocoder} from '@ionic-native/native-geocoder/ngx';
 import {File} from '@ionic-native/file/ngx';
 import {FileOpener} from '@ionic-native/file-opener/ngx';
 import { IonicSelectableModule } from 'ionic-selectable';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -26,7 +27,9 @@ import { IonicSelectableModule } from 'ionic-selectable';
         IonicModule.forRoot(),
         AppRoutingModule,
         IonicSelectableModule,
-        HttpClientModule
+        HttpClientModule,
+        FormsModule,
+        ReactiveFormsModule,
     ],
     providers: [
         StatusBar,
