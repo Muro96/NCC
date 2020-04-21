@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
-import { map } from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { Md5 } from 'ts-md5/dist/md5';
-import { AddjourneyPage } from './pages/myjourney/addjourney/addjourney.page';
+
 
 
 export interface Agency {
@@ -166,19 +165,19 @@ export class DatabaseService {
                 //VEICOLI
                 db.executeSql('CREATE TABLE vehicle' +
                     '(vehicle_id INTEGER PRIMARY KEY,' +
-                    'car_brand TEXT,' +
-                    'car_model TEXT,' +
-                    'license_plate TEXT,' +
+                    'car_brand TEXT not null,' +
+                    'car_model TEXT not null,' +
+                    'license_plate TEXT not null,' +
                     'fk_driver INTEGER,' +
                     'FOREIGN KEY(fk_driver) REFERENCES driver(driver_id));', []);
 
                 // CLIENTI (COLUI CHE PAGA CORSA)
                 db.executeSql('CREATE TABLE client' +
                     '(client_id INTEGER PRIMARY KEY,' +
-                    'name_client TEXT not null,' +
-                    'surname_client TEXT not null,' +
-                    'city TEXT not null,' +
-                    'province TEXT not null,' +
+                    'name_client TEXT,' +
+                    'surname_client TEXT,' +
+                    'city TEXT,' +
+                    'province TEXT,' +
                     'is_private INTEGER,' +
                     'is_agency INTEGER,' +
                     'cf TEXT,' +
@@ -264,7 +263,6 @@ export class DatabaseService {
         let res: any;
         await this.database.executeSql('SELECT * FROM agency;', []).then(data => {
             res = data.rows.length;
-            console.log("resssss" + res);
         });
         if (res === 0) {
             let data = ['04278440278', 'Via Massaua 37', 'Jesolo', '30016', 'VE', 'Talon Marco', '3441158768'];

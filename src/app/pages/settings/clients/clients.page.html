@@ -18,34 +18,36 @@
     </ion-segment>
     <div [ngSwitch]="selectedView">
         <div *ngSwitchCase="'add_client'">
+            <form [formGroup]="clientForm">
             <ion-item>
                 <ion-label position="stacked">Nome</ion-label>
-                <ion-input type="text" placeholder="" [(ngModel)]="client.name_client"></ion-input>
+                <ion-input type="text" placeholder="" [(ngModel)]="client.name_client" autocapitalize="characters" formControlName="name_client"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-label position="stacked">Cognome</ion-label>
-                <ion-input type="text" placeholder="" [(ngModel)]="client.surname_client"></ion-input>
+                <ion-input type="text" placeholder="" [(ngModel)]="client.surname_client" autocapitalize="characters" formControlName="surname_client"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-label position="stacked">Città</ion-label>
-                <ion-input type="text" placeholder="" [(ngModel)]="client.city"></ion-input>
+                <ion-input type="text" placeholder="" [(ngModel)]="client.city" autocapitalize="characters" formControlName="city"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-label position="stacked">Provincia</ion-label>
-                <ion-input type="text" placeholder="" [(ngModel)]="client.province"></ion-input>
+                <ion-input type="text" placeholder="" [(ngModel)]="client.province" autocapitalize="characters" maxlength="2" formControlName="province"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-label position="stacked">Codice Fiscale</ion-label>
-                <ion-input type="text" placeholder="" [(ngModel)]="client.cf"></ion-input>
+                <ion-input type="text" placeholder="" [(ngModel)]="client.cf" autocapitalize="characters" maxlength="16" formControlName="cf"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-label position="stacked">Partita Iva</ion-label>
-                <ion-input type="text" placeholder="" [(ngModel)]="client.vat"></ion-input>
+                <ion-input type="text" placeholder="" [(ngModel)]="client.vat" maxlength="11" formControlName="vat"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-label position="stacked">Note di fatturazione</ion-label>
-                <ion-input type="text" placeholder="" maxlength="50" [(ngModel)]="client.billing_notes"></ion-input>
+                <ion-input type="text" placeholder="" maxlength="40" [(ngModel)]="client.billing_notes" formControlName="billing_notes"></ion-input>
             </ion-item>
+        </form>
             <ion-item>
                 <ion-label>Privato?</ion-label>
                 <ion-checkbox color="primary" checked slot="start" (ionChange)="checkPrivate()"></ion-checkbox>

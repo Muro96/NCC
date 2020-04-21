@@ -69,8 +69,9 @@ export class RegisterPage implements OnInit {
     
             } else if (equalPass == false && res == 0) {
                 this.incorrectPassw();
-                this.driver['password'] = '';
-                this.checkPassw = '';
+                this.registerForm.reset();
+                //this.driver['password'] = '';
+                //this.checkPassw = '';
     
     
             } else {

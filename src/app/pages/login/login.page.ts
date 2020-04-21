@@ -50,13 +50,12 @@ export class LoginPage implements OnInit {
         if (res == 1) {
             let res1 = await this.database.getDriverEmailPass(this.email, Md5.hashStr(this.password));
             this.database.updateIsLogin(res1.driver_id).then(_ => {
-                this.driver = {};
-
+                this.loginForm.reset();
                 this.navcontroller.navigateRoot('/home');
             });
         } else {
             this.invalidEmailPassword();
-            this.driver = {};
+            this.loginForm.reset();
 
         }
 

@@ -18,23 +18,39 @@
     </ion-segment>
     <div [ngSwitch]="selectedView">
         <div *ngSwitchCase="'add_vehicle'">
-            <ion-item>
-                <ion-label position="stacked">Casa Automobilistica</ion-label>
-                <ion-input type="text" placeholder="" [(ngModel)]="vehicle.car_brand"></ion-input>
-            </ion-item>
-            <ion-item>
-                <ion-label position="stacked">Modello Auto</ion-label>
-                <ion-input type="text" placeholder="" [(ngModel)]="vehicle.car_model"></ion-input>
-            </ion-item>
-            <ion-item>
-                <ion-label position="stacked">Targa</ion-label>
-                <ion-input type="text" placeholder="" [(ngModel)]="vehicle.license_plate"></ion-input>
-            </ion-item>
+            <form [formGroup]="vehicleForm">
+                <ion-item>
+                    <ion-label position="stacked">Casa Automobilistica</ion-label>
+                    <ion-input type="text" placeholder="Es. Ford" maxlength="15" [(ngModel)]="vehicle.car_brand" formControlName="car_brand" autocapitalize="characters">
+                    </ion-input>
+                </ion-item>
+                <ion-item *ngIf="!vehicleForm.controls.car_brand.valid && (vehicleForm.controls.car_brand.dirty)">
+                    <p>Campo obbligatorio,inserisci marca auto</p>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="stacked">Modello Auto</ion-label>
+                    <ion-input type="text" maxlength="15" placeholder="Es. Fiesta" [(ngModel)]="vehicle.car_model" formControlName="car_model" autocapitalize="characters">
+                    </ion-input>
+                </ion-item>
+                <ion-item
+                    *ngIf="!vehicleForm.controls.car_model.valid && (vehicleForm.controls.car_model.dirty)">
+                    <p>Campo obbligatorio,inserisci modello auto</p>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="stacked">Targa</ion-label>
+                    <ion-input type="text" placeholder="Es. AB123CD" maxlength="7" [(ngModel)]="vehicle.license_plate"
+                        formControlName="license_plate" autocapitalize="characters"></ion-input>
+                </ion-item>
+                <ion-item
+                    *ngIf="!vehicleForm.controls.license_plate.valid && (vehicleForm.controls.license_plate.dirty)">
+                    <p>Campo obbligatorio,inserisci una targa valida</p>
+                </ion-item>
+            </form>
             <ion-button expand="block" (click)="addVehicle()">Aggiungi Mezzo</ion-button>
         </div>
         <div *ngSwitchCase="'list_vehicle'">
 
-            <ion-card *ngFor="let vehicle of vehicles;">   
+            <ion-card *ngFor="let vehicle of vehicles;">
                 <ion-card-header>
                     <ion-item lines="none">
                         <ion-card-title>Casa Automobilistica : {{vehicle.car_brand}}</ion-card-title>
@@ -48,8 +64,7 @@
                 </ion-card-header>
                 <ion-button expand="block" (click)="updateVehicle(vehicle)">Aggiorna Mezzo</ion-button>
                 <ion-button expand="block" (click)="cancelVehicle(vehicle.vehicle_id)">Cancella Mezzo</ion-button>
-              </ion-card>
+            </ion-card>
         </div>
     </div>
 </ion-content>
-
