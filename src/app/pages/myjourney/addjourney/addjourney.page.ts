@@ -21,7 +21,7 @@ export class AddjourneyPage implements OnInit {
     travels: Travel[] = [];
     client: Client;
     checked = true;
-
+    toast:any;
 
     departure = {};
     departures: Departure[] = [];
@@ -417,18 +417,24 @@ export class AddjourneyPage implements OnInit {
                     this.database.addTravel(response_dep, response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 1);
                     this.travel = {};
                     this.resetAll();
+                    this.showToast();
+                    this.hideToast();
                 }
                 else if (this.dep_sel != undefined && this.arr_sel == undefined) {
                     console.log("CASO 2")
                     this.database.addTravel(this.getDepSelect(), response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 1);
                     this.travel = {};
                     this.resetAll();
+                    this.showToast();
+                    this.hideToast();
                 }
                 else if (this.dep_sel == undefined && this.arr_sel != undefined) {
                     console.log("CASO 3")
                     this.database.addTravel(response_dep, this.getArrSelect(), this.time, this.mydate, this.travel['n_pass'], client_id, 1);
                     this.travel = {};
                     this.resetAll();
+                    this.showToast();
+                    this.hideToast();
 
                 }
                 else {
@@ -436,6 +442,8 @@ export class AddjourneyPage implements OnInit {
                     this.database.addTravel(this.dep_sel, this.arr_sel, this.time, this.mydate, this.travel['n_pass'], client_id, 1);
                     this.travel = {};
                     this.resetAll();
+                    this.showToast();
+                    this.hideToast();
                 }
 
 
@@ -446,18 +454,24 @@ export class AddjourneyPage implements OnInit {
                     this.database.addTravel(response_dep, response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 0);
                     this.travel = {};
                     this.resetAll();
+                    this.showToast();
+                    this.hideToast();
                 }
                 else if (this.dep_sel != undefined && this.arr_sel == undefined) {
                     console.log("CASO 6")
                     this.database.addTravel(this.getDepSelect(), response_arr, this.time, this.mydate, this.travel['n_pass'], client_id, 0);
                     this.travel = {};
                     this.resetAll();
+                    this.showToast();
+                    this.hideToast();
                 }
                 else if (this.dep_sel == undefined && this.arr_sel != undefined) {
                     console.log("CASO 7")
                     this.database.addTravel(response_dep, this.getArrSelect(), this.time, this.mydate, this.travel['n_pass'], client_id, 0);
                     this.travel = {};
                     this.resetAll();
+                    this.showToast();
+                    this.hideToast();
 
                 }
                 else {
@@ -465,6 +479,8 @@ export class AddjourneyPage implements OnInit {
                     this.database.addTravel(this.dep_sel, this.arr_sel, this.time, this.mydate, this.travel['n_pass'], client_id, 0);
                     this.travel = {};
                     this.resetAll();
+                    this.showToast();
+                    this.hideToast();
 
                 }
 
@@ -500,6 +516,19 @@ export class AddjourneyPage implements OnInit {
             }
         };
         this.navController.navigateForward(['settings/clients'], navigationExtras);
+    }
+
+    hideToast() {
+        this.toast = this.toastController.dismiss();
+    }
+
+    showToast() {
+        this.toast = this.toastController.create({
+            message: 'Aggiunto viaggio!',
+            duration: 2000
+        }).then((toastData) => {
+            toastData.present();
+        });
     }
 
 

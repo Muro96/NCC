@@ -131,6 +131,34 @@ export class ServicepaperPage implements OnInit {
     });
 
 
+    this.database.getRegister(this.mydate).then(async data => {
+      this.register['register_id'] = data.register_id;
+      this.register['print_reg'] = data.print_reg;
+      this.register['date'] = data.date;
+      this.register['km_start'] = data.km_start;
+      this.register['km_end'] = data.km_end;
+      this.database.getVehicleId(data.fk_vehicle).then(async response => {
+        this.vehicle['vehicle_id'] = response.vehicle_id;
+        this.vehicle['car_brand'] = response.car_brand;
+        this.vehicle['car_model'] = response.car_model;
+        this.vehicle['license_plate'] = response.license_plate;
+
+
+      })
+
+    })
+    this.database.getDriverLogin().then(driver => {
+      this.drivers['driver_id'] = driver.driver_id;
+      this.drivers['name'] = driver.name;
+      this.drivers['surname'] = driver.surname;
+      this.drivers['cf_driver'] = driver.cf_driver;
+      this.drivers['phone'] = driver.phone;
+      this.drivers['email'] = driver.email;
+      this.drivers['password'] = driver.password;
+      this.drivers['is_login'] = driver.is_login;
+    })
+
+
   }
 
 

@@ -125,30 +125,7 @@ export class DatadaysPage implements OnInit {
     }
 
     async openDatePicker() {
-        /*const datePickerObj = {
-          inputdate: moment(new Date('2019-02')),
-          closeOnSelect: true,
-          titleLabel: 'Data',
-          closeLabel: 'Schließen',
-          monthsList: [
-            'Gen',
-            'Feb',
-            'Mar',
-            'Apr',
-            'Mag',
-            'Giu',
-            'Lug',
-            'Ago',
-            'Set',
-            'Ott',
-            'Nov',
-            'Dic'
-          ],
-          showTodayButton: false,
-          weeksList: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
-          dateFormat: 'DD.MM.YYYY',
-          clearButton: true
-        };  */
+     
 
         const datePickerModal = await this.modalCtrl.create({
             component: Ionic4DatepickerModalComponent,

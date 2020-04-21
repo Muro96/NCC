@@ -654,8 +654,9 @@ export class DatabaseService {
 
 
     async checkArrival_present(address: string) {
+        let driver_id = (await this.getDriverLogin()).driver_id
         let res: any;
-        let query = 'SELECT * FROM arrival WHERE address_arr =' + '\'' + address + '\'';
+        let query = 'SELECT * FROM arrival WHERE address_arr =' + '\'' + address + '\'' + 'AND fk_driver=' + '\'' + driver_id + '\'';
         return this.database.executeSql(query, []).then(data => {
             res = data.rows.length;
             return res;
@@ -664,8 +665,9 @@ export class DatabaseService {
 
     }
     async checkDep_present(address: string) {
+        let driver_id = (await this.getDriverLogin()).driver_id
         let res: any;
-        let query = 'SELECT * FROM departure WHERE address_dep =' + '\'' + address + '\'';
+        let query = 'SELECT * FROM departure WHERE address_dep =' + '\'' + address + '\''  + 'AND fk_driver=' + '\'' + driver_id + '\'';
         return this.database.executeSql(query, []).then(data => {
             res = data.rows.length;
             return res;
